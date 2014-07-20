@@ -1,0 +1,10 @@
+# properties
+local.properties
+
+# Output / generated
+gen/
+out/
+
+# Intelli J files
+.idea/
+
