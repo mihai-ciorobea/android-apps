@@ -3,6 +3,8 @@ package org.mihigh.cycling.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import com.facebook.AppEventsLogger;
 import com.facebook.Session;
@@ -10,20 +12,20 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-import com.facebook.widget.ProfilePictureView;
 
 public class LoginActivity extends Activity {
 
     private LoginButton loginButton;
-    private ProfilePictureView profilePictureView;
     private GraphUser user;
+    private TextView greeting;
 
     private UiLifecycleHelper uiHelper;
 
     private Session.StatusCallback callback = new Session.StatusCallback() {
-        @Override
         public void call(Session session, SessionState state, Exception exception) {
-            onSessionStateChange(session, state, exception);
+            if (state.isOpened()) {
+                updateUI();
+            }
         }
     };
 
@@ -36,6 +38,8 @@ public class LoginActivity extends Activity {
 
         setContentView(R.layout.main);
 
+        greeting = (TextView) findViewById(R.id.greeting);
+
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
@@ -44,8 +48,6 @@ public class LoginActivity extends Activity {
                 updateUI();
             }
         });
-
-        profilePictureView = (ProfilePictureView) findViewById(R.id.profilePicture);
 
 
     }
@@ -82,20 +84,20 @@ public class LoginActivity extends Activity {
         uiHelper.onDestroy();
     }
 
-    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-        updateUI();
-    }
-
     private void updateUI() {
         Session session = Session.getActiveSession();
         boolean enableButtons = (session != null && session.isOpened());
 
-        if (enableButtons && user != null) {
-            profilePictureView.setProfileId(user.getId());
+        if (enableButtons) {
+            if (user != null) {
+                greeting.setText(user.getName());
+            }
+            loginButton.setVisibility(View.INVISIBLE);
         } else {
-            profilePictureView.setProfileId(null);
+            loginButton.setVisibility(View.VISIBLE);
+            greeting.setText(null);
+
         }
     }
-
 
 }
