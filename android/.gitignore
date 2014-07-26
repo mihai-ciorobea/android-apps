@@ -5,6 +5,10 @@ local.properties
 gen/
 out/
 
+# Libs
+libs
+
 # Intelli J files
 .idea/
+*.iml
 
