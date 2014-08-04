@@ -43,7 +43,7 @@ public class HomeFragment extends Fragment {
                 public void onClick(View v) {
 
 
-                    Intent myIntent = new Intent(getActivity(), LoginActivity.class);
+                    Intent myIntent = new Intent(getActivity(), MapPane.class);
                     getActivity().startActivity(myIntent);
 
 
