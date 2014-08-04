@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 
 public class LoginActivity extends FragmentActivity {
 
+    private String userName;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -59,6 +61,8 @@ public class LoginActivity extends FragmentActivity {
 
 
     public void onUserLoggedIn(String userName) {
+        this.userName = userName;
+
         //Check if home already exists
         HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);
 
@@ -79,4 +83,13 @@ public class LoginActivity extends FragmentActivity {
     }
 
 
+    public void startAloneActivity() {
+
+
+//      TODO: xxx ??
+
+
+
+
+    }
 }

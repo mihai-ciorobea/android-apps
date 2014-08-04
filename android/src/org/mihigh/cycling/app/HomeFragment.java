@@ -1,28 +1,57 @@
 package org.mihigh.cycling.app;
 
+import android.animation.LayoutTransition;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class HomeFragment extends Fragment {
 
     public static final String USER = "USER_DETAILS";
     private TextView greeting;
+    private float scale;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        scale = getResources().getDisplayMetrics().density;
         return inflater.inflate(R.layout.home, container, false);
+
     }
 
 
     @Override
     public void onStart() {
         super.onStart();
+
+        LayoutTransition l = new LayoutTransition();
+        l.enableTransitionType(LayoutTransition.CHANGING);
+        ViewGroup viewGroup = (ViewGroup) getView().findViewById(R.id.home_buttons_layout);
+        viewGroup.setLayoutTransition(l);
+
+        {
+            Button button = new Button(getActivity());
+            button.setText("Solo Ride");
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    Intent myIntent = new Intent(getActivity(), LoginActivity.class);
+                    getActivity().startActivity(myIntent);
+
+
+                }
+            });
+            viewGroup.addView(button);
+        }
+
         greeting = (TextView) getView().findViewById(R.id.greeting);
 
         Bundle args = getArguments();
