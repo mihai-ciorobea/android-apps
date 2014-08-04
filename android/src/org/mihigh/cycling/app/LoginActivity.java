@@ -22,18 +22,11 @@ public class LoginActivity extends FragmentActivity {
                 return;
             }
 
-            // Create an instance of ExampleFragment
             FacebookFragment firstFragment = new FacebookFragment();
-
-            // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager().beginTransaction()
-                .add(R.id.login_fragment_container, firstFragment).commit();
-
+            getSupportFragmentManager().beginTransaction().add(R.id.login_fragment_container, firstFragment).commit();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.login_fragment_container, firstFragment);
             transaction.addToBackStack(null);
-
-            // Commit the transaction
             transaction.commit();
         }
 
@@ -62,6 +55,27 @@ public class LoginActivity extends FragmentActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+
+    public void onUserLoggedIn(String userName) {
+        //Check if home already exists
+        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);
+
+        if (homeFragment != null) {
+            homeFragment.updateHomeView(userName);
+        } else {
+            HomeFragment newFragment = new HomeFragment();
+            Bundle args = new Bundle();
+            args.putString(HomeFragment.USER, userName);
+            newFragment.setArguments(args);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.login_fragment_container, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+
     }
 
 

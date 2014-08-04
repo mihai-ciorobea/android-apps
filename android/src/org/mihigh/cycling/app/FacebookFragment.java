@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.facebook.AppEventsLogger;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -17,15 +17,12 @@ public class FacebookFragment extends Fragment {
 
     private LoginButton loginButton;
     private GraphUser user;
-    private TextView greeting;
 
     private UiLifecycleHelper uiHelper;
 
     private Session.StatusCallback callback = new Session.StatusCallback() {
         public void call(Session session, SessionState state, Exception exception) {
-            if (state.isOpened()) {
-                updateUI();
-            }
+            updateUI();
         }
     };
 
@@ -44,9 +41,13 @@ public class FacebookFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        greeting = (TextView) getView().findViewById(R.id.greeting);
-
         loginButton = (LoginButton) getView().findViewById(R.id.login_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginButton.setVisibility(View.INVISIBLE);
+            }
+        });
         loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
@@ -54,6 +55,8 @@ public class FacebookFragment extends Fragment {
                 updateUI();
             }
         });
+
+        updateUI();
     }
 
     @Override
@@ -68,19 +71,25 @@ public class FacebookFragment extends Fragment {
         uiHelper.onDestroy();
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppEventsLogger.activateApp(getActivity());
+        updateUI();
+    }
+
     private void updateUI() {
         Session session = Session.getActiveSession();
         boolean enableButtons = (session != null && session.isOpened());
 
         if (enableButtons) {
             if (user != null) {
-                greeting.setText(user.getName());
+                ((LoginActivity) getActivity()).onUserLoggedIn(user.getName());
             }
             loginButton.setVisibility(View.INVISIBLE);
         } else {
             loginButton.setVisibility(View.VISIBLE);
-            greeting.setText(null);
-
         }
     }
 
