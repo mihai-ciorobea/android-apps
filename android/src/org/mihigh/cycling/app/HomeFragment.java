@@ -1,7 +1,6 @@
 package org.mihigh.cycling.app;
 
 import android.animation.LayoutTransition;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -41,12 +40,7 @@ public class HomeFragment extends Fragment {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-                    Intent myIntent = new Intent(getActivity(), MapPane.class);
-                    getActivity().startActivity(myIntent);
-
-
+                    ((LoginActivity) getActivity()).startSoloRide();
                 }
             });
             viewGroup.addView(button);

@@ -64,10 +64,11 @@ public class LoginActivity extends FragmentActivity {
         this.userName = userName;
 
         //Check if home already exists
-        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);
+        HomeFragment fragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);
 
-        if (homeFragment != null) {
-            homeFragment.updateHomeView(userName);
+
+        if (fragment != null) {
+            fragment.updateHomeView(userName);
         } else {
             HomeFragment newFragment = new HomeFragment();
             Bundle args = new Bundle();
@@ -82,14 +83,26 @@ public class LoginActivity extends FragmentActivity {
 
     }
 
+    public void startSoloRide() {
+        //Check if home already exists
+        HomeFragment fragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.solo_ride_fragment_container);
 
-    public void startAloneActivity() {
+        if (fragment != null) {
+            fragment.updateHomeView(userName);
+        } else {
+            SoloRideFragment newFragment = new SoloRideFragment();
+            Bundle args = new Bundle();
+            args.putString(HomeFragment.USER, userName);
+            newFragment.setArguments(args);
 
-
-//      TODO: xxx ??
-
-
-
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.login_fragment_container, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
 
     }
+
+
+
 }
