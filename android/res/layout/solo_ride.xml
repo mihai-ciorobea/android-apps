@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/solo_ride_fragment_container"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center|bottom"
-              android:orientation="vertical"
-              android:layout_gravity="bottom|center"
-              android:layout_marginLeft="10dp"
-              android:layout_marginRight="10dp">
+             android:id="@+id/solo_ride_fragment_container"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:gravity="center|bottom"
+             android:orientation="vertical"
+             android:layout_gravity="bottom|center"
+             android:layout_marginLeft="10dp"
+             android:layout_marginRight="10dp">
 
 
     <LinearLayout android:id="@+id/buttons_layout"
@@ -21,125 +21,12 @@
                   android:layout_marginTop="150dp"
                   android:layout_marginRight="50dp">
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:id="@+id/map"
-                  android:name="com.google.android.gms.maps.MapFragment"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  />
 
-
-
-        <LinearLayout android:id="@+id/performance_bars"
-                      android:orientation="horizontal"
-                      android:weightSum="10"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:gravity="bottom"
-                      android:layout_marginBottom="20dp"
-                      android:visibility="gone">
-
-            <View android:id="@+id/bar1"
-                  android:layout_width="0dp"
-                  android:layout_height="10dp"
-                  android:layout_weight="1"
-                  android:layout_marginLeft="20dp"
-                  android:background="@drawable/rectangle"/>
-            <View android:layout_width="0dp"
-                  android:layout_height="10dp"
-                  android:layout_weight="1"
-                  android:layout_marginLeft="5dp"
-                  android:background="@drawable/rectangle"/>
-
-            <View android:layout_width="0dp"
-                  android:layout_height="10dp"
-                  android:layout_weight="1"
-                  android:layout_marginLeft="5dp"
-                  android:background="@drawable/rectangle"/>
-
-            <View android:layout_width="0dp"
-                  android:layout_height="10dp"
-                  android:layout_weight="1"
-                  android:layout_marginLeft="5dp"
-                  android:background="@drawable/rectangle"/>
-
-            <View android:layout_width="0dp"
-                  android:layout_height="10dp"
-                  android:layout_weight="1"
-                  android:layout_marginLeft="5dp"
-                  android:background="@drawable/rectangle"/>
-
-            <View android:layout_width="0dp"
-                  android:layout_height="10dp"
-                  android:layout_weight="1"
-                  android:layout_marginLeft="5dp"
-                  android:background="@drawable/rectangle"/>
-
-            <View android:layout_width="0dp"
-                  android:layout_height="10dp"
-                  android:layout_weight="1"
-                  android:layout_marginLeft="5dp"
-                  android:background="@drawable/rectangle"/>
-
-            <View android:layout_width="0dp"
-                  android:layout_height="10dp"
-                  android:layout_weight="1"
-                  android:layout_marginLeft="5dp"
-                  android:background="@drawable/rectangle"/>
-
-            <View android:layout_width="0dp"
-                  android:layout_height="10dp"
-                  android:layout_weight="1"
-                  android:layout_marginLeft="5dp"
-                  android:background="@drawable/rectangle"/>
-
-
-        </LinearLayout>
-
-        <Button android:id="@+id/start"
-                android:padding="10dp"
-                android:textColor="#ffffff"
-                android:background="@drawable/green_button"
-                android:text="Start"
+        <android.support.v4.view.ViewPager
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/pager"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:visibility="gone"/>
-
-
-        <LinearLayout android:id="@+id/stop_pause"
-                      android:orientation="horizontal"
-                      android:weightSum="2"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:visibility="gone">
-
-            <Button android:id="@+id/stop"
-                    android:padding="10dp"
-                    android:textColor="#ffffff"
-                    android:background="@drawable/red_button"
-                    android:text="Stop"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="10dp"/>
-
-
-            <Button android:id="@+id/pause"
-                    android:padding="10dp"
-                    android:textColor="#ffffff"
-                    android:background="@drawable/gray_button"
-                    android:text="Pause"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="5dp"/>
-
-
-        </LinearLayout>
+                android:layout_height="match_parent"/>
     </LinearLayout>
 
 </FrameLayout>
