@@ -13,13 +13,12 @@ public class HomeFragment extends Fragment {
 
     public static final String USER = "USER_DETAILS";
     private TextView greeting;
-    private float scale;
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        scale = getResources().getDisplayMetrics().density;
         return inflater.inflate(R.layout.home, container, false);
 
     }

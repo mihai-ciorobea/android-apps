@@ -8,11 +8,13 @@ import android.support.v4.app.FragmentTransaction;
 public class LoginActivity extends FragmentActivity {
 
     private String userName;
+    public static float scale;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        scale = getResources().getDisplayMetrics().density;
         setContentView(R.layout.login);
 
         if (findViewById(R.id.login_fragment_container) != null) {
