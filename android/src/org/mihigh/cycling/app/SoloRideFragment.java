@@ -44,6 +44,10 @@ public class SoloRideFragment extends Fragment {
 
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+
+        private SoloHomeFragment soloHomeFragment;
+        private SoloMapFragment soloMapFragment;
+
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -51,10 +55,12 @@ public class SoloRideFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new SoloHomeFragment();
+                soloHomeFragment = new SoloHomeFragment();
+                return soloHomeFragment;
             }
 
-            return new SoloMapFragment();
+            soloMapFragment = new SoloMapFragment();
+            return soloMapFragment;
         }
 
         @Override

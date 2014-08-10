@@ -6,6 +6,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <TextView android:id="@+id/time"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/performance_bars"
                   android:orientation="horizontal"
@@ -13,8 +17,7 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:gravity="bottom"
-                  android:layout_marginBottom="20dp"
-                  android:visibility="gone">
+                  android:layout_marginBottom="20dp">
 
         <View android:id="@+id/bar1"
               android:layout_width="0dp"
@@ -69,8 +72,6 @@
               android:layout_weight="1"
               android:layout_marginLeft="5dp"
               android:background="@drawable/rectangle"/>
-
-
     </LinearLayout>
 
     <Button android:id="@+id/start"
@@ -102,8 +103,6 @@
                 android:layout_weight="1"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="10dp"/>
-
-
         <Button android:id="@+id/pause"
                 android:padding="10dp"
                 android:textColor="#ffffff"
@@ -114,7 +113,5 @@
                 android:layout_weight="1"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="5dp"/>
-
-
     </LinearLayout>
 </LinearLayout>

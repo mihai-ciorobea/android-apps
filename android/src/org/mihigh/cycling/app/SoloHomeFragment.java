@@ -1,5 +1,9 @@
 package org.mihigh.cycling.app;
 
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class SoloHomeFragment extends Fragment {
 
@@ -16,6 +21,7 @@ public class SoloHomeFragment extends Fragment {
     private LinearLayout stopPauseLayout;
     private Button stopButton;
     private Button pauseButton;
+    private TextView time;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -26,6 +32,8 @@ public class SoloHomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        time = (TextView) getView().findViewById(R.id.time);
 
         startButton = (Button) getView().findViewById(R.id.start);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +51,9 @@ public class SoloHomeFragment extends Fragment {
 
         View view = (View) getView().findViewById(R.id.bar1);
         view.getLayoutParams().height = Utils.getSizeFromDP(10, LoginActivity.scale);
+
+
+        setTimerForDisplayingTheTimePassed();
     }
 
     private void startStopRide() {
@@ -65,5 +76,38 @@ public class SoloHomeFragment extends Fragment {
         super.onDestroy();
     }
 
+    private void setTimerForDisplayingTheTimePassed() {
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(new TimerTask() {
+
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setTime();
+                    }
+                });
+            }
+        }, 0, 1000);
+    }
+
+
+    Date previousStarted = new Date();
+    int previousTime = 0;
+
+    //TODO: add logic for stop / pause -- update previous time and previous stared date
+    private void setTime() {
+        if (rideStarted) {
+            return;
+        }
+
+        Date now = new Date();
+        long diffInSeconds = (now.getTime() - previousStarted.getTime()) / 1000;
+
+
+        //TODO: set as min:sec
+        time.setText((previousTime + diffInSeconds) + "");
+    }
 
 }
