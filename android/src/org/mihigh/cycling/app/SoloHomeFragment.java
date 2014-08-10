@@ -98,16 +98,15 @@ public class SoloHomeFragment extends Fragment {
 
     //TODO: add logic for stop / pause -- update previous time and previous stared date
     private void setTime() {
-        if (rideStarted) {
+        if (!rideStarted) {
             return;
         }
 
         Date now = new Date();
         long diffInSeconds = (now.getTime() - previousStarted.getTime()) / 1000;
 
-
-        //TODO: set as min:sec
-        time.setText((previousTime + diffInSeconds) + "");
+        long totalTime = previousTime + diffInSeconds;
+        time.setText(String.format("%02d",totalTime / 60) + ":" + String.format("%02d",totalTime % 60));
     }
 
 }
