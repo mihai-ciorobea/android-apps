@@ -1,4 +1,4 @@
-package org.mihigh.cycling.app;
+package org.mihigh.cycling.app.solo;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.mihigh.cycling.app.R;
 
 public class SoloRideFragment extends Fragment {
 

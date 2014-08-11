@@ -1,4 +1,4 @@
-package org.mihigh.cycling.app;
+package org.mihigh.cycling.app.solo;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+
+import org.mihigh.cycling.app.R;
 
 public class SoloMapFragment extends Fragment {
 
@@ -39,6 +41,7 @@ public class SoloMapFragment extends Fragment {
                     map = mapView.getMap();
                     map.setMyLocationEnabled(true);
                     map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+
                         @Override
                         public void onMyLocationChange(Location location) {
                             System.out.println("GIGI: " + location.toString());

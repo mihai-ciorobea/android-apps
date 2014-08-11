@@ -1,4 +1,4 @@
-package org.mihigh.cycling.app;
+package org.mihigh.cycling.app.solo;
 
 import java.util.Date;
 import java.util.Timer;
@@ -13,6 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.mihigh.cycling.app.LoginActivity;
+import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.Utils;
 
 public class SoloHomeFragment extends Fragment {
 
