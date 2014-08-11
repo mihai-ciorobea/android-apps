@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,6 @@ public class SoloHomeFragment extends Fragment {
         View view = (View) getView().findViewById(R.id.bar1);
         view.getLayoutParams().height = Utils.getSizeFromDP(10, LoginActivity.scale);
 
-
         setTimerForDisplayingTheTimePassed();
     }
 
@@ -76,19 +76,31 @@ public class SoloHomeFragment extends Fragment {
         super.onDestroy();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     private void setTimerForDisplayingTheTimePassed() {
         Timer t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
 
             @Override
             public void run() {
-                getActivity().runOnUiThread(new Runnable() {
+                FragmentActivity activity = getActivity();
+                if (activity == null) {
+                    this.cancel();
+                    return;
+                }
+
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         setTime();
                     }
                 });
             }
+
         }, 0, 1000);
     }
 
@@ -106,7 +118,7 @@ public class SoloHomeFragment extends Fragment {
         long diffInSeconds = (now.getTime() - previousStarted.getTime()) / 1000;
 
         long totalTime = previousTime + diffInSeconds;
-        time.setText(String.format("%02d",totalTime / 60) + ":" + String.format("%02d",totalTime % 60));
+        time.setText(String.format("%02d", totalTime / 60) + ":" + String.format("%02d", totalTime % 60));
     }
 
 }

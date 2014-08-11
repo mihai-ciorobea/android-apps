@@ -26,10 +26,12 @@ public class SoloRideFragment extends Fragment {
         super.onStart();
 
         // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) getView().findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
+        mPager = (ViewPager) getActivity().findViewById(R.id.pager);
 
+        if (mPagerAdapter == null) {
+            mPagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
+        }
+        mPager.setAdapter(mPagerAdapter);
     }
 
     @Override
@@ -42,11 +44,15 @@ public class SoloRideFragment extends Fragment {
         super.onDestroy();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
-        private SoloHomeFragment soloHomeFragment;
-        private SoloMapFragment soloMapFragment;
+        private SoloHomeFragment soloHomeFragment = new SoloHomeFragment();
+        private SoloMapFragment soloMapFragment = new SoloMapFragment();
 
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -55,11 +61,9 @@ public class SoloRideFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                soloHomeFragment = new SoloHomeFragment();
                 return soloHomeFragment;
             }
 
-            soloMapFragment = new SoloMapFragment();
             return soloMapFragment;
         }
 
