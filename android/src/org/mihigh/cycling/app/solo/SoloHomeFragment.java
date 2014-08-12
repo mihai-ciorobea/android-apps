@@ -1,12 +1,15 @@
 package org.mihigh.cycling.app.solo;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,15 +99,13 @@ public class SoloHomeFragment extends Fragment {
                     this.cancel();
                     return;
                 }
-
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        setTime();
+                        pedioticUpdate();
                     }
                 });
             }
-
         }, 0, 1000);
     }
 
@@ -113,7 +114,7 @@ public class SoloHomeFragment extends Fragment {
     int previousTime = 0;
 
     //TODO: add logic for stop / pause -- update previous time and previous stared date
-    private void setTime() {
+    private void pedioticUpdate() {
         if (!rideStarted) {
             return;
         }
@@ -123,6 +124,15 @@ public class SoloHomeFragment extends Fragment {
 
         long totalTime = previousTime + diffInSeconds;
         time.setText(String.format("%02d", totalTime / 60) + ":" + String.format("%02d", totalTime % 60));
+
+
+        updateStats();
+    }
+
+    private void updateStats() {
+        List<Pair<Date,Location>> history = SoloMapFragment.LOCATION_CHANGE_LISTENER.history;
+
+
     }
 
 }

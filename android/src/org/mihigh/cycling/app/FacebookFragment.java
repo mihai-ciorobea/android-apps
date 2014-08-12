@@ -1,5 +1,6 @@
 package org.mihigh.cycling.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,6 +22,8 @@ public class FacebookFragment extends Fragment {
     private UiLifecycleHelper uiHelper;
 
     private Session.StatusCallback callback = new Session.StatusCallback() {
+
+        @Override
         public void call(Session session, SessionState state, Exception exception) {
             updateUI();
         }
@@ -77,6 +80,18 @@ public class FacebookFragment extends Fragment {
         super.onResume();
         AppEventsLogger.activateApp(getActivity());
         updateUI();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Session.getActiveSession().onActivityResult(getActivity(), requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
     }
 
     private void updateUI() {

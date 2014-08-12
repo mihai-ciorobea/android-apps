@@ -11,6 +11,7 @@ public class LoginActivity extends FragmentActivity {
 
     private String userName;
     public static float scale;
+    private FacebookFragment facebookFragment;
 
 
     @Override
@@ -28,10 +29,10 @@ public class LoginActivity extends FragmentActivity {
                 return;
             }
 
-            FacebookFragment firstFragment = new FacebookFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.login_fragment_container, firstFragment).commit();
+            facebookFragment = new FacebookFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.login_fragment_container, facebookFragment).commit();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.login_fragment_container, firstFragment);
+            transaction.replace(R.id.login_fragment_container, facebookFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         }
@@ -51,6 +52,7 @@ public class LoginActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        facebookFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

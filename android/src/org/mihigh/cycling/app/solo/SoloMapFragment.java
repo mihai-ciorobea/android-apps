@@ -1,9 +1,14 @@
 package org.mihigh.cycling.app.solo;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +24,12 @@ import org.mihigh.cycling.app.R;
 
 public class SoloMapFragment extends Fragment {
 
-    MapView mapView;
-    GoogleMap map;
+    public static final MyLocationListener LOCATION_CHANGE_LISTENER = new MyLocationListener();
 
+    MapView mapView;
+
+
+    GoogleMap map;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.solo_map, container, false);
@@ -40,13 +48,7 @@ public class SoloMapFragment extends Fragment {
                 if (mapView != null) {
                     map = mapView.getMap();
                     map.setMyLocationEnabled(true);
-                    map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-
-                        @Override
-                        public void onMyLocationChange(Location location) {
-                            System.out.println("GIGI: " + location.toString());
-                        }
-                    });
+                    map.setOnMyLocationChangeListener(LOCATION_CHANGE_LISTENER);
 
                 }
                 break;
@@ -81,5 +83,16 @@ public class SoloMapFragment extends Fragment {
         mapView.onLowMemory();
     }
 
+    static class MyLocationListener implements GoogleMap.OnMyLocationChangeListener {
+        public List<Pair<Date, Location>> history = new ArrayList<Pair<Date, Location>>();
+
+        public Location lastPos = null;
+
+        @Override
+        public void onMyLocationChange(Location location) {
+            history.add(new Pair<Date, Location>(new Date(), location));
+            lastPos = location;
+        }
+    }
 
 }
