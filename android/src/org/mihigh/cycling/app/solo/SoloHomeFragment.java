@@ -23,12 +23,22 @@ import org.mihigh.cycling.app.Utils;
 
 public class SoloHomeFragment extends Fragment {
 
-    private boolean rideStarted = false;
+    private RideStatus rideStatusUpdate = RideStatus.NOT_STARTED;
+    private Date previousStarted = new Date();
 
+
+    private enum RideStatus {
+        NOT_STARTED,
+        STARTED,
+        PAUSED,
+        STOPPED, RESUMED;
+    }
     private Button startButton;
+
     private LinearLayout stopPauseLayout;
     private Button stopButton;
     private Button pauseButton;
+    private Button resumeButton;
     private TextView time;
 
     @Override
@@ -47,15 +57,46 @@ public class SoloHomeFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rideStarted = true;
-                startStopRide();
+                rideStatusUpdate(RideStatus.STARTED);
+                stopPauseLayout.setVisibility(View.VISIBLE);
+                pauseButton.setVisibility(View.VISIBLE);
+                stopButton.setVisibility(View.VISIBLE);
+                startButton.setVisibility(View.GONE);
             }
         });
-        stopButton = (Button) getView().findViewById(R.id.stop);
-        pauseButton = (Button) getView().findViewById(R.id.pause);
-        stopPauseLayout = (LinearLayout) getView().findViewById(R.id.stop_pause);
 
-        startStopRide();
+        stopButton = (Button) getView().findViewById(R.id.stop);
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rideStatusUpdate(RideStatus.STOPPED);
+            }
+        });
+
+
+
+        pauseButton = (Button) getView().findViewById(R.id.pause);
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rideStatusUpdate(RideStatus.PAUSED);
+                resumeButton.setVisibility(View.VISIBLE);
+                pauseButton.setVisibility(View.GONE);
+            }
+        });
+
+
+        resumeButton = (Button) getView().findViewById(R.id.resume);
+        resumeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rideStatusUpdate(RideStatus.RESUMED);
+                resumeButton.setVisibility(View.GONE);
+                pauseButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        stopPauseLayout = (LinearLayout) getView().findViewById(R.id.stop_pause);
 
         View view = (View) getView().findViewById(R.id.bar1);
         view.getLayoutParams().height = Utils.getSizeFromDP(10, LoginActivity.scale);
@@ -63,14 +104,8 @@ public class SoloHomeFragment extends Fragment {
         setTimerForDisplayingTheTimePassed();
     }
 
-    private void startStopRide() {
-        if (rideStarted == false) {
-            startButton.setVisibility(View.VISIBLE);
-            stopPauseLayout.setVisibility(View.GONE);
-        } else {
-            startButton.setVisibility(View.GONE);
-            stopPauseLayout.setVisibility(View.VISIBLE);
-        }
+    private void rideStatusUpdate(RideStatus status) {
+        rideStatusUpdate = status;
     }
 
     @Override
@@ -110,12 +145,12 @@ public class SoloHomeFragment extends Fragment {
     }
 
 
-    Date previousStarted = new Date();
     int previousTime = 0;
 
     //TODO: add logic for stop / pause -- update previous time and previous stared date
     private void pedioticUpdate() {
-        if (!rideStarted) {
+        if (rideStatusUpdate != RideStatus.STARTED
+            && rideStatusUpdate != RideStatus.RESUMED) {
             return;
         }
 
@@ -125,12 +160,11 @@ public class SoloHomeFragment extends Fragment {
         long totalTime = previousTime + diffInSeconds;
         time.setText(String.format("%02d", totalTime / 60) + ":" + String.format("%02d", totalTime % 60));
 
-
         updateStats();
     }
 
     private void updateStats() {
-        List<Pair<Date,Location>> history = SoloMapFragment.LOCATION_CHANGE_LISTENER.history;
+        List<Pair<Date, Location>> history = SoloMapFragment.LOCATION_CHANGE_LISTENER.history;
 
 
     }

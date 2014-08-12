@@ -112,8 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:visibility="gone"/>
+                android:layout_marginLeft="10dp"/>
 
 
         <LinearLayout android:id="@+id/stop_pause"
@@ -143,6 +142,17 @@
                     android:layout_weight="1"
                     android:layout_marginRight="10dp"
                     android:layout_marginLeft="5dp"/>
+            <Button android:id="@+id/resume"
+                    android:padding="10dp"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/green_button"
+                    android:text="Resume"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:visibility="gone"/>
         </LinearLayout>
 
     </LinearLayout>
