@@ -25,6 +25,7 @@ public class SoloMapFragment extends Fragment {
 
 
     GoogleMap map;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.solo_map, container, false);
@@ -44,7 +45,6 @@ public class SoloMapFragment extends Fragment {
                     map = mapView.getMap();
                     map.setMyLocationEnabled(true);
                     map.setOnMyLocationChangeListener(LOCATION_CHANGE_LISTENER);
-
                 }
                 break;
             case ConnectionResult.SERVICE_MISSING:
@@ -78,7 +78,7 @@ public class SoloMapFragment extends Fragment {
         mapView.onLowMemory();
     }
 
-        static class MyLocationListener implements GoogleMap.OnMyLocationChangeListener {
+    static class MyLocationListener implements GoogleMap.OnMyLocationChangeListener {
 
         @Override
         public void onMyLocationChange(Location location) {

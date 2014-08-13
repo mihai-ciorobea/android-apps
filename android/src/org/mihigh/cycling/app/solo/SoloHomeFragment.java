@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
@@ -24,6 +29,9 @@ public class SoloHomeFragment extends Fragment {
 
     private RideStatus rideStatusUpdate = RideStatus.NOT_STARTED;
     private Date previousStarted = new Date();
+    private TextView speed;
+    private TextView distance;
+    private LocationManager locationManager;
 
     private enum RideStatus {
         NOT_STARTED,
@@ -54,6 +62,8 @@ public class SoloHomeFragment extends Fragment {
         super.onStart();
 
         time = (TextView) getView().findViewById(R.id.time);
+        speed = (TextView) getView().findViewById(R.id.speed);
+        distance = (TextView) getView().findViewById(R.id.distance);
         barLayour = (LinearLayout) getView().findViewById(R.id.performance_bars);
 
         startButton = (Button) getView().findViewById(R.id.start);
@@ -97,6 +107,10 @@ public class SoloHomeFragment extends Fragment {
         });
 
         stopPauseLayout = (LinearLayout) getView().findViewById(R.id.stop_pause);
+
+        // Get the location manager
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,  new MyLocationListener(this));
 
         setTimerForDisplayingTheTimePassed();
     }
@@ -153,6 +167,17 @@ public class SoloHomeFragment extends Fragment {
 
         updateBars();
         updateTime();
+        updateSpeed();
+        updateDistance();
+    }
+
+    private void updateDistance() {
+        distance.setText(Tracking.instance.getDistance());
+    }
+
+    private void updateSpeed() {
+
+        speed.setText(Tracking.instance.getSpeed());
     }
 
     private void updateTime() {
@@ -186,4 +211,32 @@ public class SoloHomeFragment extends Fragment {
     }
 
 
+    static class MyLocationListener implements LocationListener {
+
+        private SoloHomeFragment soloHomeFragment;
+
+        public MyLocationListener(SoloHomeFragment soloHomeFragment) {
+            this.soloHomeFragment = soloHomeFragment;
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
+            Toast.makeText(soloHomeFragment.getActivity(), "Example Toast", Toast.LENGTH_SHORT).show() ;
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    }
 }
