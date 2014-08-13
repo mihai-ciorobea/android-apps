@@ -166,8 +166,8 @@ public class SoloHomeFragment extends Fragment {
     private void updateBars() {
         List<Integer> activity = Tracking.instance.get5MinActivity();
         int size = activity.size();
-        if (size > 10) {
-            activity.subList(size - 10, size);
+        if (size > 9) {
+            activity.subList(size - 9, size);
         }
 
         int maxVal = Collections.max(activity);
