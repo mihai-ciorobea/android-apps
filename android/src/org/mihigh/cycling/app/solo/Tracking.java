@@ -7,6 +7,11 @@ import android.location.Location;
 
 public class Tracking {
 
+    public static Tracking instance = new Tracking();
+
+    private Tracking() {
+    }
+
     private List<Location> positions = new ArrayList<Location>();
 
     public void addLocation(Location location) {
@@ -21,6 +26,8 @@ public class Tracking {
 
         for (Location location : positions) {
             if (lastLocation == null) {
+                lastLocation = location;
+                continue;
             }
             distance += location.distanceTo(lastLocation);
 

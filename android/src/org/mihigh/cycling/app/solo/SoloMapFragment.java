@@ -1,14 +1,9 @@
 package org.mihigh.cycling.app.solo;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,15 +78,11 @@ public class SoloMapFragment extends Fragment {
         mapView.onLowMemory();
     }
 
-    static class MyLocationListener implements GoogleMap.OnMyLocationChangeListener {
-        public List<Pair<Date, Location>> history = new ArrayList<Pair<Date, Location>>();
-
-        public Location lastPos = null;
+        static class MyLocationListener implements GoogleMap.OnMyLocationChangeListener {
 
         @Override
         public void onMyLocationChange(Location location) {
-            history.add(new Pair<Date, Location>(new Date(), location));
-            lastPos = location;
+            Tracking.instance.addLocation(location);
         }
     }
 

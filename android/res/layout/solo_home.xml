@@ -29,7 +29,6 @@
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:id="@+id/performance_bars"
                   android:orientation="vertical"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -49,17 +48,11 @@
                       android:layout_marginBottom="20dp"
                       android:layout_marginTop="20dp">
 
-            <View android:id="@+id/bar1"
-                  android:layout_width="0dp"
-                  android:layout_height="100dp"
+            <View android:layout_width="0dp"
+                  android:layout_height="10dp"
                   android:layout_weight="1"
                   android:layout_marginLeft="20dp"
                   android:background="@drawable/rectangle"/>
-            <View android:layout_width="0dp"
-                  android:layout_height="10dp"
-                  android:layout_weight="1"
-                  android:layout_marginLeft="5dp"
-                  android:background="@drawable/rectangle"/>
 
             <View android:layout_width="0dp"
                   android:layout_height="10dp"
@@ -101,6 +94,13 @@
                   android:layout_height="10dp"
                   android:layout_weight="1"
                   android:layout_marginLeft="5dp"
+                  android:background="@drawable/rectangle"/>
+
+            <View android:layout_width="0dp"
+                  android:layout_height="10dp"
+                  android:layout_weight="1"
+                  android:layout_marginLeft="5dp"
+                  android:id="@+id/bar8"
                   android:background="@drawable/rectangle"/>
         </LinearLayout>
 

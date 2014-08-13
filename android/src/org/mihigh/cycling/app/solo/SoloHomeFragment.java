@@ -1,15 +1,14 @@
 package org.mihigh.cycling.app.solo;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +25,13 @@ public class SoloHomeFragment extends Fragment {
     private RideStatus rideStatusUpdate = RideStatus.NOT_STARTED;
     private Date previousStarted = new Date();
 
-
     private enum RideStatus {
         NOT_STARTED,
         STARTED,
         PAUSED,
         STOPPED, RESUMED;
     }
+
     private Button startButton;
 
     private LinearLayout stopPauseLayout;
@@ -40,6 +39,9 @@ public class SoloHomeFragment extends Fragment {
     private Button pauseButton;
     private Button resumeButton;
     private TextView time;
+
+    private LinearLayout barLayour;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class SoloHomeFragment extends Fragment {
         super.onStart();
 
         time = (TextView) getView().findViewById(R.id.time);
+        barLayour = (LinearLayout) getView().findViewById(R.id.performance_bars);
 
         startButton = (Button) getView().findViewById(R.id.start);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -73,8 +76,6 @@ public class SoloHomeFragment extends Fragment {
             }
         });
 
-
-
         pauseButton = (Button) getView().findViewById(R.id.pause);
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +85,6 @@ public class SoloHomeFragment extends Fragment {
                 pauseButton.setVisibility(View.GONE);
             }
         });
-
 
         resumeButton = (Button) getView().findViewById(R.id.resume);
         resumeButton.setOnClickListener(new View.OnClickListener() {
@@ -97,9 +97,6 @@ public class SoloHomeFragment extends Fragment {
         });
 
         stopPauseLayout = (LinearLayout) getView().findViewById(R.id.stop_pause);
-
-        View view = (View) getView().findViewById(R.id.bar1);
-        view.getLayoutParams().height = Utils.getSizeFromDP(10, LoginActivity.scale);
 
         setTimerForDisplayingTheTimePassed();
     }
@@ -154,19 +151,39 @@ public class SoloHomeFragment extends Fragment {
             return;
         }
 
+        updateBars();
+        updateTime();
+    }
+
+    private void updateTime() {
         Date now = new Date();
         long diffInSeconds = (now.getTime() - previousStarted.getTime()) / 1000;
 
         long totalTime = previousTime + diffInSeconds;
         time.setText(String.format("%02d", totalTime / 60) + ":" + String.format("%02d", totalTime % 60));
-
-        updateStats();
     }
 
-    private void updateStats() {
-        List<Pair<Date, Location>> history = SoloMapFragment.LOCATION_CHANGE_LISTENER.history;
+    private void updateBars() {
+        List<Integer> activity = Tracking.instance.get5MinActivity();
+        int size = activity.size();
+        if (size > 10) {
+            activity.subList(size - 10, size);
+        }
 
+        int maxVal = Collections.max(activity);
+        if (maxVal != 0) {
+            for (int index = 0; index < activity.size(); ++index) {
+                int distance = activity.get(index);
 
+                int barSize = distance * 100 / maxVal;
+
+                barLayour.getChildAt(index).getLayoutParams().height =
+                    Math.max(Utils.getSizeFromDP(barSize, LoginActivity.scale), 10);
+            }
+
+            barLayour.requestLayout();
+        }
     }
+
 
 }
