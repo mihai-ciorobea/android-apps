@@ -54,7 +54,7 @@ public class SoloRideFragment extends Fragment {
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
         private SoloHomeFragment soloHomeFragment = new SoloHomeFragment();
-        private SoloResult soloMapFragment = new SoloResult();
+        private SoloMapFragment soloMapFragment = new SoloMapFragment();
 
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);

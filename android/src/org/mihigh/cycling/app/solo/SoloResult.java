@@ -1,12 +1,17 @@
 package org.mihigh.cycling.app.solo;
 
+import java.util.ArrayList;
+
+import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -14,16 +19,19 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 
+import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
 
 public class SoloResult extends Fragment {
 
     MapView mapView;
     GoogleMap map;
+    private Button saveButton;
+    private Button cancelButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,11 +68,35 @@ public class SoloResult extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Circle circle = map.addCircle(new CircleOptions()
-                                          .center(new LatLng(-33.87365, 151.20689))
-                                          .radius(10000)
-                                          .strokeColor(Color.RED)
-                                          .fillColor(Color.BLUE));
+
+        saveButton = (Button) getView().findViewById(R.id.save);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Gson gson = new Gson();
+                String jsonString = gson.toJson(Tracking.instance.getPositions());
+
+                postData(jsonString);
+
+
+            }
+        });
+
+        cancelButton = (Button) getView().findViewById(R.id.cancel);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Tracking.instance.setPositions(new ArrayList<Location>());
+                ((LoginActivity) getActivity()).onUserLoggedIn();
+            }
+        });
+
+        PolylineOptions options = new PolylineOptions();
+        for (Location location : Tracking.instance.getPositions()) {
+            options = options.add(new LatLng(location.getLatitude(), location.getLongitude()));
+        }
+
+        map.addPolyline(options.color(Color.RED));
     }
 
     @Override
@@ -87,5 +119,17 @@ public class SoloResult extends Fragment {
 
     public void update() {
         //TODO: refresh
+    }
+
+
+    public void postData(final String jsonData) {
+
+        final ProgressDialog progress = new ProgressDialog(getActivity());
+        progress.setTitle("Loading");
+        progress.setMessage("Wait while loading...");
+        progress.show();
+
+        SaveRideTask saveRideTask = new SaveRideTask();
+        saveRideTask.execute(new SaveRideRunnable(jsonData, progress, (LoginActivity) getActivity()));
     }
 }

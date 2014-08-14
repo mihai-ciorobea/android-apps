@@ -100,7 +100,8 @@ public class FacebookFragment extends Fragment {
 
         if (enableButtons) {
             if (user != null) {
-                ((LoginActivity) getActivity()).onUserLoggedIn(user.getName());
+                //TODO: save user email
+                ((LoginActivity) getActivity()).onUserLoggedIn();
             }
             loginButton.setVisibility(View.INVISIBLE);
         } else {

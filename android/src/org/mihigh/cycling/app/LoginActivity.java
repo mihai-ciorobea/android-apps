@@ -66,9 +66,7 @@ public class LoginActivity extends FragmentActivity {
     }
 
 
-    public void onUserLoggedIn(String userName) {
-        this.userName = userName;
-
+    public void onUserLoggedIn() {
         //Check if home already exists
         HomeFragment fragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);
 

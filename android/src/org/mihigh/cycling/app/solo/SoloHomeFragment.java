@@ -20,8 +20,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
@@ -73,6 +71,8 @@ public class SoloHomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 rideStatusUpdate(RideStatus.STARTED);
+                previousStarted = new Date();
+                previousTime = 0;
             }
         });
 
@@ -86,19 +86,12 @@ public class SoloHomeFragment extends Fragment {
                     .setMessage("Do you really want to stop")
                     .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            //TODO: save activity
-
-                            ((LoginActivity) getActivity()).stopRide();
-
-
-                            Gson gson = new Gson();
-                            String jsonString = gson.toJson(Tracking.instance.getPositions());
-                            System.out.println(jsonString);
-
-
-
+                            rideStatusUpdate(RideStatus.NOT_STARTED);
+                            previousStarted = new Date();
+                            previousTime = 0;
 
                             dialog.dismiss();
+                            ((LoginActivity) getActivity()).stopRide();
                         }
                     })
                     .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -203,6 +196,12 @@ public class SoloHomeFragment extends Fragment {
             startButton.setVisibility(View.GONE);
             pauseButton.setVisibility(View.VISIBLE);
         }
+        if (status == RideStatus.NOT_STARTED) {
+            stopPauseLayout.setVisibility(View.GONE);
+            startButton.setVisibility(View.VISIBLE);
+        }
+
+
     }
 
     private void saveState() {
