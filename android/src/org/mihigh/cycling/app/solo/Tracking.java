@@ -30,6 +30,10 @@ public class Tracking {
             time = positions.get(size - 1).getElapsedRealtimeNanos() - positions.get(previousIndex).getElapsedRealtimeNanos();
             time = time / (1000 * 1000 * 1000);
             previousIndex--;
+
+            if (previousIndex < 0) {
+                return "0.00";
+            }
         }
 
         //from m/s to km/h

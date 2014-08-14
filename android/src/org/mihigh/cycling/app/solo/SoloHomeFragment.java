@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -24,6 +26,7 @@ public class SoloHomeFragment extends Fragment {
 
     private RideStatus rideStatusUpdate = RideStatus.NOT_STARTED;
     private Date previousStarted;
+    private long previousTime = 0;
     private TextView speed;
     private TextView distance;
 
@@ -31,7 +34,8 @@ public class SoloHomeFragment extends Fragment {
         NOT_STARTED,
         STARTED,
         PAUSED,
-        STOPPED, RESUMED;
+        STOPPED,
+        RESUMED
     }
 
     private Button startButton;
@@ -42,7 +46,7 @@ public class SoloHomeFragment extends Fragment {
     private Button resumeButton;
     private TextView time;
 
-    private LinearLayout barLayour;
+    private LinearLayout barLayout;
 
 
     @Override
@@ -58,17 +62,13 @@ public class SoloHomeFragment extends Fragment {
         time = (TextView) getView().findViewById(R.id.time);
         speed = (TextView) getView().findViewById(R.id.speed);
         distance = (TextView) getView().findViewById(R.id.distance);
-        barLayour = (LinearLayout) getView().findViewById(R.id.performance_bars);
+        barLayout = (LinearLayout) getView().findViewById(R.id.performance_bars);
 
         startButton = (Button) getView().findViewById(R.id.start);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 rideStatusUpdate(RideStatus.STARTED);
-                stopPauseLayout.setVisibility(View.VISIBLE);
-                pauseButton.setVisibility(View.VISIBLE);
-                stopButton.setVisibility(View.VISIBLE);
-                startButton.setVisibility(View.GONE);
             }
         });
 
@@ -85,8 +85,6 @@ public class SoloHomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 rideStatusUpdate(RideStatus.PAUSED);
-                resumeButton.setVisibility(View.VISIBLE);
-                pauseButton.setVisibility(View.GONE);
             }
         });
 
@@ -95,13 +93,18 @@ public class SoloHomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 rideStatusUpdate(RideStatus.RESUMED);
-                resumeButton.setVisibility(View.GONE);
-                pauseButton.setVisibility(View.VISIBLE);
+
             }
         });
 
         stopPauseLayout = (LinearLayout) getView().findViewById(R.id.stop_pause);
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        rideStatusUpdate = RideStatus.valueOf(sharedPref.getString("rideStatusUpdate", RideStatus.NOT_STARTED.toString()));
+        previousTime = sharedPref.getLong("previousTime", 0L);
+        previousStarted = new Date(sharedPref.getLong("previousStarted", 0L));
         setTimerForDisplayingTheTimePassed();
+        rideStatusUpdate(rideStatusUpdate);
     }
 
     @Override
@@ -140,32 +143,47 @@ public class SoloHomeFragment extends Fragment {
         }, 0, 1000);
     }
 
-    long previousTime = 0;
+
     private void rideStatusUpdate(RideStatus status) {
         rideStatusUpdate = status;
         Tracking.instance.setRideStatus(status);
 
-
-
-        if(status == RideStatus.PAUSED) {
+        if (status == RideStatus.PAUSED) {
             previousTime = updateTime();
+            saveState();
+            resumeButton.setVisibility(View.VISIBLE);
+            pauseButton.setVisibility(View.GONE);
         }
 
         if (status == RideStatus.RESUMED) {
             previousStarted = new Date();
+            saveState();
+            resumeButton.setVisibility(View.GONE);
+            pauseButton.setVisibility(View.VISIBLE);
         }
 
         if (status == RideStatus.STARTED) {
-            previousStarted = new Date();
+            saveState();
+            stopPauseLayout.setVisibility(View.VISIBLE);
+            pauseButton.setVisibility(View.VISIBLE);
+            stopButton.setVisibility(View.VISIBLE);
+            startButton.setVisibility(View.GONE);
         }
+    }
 
+    private void saveState() {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
 
+        editor.putString("rideStatusUpdate", rideStatusUpdate.toString());
+        editor.putLong("previousStarted", new Date().getTime());
+        editor.putLong("previousTime", updateTime());
+
+        editor.commit();
 
     }
 
 
-
-    //TODO: add logic for stop / pause -- update previous time and previous stared date
     private void periodicUpdate() {
         if (rideStatusUpdate != RideStatus.STARTED
             && rideStatusUpdate != RideStatus.RESUMED) {
@@ -176,6 +194,8 @@ public class SoloHomeFragment extends Fragment {
         updateTime();
         updateSpeed();
         updateDistance();
+        saveState();
+
     }
 
     private void updateDistance() {
@@ -210,11 +230,11 @@ public class SoloHomeFragment extends Fragment {
 
                 int barSize = distance * 100 / maxVal;
 
-                barLayour.getChildAt(index).getLayoutParams().height =
+                barLayout.getChildAt(index).getLayoutParams().height =
                     Math.max(Utils.getSizeFromDP(barSize, LoginActivity.scale), 10);
             }
 
-            barLayour.requestLayout();
+            barLayout.requestLayout();
         }
     }
 }
