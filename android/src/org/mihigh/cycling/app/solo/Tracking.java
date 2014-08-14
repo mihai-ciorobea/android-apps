@@ -8,6 +8,7 @@ import android.location.Location;
 public class Tracking {
 
     public static Tracking instance = new Tracking();
+    private SoloHomeFragment.RideStatus rideStatus;
 
     private Tracking() {
     }
@@ -22,7 +23,7 @@ public class Tracking {
         }
 
         float distance = 0;
-        long time = 0;
+        float time = 0;
         int previousIndex = size - 2;
         while (distance == 0) {
             distance = positions.get(size - 1).distanceTo(positions.get(previousIndex));
@@ -40,7 +41,10 @@ public class Tracking {
     }
 
     public void addLocation(Location location) {
-        positions.add(location);
+        if (rideStatus == SoloHomeFragment.RideStatus.STARTED
+            || rideStatus == SoloHomeFragment.RideStatus.RESUMED) {
+            positions.add(location);
+        }
     }
 
     public List<Integer> get5MinActivity() {
@@ -81,6 +85,11 @@ public class Tracking {
             last = location;
         }
         return String.format("%.2f", (double) distance / 1000);
+    }
+
+
+    public void setRideStatus(SoloHomeFragment.RideStatus rideStatus) {
+        this.rideStatus = rideStatus;
     }
 }
 

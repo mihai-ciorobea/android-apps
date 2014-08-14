@@ -6,10 +6,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
@@ -28,12 +23,11 @@ import org.mihigh.cycling.app.Utils;
 public class SoloHomeFragment extends Fragment {
 
     private RideStatus rideStatusUpdate = RideStatus.NOT_STARTED;
-    private Date previousStarted = new Date();
+    private Date previousStarted;
     private TextView speed;
     private TextView distance;
-    private LocationManager locationManager;
 
-    private enum RideStatus {
+    public enum RideStatus {
         NOT_STARTED,
         STARTED,
         PAUSED,
@@ -107,16 +101,7 @@ public class SoloHomeFragment extends Fragment {
         });
 
         stopPauseLayout = (LinearLayout) getView().findViewById(R.id.stop_pause);
-
-        // Get the location manager
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,  new MyLocationListener(this));
-
         setTimerForDisplayingTheTimePassed();
-    }
-
-    private void rideStatusUpdate(RideStatus status) {
-        rideStatusUpdate = status;
     }
 
     @Override
@@ -148,18 +133,40 @@ public class SoloHomeFragment extends Fragment {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        pedioticUpdate();
+                        periodicUpdate();
                     }
                 });
             }
         }, 0, 1000);
     }
 
+    long previousTime = 0;
+    private void rideStatusUpdate(RideStatus status) {
+        rideStatusUpdate = status;
+        Tracking.instance.setRideStatus(status);
 
-    int previousTime = 0;
+
+
+        if(status == RideStatus.PAUSED) {
+            previousTime = updateTime();
+        }
+
+        if (status == RideStatus.RESUMED) {
+            previousStarted = new Date();
+        }
+
+        if (status == RideStatus.STARTED) {
+            previousStarted = new Date();
+        }
+
+
+
+    }
+
+
 
     //TODO: add logic for stop / pause -- update previous time and previous stared date
-    private void pedioticUpdate() {
+    private void periodicUpdate() {
         if (rideStatusUpdate != RideStatus.STARTED
             && rideStatusUpdate != RideStatus.RESUMED) {
             return;
@@ -176,16 +183,17 @@ public class SoloHomeFragment extends Fragment {
     }
 
     private void updateSpeed() {
-
         speed.setText(Tracking.instance.getSpeed());
     }
 
-    private void updateTime() {
+    private long updateTime() {
         Date now = new Date();
         long diffInSeconds = (now.getTime() - previousStarted.getTime()) / 1000;
 
         long totalTime = previousTime + diffInSeconds;
         time.setText(String.format("%02d", totalTime / 60) + ":" + String.format("%02d", totalTime % 60));
+
+        return totalTime;
     }
 
     private void updateBars() {
@@ -207,36 +215,6 @@ public class SoloHomeFragment extends Fragment {
             }
 
             barLayour.requestLayout();
-        }
-    }
-
-
-    static class MyLocationListener implements LocationListener {
-
-        private SoloHomeFragment soloHomeFragment;
-
-        public MyLocationListener(SoloHomeFragment soloHomeFragment) {
-            this.soloHomeFragment = soloHomeFragment;
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            Toast.makeText(soloHomeFragment.getActivity(), "Example Toast", Toast.LENGTH_SHORT).show() ;
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
         }
     }
 }
