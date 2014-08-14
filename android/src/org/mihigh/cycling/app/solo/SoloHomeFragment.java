@@ -85,6 +85,7 @@ public class SoloHomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 rideStatusUpdate(RideStatus.PAUSED);
+                previousTime = updateTime();
             }
         });
 
@@ -93,7 +94,7 @@ public class SoloHomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 rideStatusUpdate(RideStatus.RESUMED);
-
+                previousStarted = new Date();
             }
         });
 
@@ -149,25 +150,27 @@ public class SoloHomeFragment extends Fragment {
         Tracking.instance.setRideStatus(status);
 
         if (status == RideStatus.PAUSED) {
-            previousTime = updateTime();
-            saveState();
+            stopPauseLayout.setVisibility(View.VISIBLE);
+            stopButton.setVisibility(View.VISIBLE);
             resumeButton.setVisibility(View.VISIBLE);
+            startButton.setVisibility(View.GONE);
             pauseButton.setVisibility(View.GONE);
         }
 
         if (status == RideStatus.RESUMED) {
-            previousStarted = new Date();
-            saveState();
+            stopPauseLayout.setVisibility(View.VISIBLE);
+            stopButton.setVisibility(View.VISIBLE);
             resumeButton.setVisibility(View.GONE);
+            startButton.setVisibility(View.GONE);
             pauseButton.setVisibility(View.VISIBLE);
         }
 
         if (status == RideStatus.STARTED) {
-            saveState();
             stopPauseLayout.setVisibility(View.VISIBLE);
-            pauseButton.setVisibility(View.VISIBLE);
             stopButton.setVisibility(View.VISIBLE);
+            resumeButton.setVisibility(View.GONE);
             startButton.setVisibility(View.GONE);
+            pauseButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -176,8 +179,11 @@ public class SoloHomeFragment extends Fragment {
         SharedPreferences.Editor editor = sharedPref.edit();
 
         editor.putString("rideStatusUpdate", rideStatusUpdate.toString());
-        editor.putLong("previousStarted", new Date().getTime());
-        editor.putLong("previousTime", updateTime());
+        if (rideStatusUpdate == RideStatus.STARTED
+            || rideStatusUpdate == RideStatus.RESUMED) {
+            editor.putLong("previousStarted", new Date().getTime());
+            editor.putLong("previousTime", updateTime());
+        }
 
         editor.commit();
 
@@ -185,6 +191,8 @@ public class SoloHomeFragment extends Fragment {
 
 
     private void periodicUpdate() {
+        saveState();
+
         if (rideStatusUpdate != RideStatus.STARTED
             && rideStatusUpdate != RideStatus.RESUMED) {
             return;
@@ -194,8 +202,6 @@ public class SoloHomeFragment extends Fragment {
         updateTime();
         updateSpeed();
         updateDistance();
-        saveState();
-
     }
 
     private void updateDistance() {

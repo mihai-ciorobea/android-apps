@@ -31,7 +31,7 @@
 
             <TextView android:id="@+id/time"
                       android:textSize="40sp"
-                      android:layout_weight="5"
+                      android:layout_weight="10"
                       android:layout_width="0dp"
                       android:layout_height="wrap_content"
                       android:gravity="center"
