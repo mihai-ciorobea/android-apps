@@ -15,6 +15,13 @@ public class Tracking {
 
     private List<Location> positions = new ArrayList<Location>();
 
+    public List<Location> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<Location> positions) {
+        this.positions = positions;
+    }
 
     public String getSpeed() {
         int size = positions.size();

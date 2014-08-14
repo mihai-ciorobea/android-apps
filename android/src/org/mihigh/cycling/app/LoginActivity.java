@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
+import org.mihigh.cycling.app.solo.SoloResult;
 import org.mihigh.cycling.app.solo.SoloRideFragment;
 
 public class LoginActivity extends FragmentActivity {
@@ -36,7 +37,6 @@ public class LoginActivity extends FragmentActivity {
             transaction.addToBackStack(null);
             transaction.commit();
         }
-
     }
 
     @Override
@@ -109,6 +109,19 @@ public class LoginActivity extends FragmentActivity {
 
     }
 
+    public void stopRide() {
+        SoloResult fragment = (SoloResult) getSupportFragmentManager().findFragmentById(R.id.solo_result);
 
+        if (fragment != null) {
+            fragment.update();
+        } else {
+            SoloResult newFragment = new SoloResult();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.login_fragment_container, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
 
+    }
 }
+

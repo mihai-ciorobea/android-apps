@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
@@ -77,6 +81,33 @@ public class SoloHomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 rideStatusUpdate(RideStatus.STOPPED);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                    .setTitle("Stop ride")
+                    .setMessage("Do you really want to stop")
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //TODO: save activity
+
+                            ((LoginActivity) getActivity()).stopRide();
+
+
+                            Gson gson = new Gson();
+                            String jsonString = gson.toJson(Tracking.instance.getPositions());
+                            System.out.println(jsonString);
+
+
+
+
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
