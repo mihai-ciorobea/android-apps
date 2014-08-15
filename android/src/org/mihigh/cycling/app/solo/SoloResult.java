@@ -127,6 +127,6 @@ public class SoloResult extends Fragment {
         progress.setMessage("Wait while loading...");
         progress.show();
 
-        new Thread(new SaveRideRunnable(jsonData, progress, (LoginActivity) getActivity())).start();
+        new Thread(new SaveRideRunnable(jsonData, Tracking.instance.getDistance(), progress, (LoginActivity) getActivity())).start();
     }
 }
