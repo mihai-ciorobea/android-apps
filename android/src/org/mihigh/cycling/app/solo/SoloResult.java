@@ -75,10 +75,7 @@ public class SoloResult extends Fragment {
             public void onClick(View v) {
                 Gson gson = new Gson();
                 String jsonString = gson.toJson(Tracking.instance.getPositions());
-
                 postData(jsonString);
-
-
             }
         });
 
@@ -123,13 +120,13 @@ public class SoloResult extends Fragment {
 
 
     public void postData(final String jsonData) {
+        //TODO: check if internet available
 
         final ProgressDialog progress = new ProgressDialog(getActivity());
         progress.setTitle("Loading");
         progress.setMessage("Wait while loading...");
         progress.show();
 
-        SaveRideTask saveRideTask = new SaveRideTask();
-        saveRideTask.execute(new SaveRideRunnable(jsonData, progress, (LoginActivity) getActivity()));
+        new Thread(new SaveRideRunnable(jsonData, progress, (LoginActivity) getActivity())).start();
     }
 }

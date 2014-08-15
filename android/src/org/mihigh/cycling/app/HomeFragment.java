@@ -45,6 +45,18 @@ public class HomeFragment extends Fragment {
             viewGroup.addView(button);
         }
 
+        {
+            Button button = new Button(getActivity());
+            button.setText("Group Ride");
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((LoginActivity) getActivity()).startGroupRide();
+                }
+            });
+            viewGroup.addView(button);
+        }
+
         greeting = (TextView) getView().findViewById(R.id.greeting);
 
         Bundle args = getArguments();

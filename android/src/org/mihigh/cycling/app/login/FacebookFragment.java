@@ -1,18 +1,29 @@
-package org.mihigh.cycling.app;
+package org.mihigh.cycling.app.login;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.AppEventsLogger;
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+
+import org.mihigh.cycling.app.LoginActivity;
+import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.http.UserInfo;
 
 public class FacebookFragment extends Fragment {
 
@@ -60,7 +71,51 @@ public class FacebookFragment extends Fragment {
         });
 
         updateUI();
+
+        List<String> permissions = new ArrayList<String>();
+        permissions.add("email");
+
+        openActiveSession(getActivity(), true, new Session.StatusCallback() {
+            @Override
+            public void call(Session session, SessionState state, Exception exception) {
+                if (session.isOpened()) {
+                    //make request to the /me API
+                    Log.e("sessionopened", "true");
+                    Request.newMeRequest(session, new Request.GraphUserCallback() {
+                        @Override
+                        public void onCompleted(GraphUser user, Response response) {
+                            if (user != null) {
+                                String firstName = user.getFirstName();
+                                String lastName = user.getLastName();
+                                String id = user.getId();
+                                String profilePic = "https://graph.facebook.com/" + id + "/picture?type=large";
+                                String email = user.getProperty("email").toString();
+
+                                Log.e("email", email);
+
+
+                                new Thread(new MakeLoginRunnable(new UserInfo(email, profilePic), (LoginActivity) getActivity())).start();
+
+                            }
+                        }
+                    }).executeAsync();
+                }
+            }
+        }, permissions);
     }
+
+
+    private static Session openActiveSession(Activity activity, boolean allowLoginUI, Session.StatusCallback callback, List<String> permissions) {
+        Session.OpenRequest openRequest = new Session.OpenRequest(activity).setPermissions(permissions).setCallback(callback);
+        Session session = new Session.Builder(activity).build();
+        if (SessionState.CREATED_TOKEN_LOADED.equals(session.getState()) || allowLoginUI) {
+            Session.setActiveSession(session);
+            session.openForRead(openRequest);
+            return session;
+        }
+        return null;
+    }
+
 
     @Override
     public void onPause() {
@@ -99,10 +154,6 @@ public class FacebookFragment extends Fragment {
         boolean enableButtons = (session != null && session.isOpened());
 
         if (enableButtons) {
-            if (user != null) {
-                //TODO: save user email
-                ((LoginActivity) getActivity()).onUserLoggedIn();
-            }
             loginButton.setVisibility(View.INVISIBLE);
         } else {
             loginButton.setVisibility(View.VISIBLE);

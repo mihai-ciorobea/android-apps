@@ -7,11 +7,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.mihigh.cycling.app.LoginActivity;
+import org.mihigh.cycling.app.R;
 
 public class SaveRideRunnable implements Runnable {
 
-    //TODO URL
-    public static final String URL = "http://www.yoursite.com/script.php";
     private final String jsonData;
     private final ProgressDialog progress;
     private final LoginActivity activity;
@@ -25,9 +24,12 @@ public class SaveRideRunnable implements Runnable {
 
     @Override
     public void run() {
+        String url = activity.getString(R.string.server_url);
+
+
         try {
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(URL);
+            HttpPost httppost = new HttpPost(url);
 
             // Add your data
             httppost.setEntity(new StringEntity(jsonData));
@@ -39,5 +41,6 @@ public class SaveRideRunnable implements Runnable {
         }
         progress.dismiss();
         activity.onUserLoggedIn();
+
     }
 }
