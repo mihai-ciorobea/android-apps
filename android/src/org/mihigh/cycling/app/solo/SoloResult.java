@@ -113,7 +113,7 @@ public class SoloResult extends Fragment {
 
 
         LatLngBounds bounds = builder.build();
-        int padding = 0; // offset from edges of the map in pixels
+        int padding = 20; // offset from edges of the map in pixels
         final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
         mapView.getViewTreeObserver().addOnGlobalLayoutListener(
