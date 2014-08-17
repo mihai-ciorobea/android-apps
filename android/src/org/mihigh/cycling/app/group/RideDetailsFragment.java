@@ -1,6 +1,7 @@
 package org.mihigh.cycling.app.group;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +59,7 @@ public class RideDetailsFragment extends Fragment {
                 // Gets to GoogleMap from the MapView and does initialization stuff
                 if (mapView != null) {
                     map = mapView.getMap();
+                    map.getUiSettings().setZoomControlsEnabled(false);
                 }
                 break;
             case ConnectionResult.SERVICE_MISSING:
@@ -80,13 +83,21 @@ public class RideDetailsFragment extends Fragment {
         TextView rideName = (TextView) getActivity().findViewById(R.id.ride_name);
         TextView rideDate = (TextView) getActivity().findViewById(R.id.ride_date);
         TextView rideStatus = (TextView) getActivity().findViewById(R.id.ride_status);
+        Button startButton = (Button) getActivity().findViewById(R.id.start_ride);
 
         Bundle args = getArguments();
         if (args != null) {
             JoinedRide joinedRide = (JoinedRide) args.getSerializable(RIDE);
             rideName.setText(joinedRide.name);
-            rideDate.setText(new SimpleDateFormat("dd-MM-yyyy").format(joinedRide.startDate));
+            rideDate.setText(new SimpleDateFormat("dd-MM-yyyy HH:mm").format(joinedRide.startDate));
             rideStatus.setText(joinedRide.joinedStatus.toString());
+
+            //Show StartRide button
+            if (joinedRide.joinedStatus != JoinedRide.JoinedStatus.PENDING) {
+                if (new Date().after(joinedRide.startDate)) {
+                    startButton.setVisibility(View.VISIBLE);
+                }
+            }
 
             List<Pair<Double, Double>> track = joinedRide.track;
             PolylineOptions polylineOptions = new PolylineOptions();

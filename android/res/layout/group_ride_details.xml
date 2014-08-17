@@ -55,12 +55,16 @@
                           android:layout_alignParentTop="true">
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:padding="10dp"
+                          android:paddingBottom="10dp"
+                          android:paddingLeft="10dp"
+                          android:paddingRight="10dp"
                           android:text="Start Date:"/>
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:padding="10dp"
                           android:id="@+id/ride_date"
+                          android:paddingBottom="10dp"
+                          android:paddingLeft="10dp"
+                          android:paddingRight="10dp"
                           android:text="17-08-2013"/>
 
             </LinearLayout>
@@ -74,17 +78,30 @@
                           android:layout_alignParentTop="true">
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:padding="10dp"
+                          android:paddingBottom="10dp"
+                          android:paddingLeft="10dp"
+                          android:paddingRight="10dp"
                           android:text="Status:"/>
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:padding="10dp"
                           android:id="@+id/ride_status"
+                          android:paddingBottom="10dp"
+                          android:paddingLeft="10dp"
+                          android:paddingRight="10dp"
                           android:text="MINE"/>
 
             </LinearLayout>
 
         </LinearLayout>
+        <Button android:id="@+id/start_ride"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                android:textColor="#ffffff"
+                android:background="@drawable/green_button"
+                android:text="Start Ride"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
         <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
                                              android:id="@+id/ride_map"
                                              android:name="com.google.android.gms.maps.MapFragment"

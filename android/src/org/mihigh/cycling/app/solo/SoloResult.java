@@ -56,6 +56,7 @@ public class SoloResult extends Fragment {
                 // Gets to GoogleMap from the MapView and does initialization stuff
                 if (mapView != null) {
                     map = mapView.getMap();
+                    map.getUiSettings().setZoomControlsEnabled(false);
                 }
                 break;
             case ConnectionResult.SERVICE_MISSING:
