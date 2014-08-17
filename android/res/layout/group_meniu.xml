@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/home_fragment_container"
+              android:id="@+id/group_fragment_container"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="center|bottom"
@@ -8,7 +8,6 @@
               android:layout_gravity="bottom|center"
               android:layout_marginLeft="10px"
               android:layout_marginRight="10px">
-
 
     <LinearLayout android:id="@+id/home_buttons_layout"
                   android:layout_width="match_parent"
@@ -21,6 +20,4 @@
                   android:layout_marginRight="50dp">
 
     </LinearLayout>
-
-
 </LinearLayout>

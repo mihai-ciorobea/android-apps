@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:gravity="center|bottom"
+             android:orientation="vertical"
+             android:layout_gravity="bottom|center"
+             android:layout_marginLeft="10dp"
+             android:layout_marginRight="10dp"
+             android:id="@+id/group_ride_details">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:background="#aa3b3b3b"
+                  android:orientation="vertical"
+                  android:gravity="center|top"
+                  android:layout_gravity="top|center"
+                  android:layout_marginLeft="50dp"
+                  android:layout_marginTop="150dp"
+                  android:layout_marginRight="50dp">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:orientation="vertical"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center|top"
+                      android:layout_gravity="top"
+                      android:layout_alignParentTop="true">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:orientation="horizontal"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:gravity="center|top"
+                          android:layout_gravity="top"
+                          android:layout_alignParentTop="true">
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:padding="10dp"
+                          android:text="Name:"/>
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:padding="10dp"
+                          android:id="@+id/ride_name"
+                          android:text="Name1"/>
+            </LinearLayout>
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:orientation="horizontal"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:gravity="center|top"
+                          android:layout_gravity="top"
+                          android:layout_alignParentTop="true">
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:padding="10dp"
+                          android:text="Start Date:"/>
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:padding="10dp"
+                          android:id="@+id/ride_date"
+                          android:text="17-08-2013"/>
+            </LinearLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:orientation="horizontal"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:gravity="center|top"
+                          android:layout_gravity="top"
+                          android:layout_alignParentTop="true">
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:padding="10dp"
+                          android:text="Status:"/>
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:padding="10dp"
+                          android:id="@+id/ride_status"
+                          android:text="MINE"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+                                             android:id="@+id/ride_map"
+                                             android:name="com.google.android.gms.maps.MapFragment"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"/>
+    </LinearLayout>
+
+</FrameLayout>

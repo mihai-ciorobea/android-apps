@@ -1,4 +1,4 @@
-package org.mihigh.cycling.app;
+package org.mihigh.cycling.app.group;
 
 import android.animation.LayoutTransition;
 import android.os.Bundle;
@@ -8,15 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class HomeFragment extends Fragment {
+import org.mihigh.cycling.app.LoginActivity;
+import org.mihigh.cycling.app.R;
 
-    public static final String USER = "USER_DETAILS";
+public class GroupMeniuFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        return inflater.inflate(R.layout.home, container, false);
-
+        return inflater.inflate(R.layout.group_meniu, container, false);
     }
 
 
@@ -31,11 +31,11 @@ public class HomeFragment extends Fragment {
 
         {
             Button button = new Button(getActivity());
-            button.setText("Solo Ride");
+            button.setText("Search for a ride");
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((LoginActivity) getActivity()).startSoloRide();
+                    ((LoginActivity) getActivity()).searchForRide();
                 }
             });
             viewGroup.addView(button);
@@ -43,20 +43,16 @@ public class HomeFragment extends Fragment {
 
         {
             Button button = new Button(getActivity());
-            button.setText("Group Ride");
+            button.setText("Joined Rides");
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((LoginActivity) getActivity()).startGroupRide();
+                    ((LoginActivity) getActivity()).joinedRides();
                 }
             });
             viewGroup.addView(button);
         }
 
-        Bundle args = getArguments();
-        if (args != null) {
-            updateHomeView();
-        }
     }
 
     @Override
@@ -72,5 +68,4 @@ public class HomeFragment extends Fragment {
     public void updateHomeView() {
         //TODO:
     }
-
 }

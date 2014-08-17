@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
+import org.mihigh.cycling.app.group.GroupJoinedListFragment;
+import org.mihigh.cycling.app.group.GroupMeniuFragment;
 import org.mihigh.cycling.app.login.FacebookFragment;
 import org.mihigh.cycling.app.solo.SoloResult;
 import org.mihigh.cycling.app.solo.SoloRideFragment;
@@ -71,9 +73,8 @@ public class LoginActivity extends FragmentActivity {
         //Check if home already exists
         HomeFragment fragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);
 
-
         if (fragment != null) {
-            fragment.updateHomeView(userName);
+            fragment.updateHomeView();
         } else {
             HomeFragment newFragment = new HomeFragment();
             Bundle args = new Bundle();
@@ -93,7 +94,7 @@ public class LoginActivity extends FragmentActivity {
         HomeFragment fragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.solo_ride_fragment_container);
 
         if (fragment != null) {
-            fragment.updateHomeView(userName);
+            fragment.updateHomeView();
         } else {
             SoloRideFragment newFragment = new SoloRideFragment();
             Bundle args = new Bundle();
@@ -124,6 +125,39 @@ public class LoginActivity extends FragmentActivity {
     }
 
     public void startGroupRide() {
+            //Check if home already exists
+            GroupMeniuFragment fragment = (GroupMeniuFragment) getSupportFragmentManager().findFragmentById(R.id.group_fragment_container);
+
+            if (fragment != null) {
+                fragment.updateHomeView();
+            } else {
+                GroupMeniuFragment newFragment = new GroupMeniuFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.login_fragment_container, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+    }
+
+    public void searchForRide() {
+
+        //TODO: ???
+    }
+
+    public void joinedRides() {
+        //Check if home already exists
+        GroupJoinedListFragment fragment = (GroupJoinedListFragment) getSupportFragmentManager().findFragmentById(R.id.listview);
+
+        if (fragment != null) {
+            fragment.updateHomeView();
+        } else {
+            GroupJoinedListFragment newFragment = new GroupJoinedListFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.login_fragment_container, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+
         //TODO:
     }
 }

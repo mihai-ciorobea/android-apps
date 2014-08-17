@@ -11,15 +11,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
@@ -88,12 +94,37 @@ public class SoloResult extends Fragment {
             }
         });
 
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
         PolylineOptions options = new PolylineOptions();
         for (Location location : Tracking.instance.getPositions()) {
-            options = options.add(new LatLng(location.getLatitude(), location.getLongitude()));
-        }
+            LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+            options = options.add(point);
+            builder.include(point);
 
+        }
         map.addPolyline(options.color(Color.RED));
+
+
+
+        map.addMarker(new MarkerOptions()
+                          .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                          .position(new LatLng(Tracking.instance.getPositions().get(0).getLatitude(),
+                                               Tracking.instance.getPositions().get(0).getLongitude())));
+
+
+        LatLngBounds bounds = builder.build();
+        int padding = 0; // offset from edges of the map in pixels
+        final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+        mapView.getViewTreeObserver().addOnGlobalLayoutListener(
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    // If you need this to be called again, then run again addOnGlobalLayoutListener.
+                    mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    map.animateCamera(cu);
+                }
+            });
     }
 
     @Override
