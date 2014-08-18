@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.mihigh.cycling.app.R;
-import org.mihigh.cycling.app.http.JoinedRide;
+import org.mihigh.cycling.app.group.dto.JoinedRide;
 
 public class GroupJoinedListFragment extends Fragment {
 

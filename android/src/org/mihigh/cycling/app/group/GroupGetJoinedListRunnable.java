@@ -15,8 +15,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.group.dto.JoinedRide;
 import org.mihigh.cycling.app.http.HttpHelper;
-import org.mihigh.cycling.app.http.JoinedRide;
 
 public class GroupGetJoinedListRunnable implements Runnable {
 

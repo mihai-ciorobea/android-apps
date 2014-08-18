@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +30,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.mihigh.cycling.app.R;
-import org.mihigh.cycling.app.http.JoinedRide;
-import org.mihigh.cycling.app.http.Pair;
+import org.mihigh.cycling.app.group.dto.JoinedRide;
+import org.mihigh.cycling.app.group.dto.Pair;
 
 public class RideDetailsFragment extends Fragment {
 
@@ -85,6 +86,8 @@ public class RideDetailsFragment extends Fragment {
         TextView rideStatus = (TextView) getActivity().findViewById(R.id.ride_status);
         Button startButton = (Button) getActivity().findViewById(R.id.start_ride);
 
+
+
         Bundle args = getArguments();
         if (args != null) {
             JoinedRide joinedRide = (JoinedRide) args.getSerializable(RIDE);
@@ -96,6 +99,23 @@ public class RideDetailsFragment extends Fragment {
             if (joinedRide.joinedStatus != JoinedRide.JoinedStatus.PENDING) {
                 if (new Date().after(joinedRide.startDate)) {
                     startButton.setVisibility(View.VISIBLE);
+
+                    startButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            GroupRideFragment fragment = (GroupRideFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.group_ride_fragment_container);
+
+                            if (fragment != null) {
+                                fragment.updateHomeView();
+                            } else {
+                                GroupRideFragment newFragment = new GroupRideFragment();
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.login_fragment_container, newFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                            }
+                        }
+                    });
                 }
             }
 

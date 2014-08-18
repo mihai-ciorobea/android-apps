@@ -91,7 +91,7 @@ public class LoginActivity extends FragmentActivity {
 
     public void startSoloRide() {
         //Check if home already exists
-        HomeFragment fragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.solo_ride_fragment_container);
+        HomeFragment fragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.group_ride_fragment_container);
 
         if (fragment != null) {
             fragment.updateHomeView();

@@ -13,7 +13,7 @@ import org.apache.http.protocol.HTTP;
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.http.HttpHelper;
-import org.mihigh.cycling.app.http.UserInfo;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 
 public class MakeLoginRunnable implements Runnable {
 

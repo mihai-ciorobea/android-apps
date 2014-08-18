@@ -1,4 +1,4 @@
-package org.mihigh.cycling.app.http;
+package org.mihigh.cycling.app.group.dto;
 
 import java.io.Serializable;
 import java.util.Date;

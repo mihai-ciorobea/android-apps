@@ -1,4 +1,4 @@
-package org.mihigh.cycling.app.http;
+package org.mihigh.cycling.app.group.dto;
 
 public class Pair<F, S> {
     private F first; //first member of pair

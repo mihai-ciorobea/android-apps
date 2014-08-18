@@ -1,4 +1,4 @@
-package org.mihigh.cycling.app.http;
+package org.mihigh.cycling.app.login.dto;
 
 public class UserInfo {
 

@@ -23,7 +23,7 @@ import com.facebook.widget.LoginButton;
 
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
-import org.mihigh.cycling.app.http.UserInfo;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 
 public class FacebookFragment extends Fragment {
 
