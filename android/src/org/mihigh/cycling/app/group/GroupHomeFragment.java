@@ -31,6 +31,12 @@ public class GroupHomeFragment extends Fragment {
     private long previousTime = 0;
     private TextView speed;
     private TextView distance;
+    private GroupRideFragment groupRideFragment;
+
+    public GroupHomeFragment(GroupRideFragment groupRideFragment) {
+
+        this.groupRideFragment = groupRideFragment;
+    }
 
     public enum RideStatus {
         NOT_STARTED,
@@ -91,7 +97,8 @@ public class GroupHomeFragment extends Fragment {
                             previousTime = 0;
 
                             dialog.dismiss();
-                            ((LoginActivity) getActivity()).stopRide();
+
+                            ((LoginActivity) getActivity()).stopGroupRide(groupRideFragment);
                         }
                     })
                     .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

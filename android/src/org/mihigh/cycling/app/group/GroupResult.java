@@ -1,6 +1,4 @@
-package org.mihigh.cycling.app.solo;
-
-import java.util.ArrayList;
+package org.mihigh.cycling.app.group;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
@@ -27,21 +25,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.gson.Gson;
 
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
 
-public class SoloResult extends Fragment {
+public class GroupResult extends Fragment {
 
     MapView mapView;
     GoogleMap map;
-    private Button saveButton;
-    private Button cancelButton;
+    private Button okButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.solo_result, container, false);
+        View v = inflater.inflate(R.layout.group_result, container, false);
 
         try {
             MapsInitializer.initialize(getActivity());
@@ -76,28 +72,17 @@ public class SoloResult extends Fragment {
     public void onStart() {
         super.onStart();
 
-        saveButton = (Button) getView().findViewById(R.id.save);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        okButton = (Button) getView().findViewById(R.id.ok);
+        okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Gson gson = new Gson();
-                String jsonString = gson.toJson(Tracking.instance.getPositions());
-                postData(jsonString);
-            }
-        });
-
-        cancelButton = (Button) getView().findViewById(R.id.cancel);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Tracking.instance.setPositions(new ArrayList<Location>());
-                ((LoginActivity) getActivity()).onUserLoggedIn();
+                sendFinish();
             }
         });
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         PolylineOptions options = new PolylineOptions();
-        for (Location location : Tracking.instance.getPositions()) {
+        for (Location location : GroupTracking.instance.getPositions()) {
             LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
             options = options.add(point);
             builder.include(point);
@@ -105,13 +90,10 @@ public class SoloResult extends Fragment {
         }
         map.addPolyline(options.color(Color.RED));
 
-
-
         map.addMarker(new MarkerOptions()
                           .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                          .position(new LatLng(Tracking.instance.getPositions().get(0).getLatitude(),
-                                               Tracking.instance.getPositions().get(0).getLongitude())));
-
+                          .position(new LatLng(GroupTracking.instance.getPositions().get(0).getLatitude(),
+                                               GroupTracking.instance.getPositions().get(0).getLongitude())));
 
         LatLngBounds bounds = builder.build();
         int padding = 20; // offset from edges of the map in pixels
@@ -151,7 +133,7 @@ public class SoloResult extends Fragment {
     }
 
 
-    public void postData(final String jsonData) {
+    public void sendFinish() {
         //TODO: check if internet available
 
         final ProgressDialog progress = new ProgressDialog(getActivity());
@@ -159,6 +141,6 @@ public class SoloResult extends Fragment {
         progress.setMessage("Wait while loading...");
         progress.show();
 
-        new Thread(new SaveSoloRideRunnable(jsonData, Tracking.instance.getDistance(), progress, (LoginActivity) getActivity())).start();
+        new Thread(new SaveGroupRideRunnable(progress, (LoginActivity) getActivity())).start();
     }
 }

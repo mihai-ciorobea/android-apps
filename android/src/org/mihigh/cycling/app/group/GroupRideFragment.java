@@ -15,7 +15,7 @@ public class GroupRideFragment extends Fragment {
 
 
     private ViewPager mPager;
-    private ScreenSlidePagerAdapter mPagerAdapter;
+    public ScreenSlidePagerAdapter mPagerAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class GroupRideFragment extends Fragment {
         mPager = (ViewPager) getActivity().findViewById(R.id.group_pager);
 
         if (mPagerAdapter == null) {
-            mPagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
+            mPagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager(), this);
         }
         mPager.setAdapter(mPagerAdapter);
     }
@@ -44,6 +44,9 @@ public class GroupRideFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        for(int i = 0; i < mPagerAdapter.getCount(); i++){
+            mPagerAdapter.getItem(i).onDestroy();
+        }
     }
 
     @Override
@@ -55,13 +58,17 @@ public class GroupRideFragment extends Fragment {
         //TODO:
     }
 
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+    public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
-        private GroupHomeFragment groupHomeFragment = new GroupHomeFragment();
-        private GroupMapFragment groupMapFragment = new GroupMapFragment();
+        private final GroupRideFragment groupRideFragment;
+        private GroupHomeFragment groupHomeFragment;
+        private GroupMapFragment groupMapFragment;
 
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
+        public ScreenSlidePagerAdapter(FragmentManager fm, GroupRideFragment groupRideFragment) {
             super(fm);
+            this.groupRideFragment = groupRideFragment;
+            groupMapFragment = new GroupMapFragment(groupRideFragment);
+            groupHomeFragment = new GroupHomeFragment(groupRideFragment);
         }
 
         @Override
@@ -76,6 +83,10 @@ public class GroupRideFragment extends Fragment {
         @Override
         public int getCount() {
             return 2;
+        }
+
+        public GroupMapFragment getMap() {
+            return groupMapFragment;
         }
     }
 

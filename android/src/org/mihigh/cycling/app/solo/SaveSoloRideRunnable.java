@@ -12,7 +12,7 @@ import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.http.HttpHelper;
 
-public class SaveRideRunnable implements Runnable {
+public class SaveSoloRideRunnable implements Runnable {
 
     public static final String PATH_SAVE_SOLO_ACTIVITY = "/api/v1/activities/solo/activity/";
     private final String jsonData;
@@ -20,7 +20,7 @@ public class SaveRideRunnable implements Runnable {
     private final ProgressDialog progress;
     private final LoginActivity activity;
 
-    public SaveRideRunnable(String jsonData, String distance, ProgressDialog progress, LoginActivity activity) {
+    public SaveSoloRideRunnable(String jsonData, String distance, ProgressDialog progress, LoginActivity activity) {
         this.jsonData = jsonData;
         this.distance = distance;
         this.progress = progress;

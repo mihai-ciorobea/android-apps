@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 
 import org.mihigh.cycling.app.group.GroupJoinedListFragment;
 import org.mihigh.cycling.app.group.GroupMeniuFragment;
+import org.mihigh.cycling.app.group.GroupResult;
+import org.mihigh.cycling.app.group.GroupRideFragment;
 import org.mihigh.cycling.app.login.FacebookFragment;
 import org.mihigh.cycling.app.solo.SoloResult;
 import org.mihigh.cycling.app.solo.SoloRideFragment;
@@ -16,6 +18,7 @@ public class LoginActivity extends FragmentActivity {
     private String userName;
     public static float scale;
     private FacebookFragment facebookFragment;
+    private GroupMeniuFragment groupMeniuFragment;
 
 
     @Override
@@ -86,7 +89,6 @@ public class LoginActivity extends FragmentActivity {
             transaction.addToBackStack(null);
             transaction.commit();
         }
-
     }
 
     public void startSoloRide() {
@@ -124,16 +126,33 @@ public class LoginActivity extends FragmentActivity {
 
     }
 
+    public void stopGroupRide(GroupRideFragment groupRideFragment) {
+        GroupResult fragment = (GroupResult) getSupportFragmentManager().findFragmentById(R.id.group_result);
+
+        if (fragment != null) {
+            fragment.update();
+        } else {
+            GroupResult newFragment = new GroupResult();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.login_fragment_container, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+
+        groupRideFragment.mPagerAdapter.getMap().removeListner();
+
+    }
+
     public void startGroupRide() {
             //Check if home already exists
-            GroupMeniuFragment fragment = (GroupMeniuFragment) getSupportFragmentManager().findFragmentById(R.id.group_fragment_container);
+        groupMeniuFragment = (GroupMeniuFragment) getSupportFragmentManager().findFragmentById(R.id.group_fragment_container);
 
-            if (fragment != null) {
-                fragment.updateHomeView();
+            if (groupMeniuFragment != null) {
+                groupMeniuFragment.updateHomeView();
             } else {
-                GroupMeniuFragment newFragment = new GroupMeniuFragment();
+                groupMeniuFragment = new GroupMeniuFragment();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.login_fragment_container, newFragment);
+                transaction.replace(R.id.login_fragment_container, groupMeniuFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }

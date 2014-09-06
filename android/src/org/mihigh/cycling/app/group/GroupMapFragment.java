@@ -32,6 +32,10 @@ public class GroupMapFragment extends Fragment {
 
     GoogleMap map;
 
+    public GroupMapFragment(GroupRideFragment groupRideFragment) {
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.group_map, container, false);
@@ -128,4 +132,8 @@ public class GroupMapFragment extends Fragment {
             }
         });
     }
+
+    public void removeListner() {
+        map.setOnMyLocationChangeListener(null);
+        }
 }
