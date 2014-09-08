@@ -20,7 +20,7 @@ import org.mihigh.cycling.app.http.HttpHelper;
 
 public class GroupGetJoinedListRunnable implements Runnable {
 
-    private static final String PATH_GET_JOINED_LIST = "/api/v1/requests/joinedRides";
+    private static final String PATH_GET_JOINED_LIST = "/api/v1/activities/joined";
     private final GroupJoinedListFragment fragment;
 
     public GroupGetJoinedListRunnable(GroupJoinedListFragment fragment) {
@@ -72,3 +72,6 @@ public class GroupGetJoinedListRunnable implements Runnable {
 
     }
 }
+
+
+

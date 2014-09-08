@@ -10,6 +10,7 @@ import org.mihigh.cycling.app.group.GroupMeniuFragment;
 import org.mihigh.cycling.app.group.GroupResult;
 import org.mihigh.cycling.app.group.GroupRideFragment;
 import org.mihigh.cycling.app.login.FacebookFragment;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.solo.SoloResult;
 import org.mihigh.cycling.app.solo.SoloRideFragment;
 
@@ -19,6 +20,7 @@ public class LoginActivity extends FragmentActivity {
     public static float scale;
     private FacebookFragment facebookFragment;
     private GroupMeniuFragment groupMeniuFragment;
+    public static UserInfo userInfo;
 
 
     @Override
@@ -71,6 +73,9 @@ public class LoginActivity extends FragmentActivity {
         super.onDestroy();
     }
 
+    public void updateUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
 
     public void onUserLoggedIn() {
         //Check if home already exists

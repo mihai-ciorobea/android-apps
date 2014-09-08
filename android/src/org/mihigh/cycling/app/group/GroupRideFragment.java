@@ -16,6 +16,12 @@ public class GroupRideFragment extends Fragment {
 
     private ViewPager mPager;
     public ScreenSlidePagerAdapter mPagerAdapter;
+    public long id;
+
+    public GroupRideFragment(long id) {
+
+        this.id = id;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,9 +50,6 @@ public class GroupRideFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        for(int i = 0; i < mPagerAdapter.getCount(); i++){
-            mPagerAdapter.getItem(i).onDestroy();
-        }
     }
 
     @Override
@@ -54,7 +57,7 @@ public class GroupRideFragment extends Fragment {
         super.onResume();
     }
 
-    public void updateHomeView() {
+    public void updateHomeView(long id) {
         //TODO:
     }
 
@@ -67,7 +70,7 @@ public class GroupRideFragment extends Fragment {
         public ScreenSlidePagerAdapter(FragmentManager fm, GroupRideFragment groupRideFragment) {
             super(fm);
             this.groupRideFragment = groupRideFragment;
-            groupMapFragment = new GroupMapFragment(groupRideFragment);
+            groupMapFragment = new GroupMapFragment(groupRideFragment.id);
             groupHomeFragment = new GroupHomeFragment(groupRideFragment);
         }
 

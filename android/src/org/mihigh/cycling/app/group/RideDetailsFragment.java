@@ -30,8 +30,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.group.dto.Coordinates;
 import org.mihigh.cycling.app.group.dto.JoinedRide;
-import org.mihigh.cycling.app.group.dto.Pair;
 
 public class RideDetailsFragment extends Fragment {
 
@@ -90,7 +90,7 @@ public class RideDetailsFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            JoinedRide joinedRide = (JoinedRide) args.getSerializable(RIDE);
+            final JoinedRide joinedRide = (JoinedRide) args.getSerializable(RIDE);
             rideName.setText(joinedRide.name);
             rideDate.setText(new SimpleDateFormat("dd-MM-yyyy HH:mm").format(joinedRide.startDate));
             rideStatus.setText(joinedRide.joinedStatus.toString());
@@ -106,9 +106,9 @@ public class RideDetailsFragment extends Fragment {
                             GroupRideFragment fragment = (GroupRideFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.group_ride_fragment_container);
 
                             if (fragment != null) {
-                                fragment.updateHomeView();
+                                fragment.updateHomeView(joinedRide.id);
                             } else {
-                                GroupRideFragment newFragment = new GroupRideFragment();
+                                GroupRideFragment newFragment = new GroupRideFragment(joinedRide.id);
                                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                                 transaction.replace(R.id.login_fragment_container, newFragment);
                                 transaction.addToBackStack(null);
@@ -119,12 +119,12 @@ public class RideDetailsFragment extends Fragment {
                 }
             }
 
-            List<Pair<Double, Double>> track = joinedRide.track;
+            List<Coordinates> track = joinedRide.coordinates;
             PolylineOptions polylineOptions = new PolylineOptions();
 
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            for (Pair<Double, Double> mark : track) {
-                LatLng point = new LatLng(mark.getFirst(), mark.getSecond());
+            for (Coordinates mark : track) {
+                LatLng point = new LatLng(mark.getLatitude(), mark.getLongitude());
                 polylineOptions.add(point);
                 builder.include(point);
             }
@@ -132,7 +132,7 @@ public class RideDetailsFragment extends Fragment {
 
             map.addMarker(new MarkerOptions()
                               .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                              .position(new LatLng(track.get(0).getFirst(), track.get(0).getSecond())));
+                              .position(new LatLng(track.get(0).getLatitude(), track.get(0).getLongitude())));
 
             LatLngBounds bounds = builder.build();
             int padding = 20; // offset from edges of the map in pixels

@@ -1,13 +1,13 @@
 package org.mihigh.cycling.app.group.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class UserMapDetails implements Serializable {
 
-    public String email;
-    public double lat;
-    public double lng;
-    public long distanceInMeters;
-    public long distanceInTime;
+    public User user;
+    public JoinedRide.JoinedStatus joinedStatus;
+    public ProgressStatus progressStatus;
+    public List<Coordinates> coordinates;
 
 }

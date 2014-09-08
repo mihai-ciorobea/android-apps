@@ -94,7 +94,7 @@ public class FacebookFragment extends Fragment {
                                 Log.e("email", email);
 
 
-                                new Thread(new MakeLoginRunnable(new UserInfo(email, profilePic), (LoginActivity) getActivity())).start();
+                                new Thread(new MakeLoginRunnable(new UserInfo(firstName, lastName ,email, profilePic), (LoginActivity) getActivity())).start();
 
                             }
                         }

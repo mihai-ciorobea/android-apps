@@ -63,6 +63,7 @@ public class MakeLoginRunnable implements Runnable {
             }
         }
 
+        activity.updateUserInfo(userInfo);
         activity.onUserLoggedIn();
     }
 

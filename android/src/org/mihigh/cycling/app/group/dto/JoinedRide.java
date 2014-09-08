@@ -6,26 +6,21 @@ import java.util.List;
 
 public class JoinedRide implements Serializable {
 
+    public long id;
     public String name;
+    public User owner;
     public Date startDate;
     public JoinedStatus joinedStatus;
-    public List<Pair<Double, Double>> track;
+    public List<Coordinates> coordinates;
+
 
     public enum JoinedStatus {
-        MINE, PENDING, ACCEPTED
-    }
-
-    ;
+        MINE, PENDING, ACCEPTED, DECLINED;
+    };
 
     public JoinedRide() {
     }
 
-    public JoinedRide(String name, Date startDate, JoinedStatus joinedStatus, List<Pair<Double, Double>> track) {
-        this.name = name;
-        this.startDate = startDate;
-        this.joinedStatus = joinedStatus;
-        this.track = track;
-    }
 }
 
 

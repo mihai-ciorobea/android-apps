@@ -1,14 +1,22 @@
 package org.mihigh.cycling.app.group;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,23 +25,26 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.group.dto.Coordinates;
+import org.mihigh.cycling.app.group.dto.User;
 import org.mihigh.cycling.app.group.dto.UserMapDetails;
 
 public class GroupMapFragment extends Fragment {
 
-
     MapView mapView;
-
-
     GoogleMap map;
+    private long id;
+    private Bitmap bitmap;
 
-    public GroupMapFragment(GroupRideFragment groupRideFragment) {
-
+    public GroupMapFragment(long id) {
+        this.id = id;
     }
 
     @Override
@@ -59,7 +70,7 @@ public class GroupMapFragment extends Fragment {
                         @Override
                         public void onMyLocationChange(Location location) {
                             GroupTracking.instance.addLocation(location);
-                            new Thread(new GroupMyPositionRunnable(location.getLatitude(), location.getLongitude(), GroupMapFragment.this)).start();
+                            new Thread(new GroupMyPositionRunnable(id, location.getLatitude(), location.getLongitude(), GroupMapFragment.this)).start();
                         }
                     });
                 }
@@ -95,17 +106,49 @@ public class GroupMapFragment extends Fragment {
         mapView.onLowMemory();
     }
 
+
+    MarkerOptions myMarker;
+    Marker xxx;
     public void updateAllUsers(final List<UserMapDetails> usersInfo) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                map.clear();
-                for (UserMapDetails userInfo : usersInfo) {
-                    map.addMarker(new MarkerOptions()
-                                      .position(new LatLng(userInfo.lat, userInfo.lng))
-                                      .title(userInfo.email)
-                                      .snippet(String.valueOf(usersInfo.indexOf(userInfo))));
+//                map.clear();
 
+                if ( myMarker == null ){
+                    myMarker = new MarkerOptions()
+                        .position(new LatLng(0, 0))
+                        .snippet(String.valueOf(0));
+                    xxx = map.addMarker(myMarker);
+                } else {
+                    LatLng position = xxx.getPosition();
+                    xxx.setPosition(new LatLng(position.latitude+1, position.longitude+1));
+                }
+
+                UserMapDetails me;
+                UserMapDetails userMapDetails = new UserMapDetails();
+
+//                String imageUrl = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/c0.20.60.60/p60x60/1908295_513120792127754_6984548125146923198_n.jpg?oh=748bb67ce1f2e65e9c6b17738ade54db&oe=549B7E58&__gda__=1418464781_cd8550577060ab6698b4dd640767bffe";
+                String imageUrl = "http://assets0-store.majorleaguegaming.com/assets/products/1936/small/FaZe-Logo.png?1386629240";
+
+                userMapDetails.user = new User("email", imageUrl);
+                userMapDetails.coordinates = Arrays.asList(new Coordinates(44.4, 26.0));
+                usersInfo.add(userMapDetails);
+
+                for (UserMapDetails userInfo : usersInfo) {
+
+                    if (userInfo.user.getEmail().equalsIgnoreCase(LoginActivity.userInfo.getEmail())) {
+                        me = userInfo;
+                        continue;
+                    }
+
+                    List<Coordinates> coordinates = userInfo.coordinates;
+                    map.addMarker(new MarkerOptions()
+                                      .position(new LatLng(coordinates.get(coordinates.size() - 1).getLatitude(),
+                                                           coordinates.get(coordinates.size() - 1).getLongitude()))
+                                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
+                                      .title(userInfo.user.getEmail())
+                                      .snippet(String.valueOf(usersInfo.indexOf(userInfo))));
 
                     //TODO: keep window open even on refresh of data
                     map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -115,16 +158,42 @@ public class GroupMapFragment extends Fragment {
                         }
 
                         @Override
-                        public View getInfoContents(Marker marker) {
+                        public View getInfoContents(final Marker marker) {
                             View v = getActivity().getLayoutInflater().inflate(R.layout.group_map_window_adapter, null);
+                            final ImageView image = (ImageView) v.findViewById(R.id.image);
+                            TextView email = (TextView) v.findViewById(R.id.userEmail);
                             TextView distance = (TextView) v.findViewById(R.id.distance);
                             TextView time = (TextView) v.findViewById(R.id.time);
 
-                            UserMapDetails userInfo = usersInfo.get(Integer.parseInt(marker.getSnippet()));
+                            final UserMapDetails userInfo = usersInfo.get(Integer.parseInt(marker.getSnippet()));
 
-                            distance.setText("Distance in meters: " + userInfo.distanceInMeters);
-                            time.setText("Distance in time: " + userInfo.distanceInTime);
+//                            LoadImageFromWebOperations(image, userInfo.user.getImageUrl(), marker, getActivity());
 
+                            if (bitmap == null) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            bitmap = BitmapFactory.decodeStream((InputStream) new URL(userInfo.user.getImageUrl()).getContent());
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    marker.showInfoWindow();
+                                                }
+                                            });
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }).start();
+                            } else {
+                                image.setImageBitmap(bitmap);
+                                bitmap = null;
+                            }
+
+                            email.setText(userInfo.user.getEmail());
+                            distance.setText("Distance in meters: " + "xxx");
+                            time.setText("Distance in time: " + "xxx");
                             return v;
                         }
                     });
@@ -135,5 +204,10 @@ public class GroupMapFragment extends Fragment {
 
     public void removeListner() {
         map.setOnMyLocationChangeListener(null);
-        }
+    }
+
+    public static void LoadImageFromWebOperations(final ImageView image, final String url, final Marker marker, final FragmentActivity activity) {
+
+    }
+
 }
