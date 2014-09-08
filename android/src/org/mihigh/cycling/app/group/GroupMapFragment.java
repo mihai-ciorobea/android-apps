@@ -3,7 +3,6 @@ package org.mihigh.cycling.app.group;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 import android.graphics.Bitmap;
@@ -33,7 +32,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.group.dto.Coordinates;
-import org.mihigh.cycling.app.group.dto.User;
 import org.mihigh.cycling.app.group.dto.UserMapDetails;
 
 public class GroupMapFragment extends Fragment {
@@ -113,7 +111,6 @@ public class GroupMapFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                map.clear();
 
                 if ( myMarker == null ){
                     myMarker = new MarkerOptions()
@@ -126,14 +123,6 @@ public class GroupMapFragment extends Fragment {
                 }
 
                 UserMapDetails me;
-                UserMapDetails userMapDetails = new UserMapDetails();
-
-//                String imageUrl = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/c0.20.60.60/p60x60/1908295_513120792127754_6984548125146923198_n.jpg?oh=748bb67ce1f2e65e9c6b17738ade54db&oe=549B7E58&__gda__=1418464781_cd8550577060ab6698b4dd640767bffe";
-                String imageUrl = "http://assets0-store.majorleaguegaming.com/assets/products/1936/small/FaZe-Logo.png?1386629240";
-
-                userMapDetails.user = new User("email", imageUrl);
-                userMapDetails.coordinates = Arrays.asList(new Coordinates(44.4, 26.0));
-                usersInfo.add(userMapDetails);
 
                 for (UserMapDetails userInfo : usersInfo) {
 
@@ -192,8 +181,8 @@ public class GroupMapFragment extends Fragment {
                             }
 
                             email.setText(userInfo.user.getEmail());
-                            distance.setText("Distance in meters: " + "xxx");
-                            time.setText("Distance in time: " + "xxx");
+                            distance.setText("123m");
+                            time.setText("40s");
                             return v;
                         }
                     });
