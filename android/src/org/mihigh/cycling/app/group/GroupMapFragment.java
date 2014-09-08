@@ -3,6 +3,7 @@ package org.mihigh.cycling.app.group;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 
 import android.graphics.Bitmap;
@@ -104,40 +105,44 @@ public class GroupMapFragment extends Fragment {
         mapView.onLowMemory();
     }
 
+    UserMapDetails me;
+    HashMap<String, Marker> markers = new HashMap<String, Marker>();
 
-    MarkerOptions myMarker;
-    Marker xxx;
+
     public void updateAllUsers(final List<UserMapDetails> usersInfo) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
-                if ( myMarker == null ){
-                    myMarker = new MarkerOptions()
-                        .position(new LatLng(0, 0))
-                        .snippet(String.valueOf(0));
-                    xxx = map.addMarker(myMarker);
-                } else {
-                    LatLng position = xxx.getPosition();
-                    xxx.setPosition(new LatLng(position.latitude+1, position.longitude+1));
-                }
-
-                UserMapDetails me;
-
                 for (UserMapDetails userInfo : usersInfo) {
-
                     if (userInfo.user.getEmail().equalsIgnoreCase(LoginActivity.userInfo.getEmail())) {
                         me = userInfo;
+                        break;
+                    }
+                }
+
+                for (UserMapDetails userInfo : usersInfo) {
+                    String email = userInfo.user.getEmail();
+                    if (email.equalsIgnoreCase(me.user.getEmail())) {
                         continue;
                     }
 
+                    Marker currentMarker = markers.get(email);
                     List<Coordinates> coordinates = userInfo.coordinates;
-                    map.addMarker(new MarkerOptions()
-                                      .position(new LatLng(coordinates.get(coordinates.size() - 1).getLatitude(),
-                                                           coordinates.get(coordinates.size() - 1).getLongitude()))
-                                      .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
-                                      .title(userInfo.user.getEmail())
-                                      .snippet(String.valueOf(usersInfo.indexOf(userInfo))));
+                    if (currentMarker == null) {
+                        Marker marker = map.addMarker(new MarkerOptions()
+                                                          .position(new LatLng(coordinates.get(coordinates.size() - 1).getLatitude(),
+                                                                               coordinates.get(coordinates.size() - 1).getLongitude()))
+                                                          .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
+                                                          .title(email)
+                                                          .snippet(String.valueOf(usersInfo.indexOf(userInfo))));
+                        markers.put(email, marker);
+                    } else {
+                        currentMarker.setPosition(new LatLng(coordinates.get(coordinates.size() - 1).getLatitude(),
+                                                             coordinates.get(coordinates.size() - 1).getLongitude()));
+                    }
+
+
+
 
                     //TODO: keep window open even on refresh of data
                     map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -164,7 +169,7 @@ public class GroupMapFragment extends Fragment {
                                     public void run() {
                                         try {
                                             bitmap = BitmapFactory.decodeStream((InputStream) new URL(userInfo.user.getImageUrl()).getContent());
-                                                getActivity().runOnUiThread(new Runnable() {
+                                            getActivity().runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     marker.showInfoWindow();
