@@ -141,9 +141,6 @@ public class GroupMapFragment extends Fragment {
                                                              coordinates.get(coordinates.size() - 1).getLongitude()));
                     }
 
-
-
-
                     //TODO: keep window open even on refresh of data
                     map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                         @Override
@@ -186,7 +183,8 @@ public class GroupMapFragment extends Fragment {
                             }
 
                             email.setText(userInfo.user.getEmail());
-                            distance.setText("123m");
+
+                            distance.setText(getDistance(userInfo.coordinates, me.coordinates));
                             time.setText("40s");
                             return v;
                         }
@@ -194,6 +192,81 @@ public class GroupMapFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private int getDistance(List<Coordinates> coordinates, List<Coordinates> myCoordinates) {
+        int cSize = coordinates.size();
+        int mycSize = myCoordinates.size();
+
+        Coordinates lastPos = coordinates.get(cSize - 1);
+        Location lastLocation = new Location("");
+        lastLocation.setLatitude(lastPos.getLatitude());
+        lastLocation.setLongitude(lastPos.getLongitude());
+
+        Coordinates myLastPos = myCoordinates.get(mycSize - 1);
+        Location myLastLocation = new Location("");
+        myLastLocation.setLatitude(myLastPos.getLatitude());
+        myLastLocation.setLongitude(myLastPos.getLongitude());
+
+        double minC = Integer.MAX_VALUE;
+        double minMyC = Integer.MAX_VALUE;
+        int pozC = 0;
+        int myPozC = 0;
+
+        for (Coordinates c : coordinates) {
+            Location location = new Location("");
+            location.setLatitude(c.getLatitude());
+            location.setLongitude(c.getLongitude());
+
+            minC = Math.min(minC, location.distanceTo(myLastLocation));
+            if (minC == location.distanceTo(myLastLocation)) {
+                pozC = coordinates.indexOf(c);
+            }
+        }
+
+        for (Coordinates c : myCoordinates) {
+            Location location = new Location("");
+            location.setLatitude(c.getLatitude());
+            location.setLongitude(c.getLongitude());
+
+            minMyC = Math.min(minMyC, location.distanceTo(lastLocation));
+            if (minMyC == location.distanceTo(lastLocation)) {
+                myPozC = coordinates.indexOf(c);
+            }
+        }
+
+        List<Coordinates> coords;
+        int poz;
+        if (minC < minMyC) {
+            coords = coordinates;
+            poz = pozC;
+        } else {
+            coords = myCoordinates;
+            poz = myPozC;
+        }
+
+
+        int distance = 0;
+        lastLocation = null;
+        for (int i = poz; i < coords.size(); ++i) {
+
+            Coordinates c = coords.get(i);
+            Location location = new Location("");
+            location.setLatitude(c.getLatitude());
+            location.setLongitude(c.getLongitude());
+
+
+            if (lastLocation == null) {
+                lastLocation = location;
+                continue;
+            }
+
+
+            distance += lastLocation.distanceTo(location);
+            lastLocation = location;
+        }
+
+        return distance;
     }
 
     public void removeListner() {
