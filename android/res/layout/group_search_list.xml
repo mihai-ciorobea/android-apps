@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+id/group_ride_fragment_container"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+             android:layout_marginLeft="10dp"
+             android:layout_marginRight="10dp">
+
+
+    <LinearLayout android:id="@+id/buttons_layout"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:background="#aa3b3b3b"
+                  android:orientation="vertical"
+                  android:layout_marginLeft="50dp"
+                  android:layout_marginTop="150dp"
+                  android:layout_marginRight="50dp">
+
+
+        <LinearLayout android:id="@+id/buttons_layout"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:background="#aa3b3b3b"
+                      android:orientation="horizontal">
+            <SearchView android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/search"
+                    android:text="Search"/>
+
+        </LinearLayout>
+
+        <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/listview"
+                  android:gravity="center|bottom"
+                  android:layout_gravity="bottom|center"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</FrameLayout>

@@ -184,8 +184,8 @@ public class GroupMapFragment extends Fragment {
 
                             email.setText(userInfo.user.getEmail());
 
-                            distance.setText(getDistance(userInfo.coordinates, me.coordinates));
-                            time.setText("40s");
+                            distance.setText(getDistance(userInfo.coordinates, me.coordinates) + "m");
+                            time.setText("");
                             return v;
                         }
                     });
@@ -245,7 +245,6 @@ public class GroupMapFragment extends Fragment {
             poz = myPozC;
         }
 
-
         int distance = 0;
         lastLocation = null;
         for (int i = poz; i < coords.size(); ++i) {
@@ -255,12 +254,10 @@ public class GroupMapFragment extends Fragment {
             location.setLatitude(c.getLatitude());
             location.setLongitude(c.getLongitude());
 
-
             if (lastLocation == null) {
                 lastLocation = location;
                 continue;
             }
-
 
             distance += lastLocation.distanceTo(location);
             lastLocation = location;

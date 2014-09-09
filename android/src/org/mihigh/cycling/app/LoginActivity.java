@@ -9,6 +9,7 @@ import org.mihigh.cycling.app.group.GroupJoinedListFragment;
 import org.mihigh.cycling.app.group.GroupMeniuFragment;
 import org.mihigh.cycling.app.group.GroupResult;
 import org.mihigh.cycling.app.group.GroupRideFragment;
+import org.mihigh.cycling.app.group.SearchListFragment;
 import org.mihigh.cycling.app.login.FacebookFragment;
 import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.solo.SoloResult;
@@ -165,7 +166,18 @@ public class LoginActivity extends FragmentActivity {
 
     public void searchForRide() {
 
-        //TODO: ???
+        //Check if home already exists
+        SearchListFragment fragment = (SearchListFragment) getSupportFragmentManager().findFragmentById(R.id.listview);
+
+        if (fragment != null) {
+            fragment.updateHomeView();
+        } else {
+            SearchListFragment newFragment = new SearchListFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.login_fragment_container, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 
     public void joinedRides() {

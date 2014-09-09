@@ -98,10 +98,9 @@
                 android:layout_margin="10dp"
                 android:textColor="#ffffff"
                 android:background="@drawable/green_button"
-                android:text="Start Ride"
+                android:text="Join Ride"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:layout_height="wrap_content"/>
         <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
                                              android:id="@+id/ride_map"
                                              android:name="com.google.android.gms.maps.MapFragment"
