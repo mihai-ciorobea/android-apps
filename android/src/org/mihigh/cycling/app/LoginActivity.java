@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
+import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.group.GroupJoinedListFragment;
 import org.mihigh.cycling.app.group.GroupMeniuFragment;
 import org.mihigh.cycling.app.group.GroupResult;
@@ -27,6 +28,8 @@ public class LoginActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+
         scale = getResources().getDisplayMetrics().density;
         setContentView(R.layout.login);
 
