@@ -113,6 +113,9 @@ public class GroupMapFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (usersInfo == null) {
+                    return;
+                }
                 for (UserMapDetails userInfo : usersInfo) {
                     if (userInfo.user.getEmail().equalsIgnoreCase(LoginActivity.userInfo.getEmail())) {
                         me = userInfo;
@@ -121,6 +124,9 @@ public class GroupMapFragment extends Fragment {
                 }
 
                 for (UserMapDetails userInfo : usersInfo) {
+                    if (userInfo.coordinates.isEmpty()) {
+                        continue;
+                    }
                     String email = userInfo.user.getEmail();
                     if (email.equalsIgnoreCase(me.user.getEmail())) {
                         continue;
@@ -245,6 +251,9 @@ public class GroupMapFragment extends Fragment {
             poz = myPozC;
         }
 
+        if (poz < 0) {
+            return 0;
+        }
         int distance = 0;
         lastLocation = null;
         for (int i = poz; i < coords.size(); ++i) {

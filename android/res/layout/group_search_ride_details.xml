@@ -69,28 +69,6 @@
 
             </LinearLayout>
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:orientation="horizontal"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:gravity="center|top"
-                          android:layout_gravity="top"
-                          android:layout_alignParentTop="true">
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:paddingBottom="10dp"
-                          android:paddingLeft="10dp"
-                          android:paddingRight="10dp"
-                          android:text="Status:"/>
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/ride_status"
-                          android:paddingBottom="10dp"
-                          android:paddingLeft="10dp"
-                          android:paddingRight="10dp"
-                          android:text="MINE"/>
-
-            </LinearLayout>
 
         </LinearLayout>
         <Button android:id="@+id/start_ride"
@@ -98,7 +76,7 @@
                 android:layout_margin="10dp"
                 android:textColor="#ffffff"
                 android:background="@drawable/green_button"
-                android:text="Start Ride"
+                android:text="Join Ride"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"/>

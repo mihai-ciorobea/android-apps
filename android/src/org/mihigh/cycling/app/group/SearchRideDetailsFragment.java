@@ -43,7 +43,7 @@ public class SearchRideDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View v = inflater.inflate(R.layout.group_ride_details, container, false);
+        View v = inflater.inflate(R.layout.group_search_ride_details, container, false);
 
         try {
             MapsInitializer.initialize(getActivity());
@@ -81,7 +81,6 @@ public class SearchRideDetailsFragment extends Fragment {
 
         TextView rideName = (TextView) getActivity().findViewById(R.id.ride_name);
         TextView rideDate = (TextView) getActivity().findViewById(R.id.ride_date);
-        TextView rideStatus = (TextView) getActivity().findViewById(R.id.ride_status);
         Button joinButton = (Button) getActivity().findViewById(R.id.start_ride);
 
 
