@@ -1,9 +1,13 @@
 package org.mihigh.cycling.app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.group.GroupJoinedListFragment;
@@ -42,12 +46,27 @@ public class LoginActivity extends FragmentActivity {
                 return;
             }
 
+            if (!isNetworkConnected()) {
+                Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_LONG).show();
+            }
+
             facebookFragment = new FacebookFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.login_fragment_container, facebookFragment).commit();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.login_fragment_container, facebookFragment);
             transaction.addToBackStack(null);
             transaction.commit();
+        }
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni == null) {
+            // There are no active networks.
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -153,18 +172,18 @@ public class LoginActivity extends FragmentActivity {
     }
 
     public void startGroupRide() {
-            //Check if home already exists
+        //Check if home already exists
         groupMeniuFragment = (GroupMeniuFragment) getSupportFragmentManager().findFragmentById(R.id.group_fragment_container);
 
-            if (groupMeniuFragment != null) {
-                groupMeniuFragment.updateHomeView();
-            } else {
-                groupMeniuFragment = new GroupMeniuFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.login_fragment_container, groupMeniuFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
+        if (groupMeniuFragment != null) {
+            groupMeniuFragment.updateHomeView();
+        } else {
+            groupMeniuFragment = new GroupMeniuFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.login_fragment_container, groupMeniuFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 
     public void searchForRide() {
