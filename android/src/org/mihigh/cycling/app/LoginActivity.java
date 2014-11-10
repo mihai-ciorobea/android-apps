@@ -1,13 +1,15 @@
 package org.mihigh.cycling.app;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.Toast;
 
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.group.GroupJoinedListFragment;
@@ -47,7 +49,7 @@ public class LoginActivity extends FragmentActivity {
             }
 
             if (!isNetworkConnected()) {
-                Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_LONG).show();
+                buildAlertMessageNoInternet();
             }
 
             facebookFragment = new FacebookFragment();
@@ -59,6 +61,24 @@ public class LoginActivity extends FragmentActivity {
         }
     }
 
+
+    private void buildAlertMessageNoInternet() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your MobileData seems to be disabled, do you want to enable it? The app will not work without it.")
+            .setCancelable(false)
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                    startActivity(new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS));
+                }
+            })
+            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                    dialog.cancel();
+                }
+            });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();

@@ -1,6 +1,11 @@
 package org.mihigh.cycling.app;
 
 import android.animation.LayoutTransition;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +16,26 @@ import android.widget.Button;
 public class HomeFragment extends Fragment {
 
     public static final String USER = "USER_DETAILS";
+
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it? The app will not work without it.")
+            .setCancelable(false)
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+            })
+            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                    dialog.cancel();
+                }
+            });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +81,11 @@ public class HomeFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             updateHomeView();
+        }
+
+        LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
         }
     }
 
