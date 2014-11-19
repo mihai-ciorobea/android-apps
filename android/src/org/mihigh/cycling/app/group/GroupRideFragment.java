@@ -70,7 +70,7 @@ public class GroupRideFragment extends Fragment {
         public ScreenSlidePagerAdapter(FragmentManager fm, GroupRideFragment groupRideFragment) {
             super(fm);
             this.groupRideFragment = groupRideFragment;
-            groupMapFragment = new GroupMapFragment(groupRideFragment.id);
+            groupMapFragment = new GroupMapFragment(groupRideFragment.id, mPager);
             groupHomeFragment = new GroupHomeFragment(groupRideFragment);
         }
 

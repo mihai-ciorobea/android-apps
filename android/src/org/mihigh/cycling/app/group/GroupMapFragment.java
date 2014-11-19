@@ -1,21 +1,17 @@
 package org.mihigh.cycling.app.group;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +31,12 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.group.dto.Coordinates;
 import org.mihigh.cycling.app.group.dto.UserMapDetails;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+
 public class GroupMapFragment extends Fragment {
 
     MapView mapView;
@@ -42,13 +44,23 @@ public class GroupMapFragment extends Fragment {
     private long id;
     private Bitmap bitmap;
 
-    public GroupMapFragment(long id) {
+    private ViewPager viewPager;
+    public GroupMapFragment(long id, ViewPager mPager) {
         this.id = id;
+        this.viewPager = mPager;
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.group_map, container, false);
+
+        Button backButton = (Button) v.findViewById(R.id.mapback);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                viewPager.setCurrentItem(0);
+            }
+        });
 
         try {
             MapsInitializer.initialize(getActivity());

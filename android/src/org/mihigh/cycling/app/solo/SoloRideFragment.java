@@ -34,6 +34,7 @@ public class SoloRideFragment extends Fragment {
             mPagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
         }
         mPager.setAdapter(mPagerAdapter);
+
     }
 
     @Override
@@ -51,10 +52,10 @@ public class SoloRideFragment extends Fragment {
         super.onResume();
     }
 
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+    public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
         private SoloHomeFragment soloHomeFragment = new SoloHomeFragment();
-        private SoloMapFragment soloMapFragment = new SoloMapFragment();
+        private SoloMapFragment soloMapFragment = new SoloMapFragment(mPager);
 
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
