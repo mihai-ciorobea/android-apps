@@ -1,11 +1,5 @@
 package org.mihigh.cycling.app.group;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpResponse;
@@ -15,9 +9,16 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.group.dto.Coordinates;
 import org.mihigh.cycling.app.group.dto.UserMapDetails;
 import org.mihigh.cycling.app.http.HttpHelper;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroupMyPositionRunnable implements Runnable {
 
@@ -42,7 +43,7 @@ public class GroupMyPositionRunnable implements Runnable {
             HttpResponse httpResponse = null;
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url);
-            httpPost.addHeader("Cookie", "SESSION0 = " + HttpHelper.session);
+            httpPost.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpPost.setHeader(HTTP.CONTENT_TYPE, "application/json");
 
 

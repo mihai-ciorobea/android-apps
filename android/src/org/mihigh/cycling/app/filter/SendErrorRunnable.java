@@ -9,12 +9,13 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.http.HttpHelper;
 
 public class SendErrorRunnable implements Runnable {
 
     public static final String PATH = "/api/v1/error";
-    private final Activity activity;
+  private final Activity activity;
     private String errorData;
     private int pid;
 
@@ -32,7 +33,7 @@ public class SendErrorRunnable implements Runnable {
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(url);
-            httppost.addHeader("Cookie", "SESSION0 = " + HttpHelper.session);
+            httppost.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/json");
 
             // Add your data

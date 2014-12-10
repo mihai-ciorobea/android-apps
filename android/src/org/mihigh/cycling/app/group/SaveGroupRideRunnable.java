@@ -9,6 +9,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.http.HttpHelper;
 
 public class SaveGroupRideRunnable implements Runnable {
@@ -30,7 +31,7 @@ public class SaveGroupRideRunnable implements Runnable {
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
-            httpGet.addHeader("Cookie", "SESSION0 = " + HttpHelper.session);
+            httpGet.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpGet.setHeader(HTTP.CONTENT_TYPE, "application/json");
 
             // Execute HTTP Post Request

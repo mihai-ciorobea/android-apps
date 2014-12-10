@@ -12,6 +12,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.http.HttpHelper;
 import org.mihigh.cycling.app.login.dto.UserInfo;
 
@@ -56,7 +57,7 @@ public class MakeLoginRunnable implements Runnable {
         for (Header h : headers) {
             if (h.getName().equalsIgnoreCase("Set-Cookie")) {
                  for(HeaderElement cookie: h.getElements()) {
-                     if (cookie.getName().equalsIgnoreCase("SESSION0")) {
+                     if (cookie.getName().equalsIgnoreCase(Utils.SESSION_ID + "")) {
                          HttpHelper.session = cookie.getValue();
                      }
                  }
