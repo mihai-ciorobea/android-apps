@@ -2,7 +2,6 @@ package org.mihigh.cycling.app.filter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 
 import org.mihigh.cycling.app.LoginActivity;
 
@@ -27,35 +26,35 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         errorReport.append("************ CAUSE OF ERROR ************\n\n");
         errorReport.append(stackTrace.toString());
 
-        errorReport.append("\n************ DEVICE INFORMATION ***********\n");
-        errorReport.append("Brand: ");
-        errorReport.append(Build.BRAND);
-        errorReport.append(LINE_SEPARATOR);
-        errorReport.append("Device: ");
-        errorReport.append(Build.DEVICE);
-        errorReport.append(LINE_SEPARATOR);
-        errorReport.append("Model: ");
-        errorReport.append(Build.MODEL);
-        errorReport.append(LINE_SEPARATOR);
-        errorReport.append("Id: ");
-        errorReport.append(Build.ID);
-        errorReport.append(LINE_SEPARATOR);
-        errorReport.append("Product: ");
-        errorReport.append(Build.PRODUCT);
-        errorReport.append(LINE_SEPARATOR);
-        errorReport.append("\n************ FIRMWARE ************\n");
-        errorReport.append("SDK_INT: ");
-        errorReport.append(Build.VERSION.SDK_INT);
-        errorReport.append(LINE_SEPARATOR);
-        errorReport.append("Release: ");
-        errorReport.append(Build.VERSION.RELEASE);
-        errorReport.append(LINE_SEPARATOR);
-        errorReport.append("Incremental: ");
-        errorReport.append(Build.VERSION.INCREMENTAL);
-        errorReport.append(LINE_SEPARATOR);
-        errorReport.append("activity: ");
-        errorReport.append(activity.toString());
-        errorReport.append(LINE_SEPARATOR);
+//        errorReport.append("\n************ DEVICE INFORMATION ***********\n");
+//        errorReport.append("Brand: ");
+//        errorReport.append(Build.BRAND);
+//        errorReport.append(LINE_SEPARATOR);
+//        errorReport.append("Device: ");
+//        errorReport.append(Build.DEVICE);
+//        errorReport.append(LINE_SEPARATOR);
+//        errorReport.append("Model: ");
+//        errorReport.append(Build.MODEL);
+//        errorReport.append(LINE_SEPARATOR);
+//        errorReport.append("Id: ");
+//        errorReport.append(Build.ID);
+//        errorReport.append(LINE_SEPARATOR);
+//        errorReport.append("Product: ");
+//        errorReport.append(Build.PRODUCT);
+//        errorReport.append(LINE_SEPARATOR);
+//        errorReport.append("\n************ FIRMWARE ************\n");
+//        errorReport.append("SDK_INT: ");
+//        errorReport.append(Build.VERSION.SDK_INT);
+//        errorReport.append(LINE_SEPARATOR);
+//        errorReport.append("Release: ");
+//        errorReport.append(Build.VERSION.RELEASE);
+//        errorReport.append(LINE_SEPARATOR);
+//        errorReport.append("Incremental: ");
+//        errorReport.append(Build.VERSION.INCREMENTAL);
+//        errorReport.append(LINE_SEPARATOR);
+//        errorReport.append("activity: ");
+//        errorReport.append(activity.toString());
+//        errorReport.append(LINE_SEPARATOR);
 
 
         new Thread(new SendErrorRunnable(activity, errorReport.toString(), android.os.Process.myPid())).start();

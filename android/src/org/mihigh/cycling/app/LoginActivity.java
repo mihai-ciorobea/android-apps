@@ -238,5 +238,12 @@ public class LoginActivity extends FragmentActivity {
 
         //TODO:
     }
+
+  @Override
+  public String toString() {
+    return "LoginActivity{" +
+           "userName='" + userName + '\'' +
+           '}';
+  }
 }
 

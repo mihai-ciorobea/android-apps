@@ -1,15 +1,14 @@
 package org.mihigh.cycling.app.group.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.Date;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Coordinates implements Serializable {
-    //    TODO: modify from k and B to lat and lng -> web + app
-    @SerializedName("k")
+    @SerializedName("lat")
     private double latitude;
-    @SerializedName("B")
+    @SerializedName("lng")
     private double longitude;
 
     public Coordinates() {
