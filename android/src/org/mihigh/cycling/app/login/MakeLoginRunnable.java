@@ -50,7 +50,7 @@ public class MakeLoginRunnable implements Runnable {
             // Execute HTTP Post Request
             httpResponse = httpclient.execute(httppost);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         Header[] headers = httpResponse.getHeaders("Set-Cookie");

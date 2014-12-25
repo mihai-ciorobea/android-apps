@@ -191,7 +191,7 @@ public class GroupMapFragment extends Fragment {
                                                 }
                                             });
                                         } catch (IOException e) {
-                                            e.printStackTrace();
+                                            throw new RuntimeException(e);
                                         }
                                     }
                                 }).start();

@@ -44,7 +44,7 @@ public class GroupGetSearchListRunnable implements Runnable {
             // Execute HTTP Post Request
             httpResponse = httpclient.execute(httppost);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         if (httpResponse.getStatusLine().getStatusCode() >= 300) {
@@ -62,7 +62,7 @@ public class GroupGetSearchListRunnable implements Runnable {
 
             yourClassList = HttpHelper.getGson().fromJson(responseBody, listType);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         final List<JoinedRide> finalYourClassList = yourClassList;

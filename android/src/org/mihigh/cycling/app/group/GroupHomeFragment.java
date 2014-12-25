@@ -1,11 +1,5 @@
 package org.mihigh.cycling.app.group;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +17,13 @@ import android.widget.TextView;
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
+import org.mihigh.cycling.app.group.dto.ProgressStatus;
+
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GroupHomeFragment extends Fragment {
 
@@ -79,6 +80,7 @@ public class GroupHomeFragment extends Fragment {
                 rideStatusUpdate(RideStatus.STARTED);
                 previousStarted = new Date();
                 previousTime = 0;
+                new Thread(new GroupStartRideRunnable(groupRideFragment.id, GroupHomeFragment.this, ProgressStatus.ACTIVE)).start();
             }
         });
 
@@ -97,7 +99,7 @@ public class GroupHomeFragment extends Fragment {
                             previousTime = 0;
 
                             dialog.dismiss();
-
+                            new Thread(new GroupStartRideRunnable(groupRideFragment.id, GroupHomeFragment.this, ProgressStatus.FINISHED)).start();
                             ((LoginActivity) getActivity()).stopGroupRide(groupRideFragment);
                         }
                     })
@@ -108,6 +110,7 @@ public class GroupHomeFragment extends Fragment {
                     });
                 AlertDialog alert = builder.create();
                 alert.show();
+
             }
         });
 
@@ -263,7 +266,7 @@ public class GroupHomeFragment extends Fragment {
         List<Integer> activity = GroupTracking.instance.get5MinActivity();
         int size = activity.size();
         if (size > 9) {
-            activity.subList(size - 9, size);
+            activity = activity.subList(size - 9, size);
         }
 
         int maxVal = Collections.max(activity);

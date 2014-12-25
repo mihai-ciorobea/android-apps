@@ -60,7 +60,7 @@ public class GroupGetJoinedListRunnable implements Runnable {
 
             yourClassList = HttpHelper.getGson().fromJson(responseBody, listType);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         final List<JoinedRide> finalYourClassList = yourClassList;

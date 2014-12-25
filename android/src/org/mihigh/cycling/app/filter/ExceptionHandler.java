@@ -56,7 +56,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 //        errorReport.append(activity.toString());
 //        errorReport.append(LINE_SEPARATOR);
 
-
+        System.err.println(errorReport.toString());
         new Thread(new SendErrorRunnable(activity, errorReport.toString(), android.os.Process.myPid())).start();
 
         Intent intent = new Intent(activity, LoginActivity.class);

@@ -38,7 +38,7 @@ public class JoinedActivityRunnable implements Runnable {
             // Execute HTTP Post Request
             httpResponse = httpclient.execute(httppost);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         if (httpResponse.getStatusLine().getStatusCode() >= 300) {

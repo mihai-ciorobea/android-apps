@@ -67,7 +67,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Distance"/>
+                        android:text="Distance (KM)"/>
                 <TextView android:id="@+id/distance"
                         android:textSize="40sp"
                         android:layout_weight="5"
@@ -95,7 +95,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Speed"/>
+                        android:text="Speed (KM/h)"/>
                 <TextView android:id="@+id/speed"
                         android:textSize="40sp"
                         android:layout_weight="5"

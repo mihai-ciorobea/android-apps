@@ -1,9 +1,9 @@
 package org.mihigh.cycling.app.group;
 
+import android.location.Location;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import android.location.Location;
 
 public class GroupTracking {
 
@@ -25,30 +25,10 @@ public class GroupTracking {
 
     public String getSpeed() {
         int size = positions.size();
-        if (positions.isEmpty() || size < 2) {
-            return "0.00";
-        }
+        float speedMps = size != 0 ? positions.get(size - 1).getSpeed() : 0;
+        double speedKMps = speedMps * 3.6;
 
-        float distance = 0;
-        float time = 0;
-        int previousIndex = size - 2;
-        while (distance == 0) {
-            distance = positions.get(size - 1).distanceTo(positions.get(previousIndex));
-            time = positions.get(size - 1).getElapsedRealtimeNanos() - positions.get(previousIndex).getElapsedRealtimeNanos();
-            time = time / (1000 * 1000 * 1000);
-            previousIndex--;
-
-            if (previousIndex < 0) {
-                return "0.00";
-            }
-        }
-
-        //from m/s to km/h
-
-        time /= 3600;
-        distance /= 1000;
-
-        return String.format("%.2f", (double) distance / time);
+        return String.format("%.2f", speedKMps);
     }
 
     public void addLocation(Location location) {
@@ -80,6 +60,18 @@ public class GroupTracking {
         }
 
         activity.add((int) distance);
+        activity.add(1);
+        activity.add(2);
+        activity.add(3);
+        activity.add(4);
+        activity.add(5);
+        activity.add(6);
+        activity.add(7);
+        activity.add(8);
+        activity.add(9);
+        activity.add(10);
+        activity.add(11);
+        activity.add(5);
         return activity;
     }
 
