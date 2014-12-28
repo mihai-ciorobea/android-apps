@@ -256,10 +256,17 @@ public class GroupHomeFragment extends Fragment {
         Date now = new Date();
         long diffInSeconds = (now.getTime() - previousStarted.getTime()) / 1000;
 
-        long totalTime = previousTime + diffInSeconds;
-        time.setText(String.format("%02d", totalTime / 60) + ":" + String.format("%02d", totalTime % 60));
+        long totalTimeInSec = previousTime + diffInSeconds;
+        int hour = (int) (totalTimeInSec / 3600);
+        int minInSec = (int) (totalTimeInSec - hour);
+        int min = minInSec / 60;
+        int sec = minInSec % 60;
 
-        return totalTime;
+        time.setText(String.format("%02d", hour) + ":"
+                     + String.format("%02d", min) + ":"
+                     + String.format("%02d", sec));
+
+        return totalTimeInSec;
     }
 
     private void updateBars() {

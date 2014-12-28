@@ -1,8 +1,8 @@
 package org.mihigh.cycling.app.solo;
 
 import android.app.ProgressDialog;
+import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -32,7 +32,6 @@ public class SaveSoloRideRunnable implements Runnable {
     public void run() {
         String url = activity.getString(R.string.server_url) + PATH_SAVE_SOLO_ACTIVITY + distance;
 
-        HttpResponse httpResponse = null;
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(url);
@@ -43,14 +42,12 @@ public class SaveSoloRideRunnable implements Runnable {
             httppost.setEntity(new StringEntity(jsonData));
 
             // Execute HTTP Post Request
-            httpResponse = httpclient.execute(httppost);
+            httpclient.execute(httppost);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Toast.makeText(activity, "Check internet connection!", Toast.LENGTH_SHORT).show();
+            progress.dismiss();
         }
 
-        if (httpResponse.getStatusLine().getStatusCode() >= 300) {
-            //TODO: error handling
-        }
 
         progress.dismiss();
         activity.onUserLoggedIn();

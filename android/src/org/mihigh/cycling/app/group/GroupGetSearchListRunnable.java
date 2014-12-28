@@ -1,5 +1,7 @@
 package org.mihigh.cycling.app.group;
 
+import android.widget.Toast;
+
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpResponse;
@@ -44,15 +46,12 @@ public class GroupGetSearchListRunnable implements Runnable {
             // Execute HTTP Post Request
             httpResponse = httpclient.execute(httppost);
         } catch (Exception e) {
+            Toast.makeText(fragment.getActivity(), "Check internet connection!", Toast.LENGTH_SHORT).show();
             throw new RuntimeException(e);
         }
 
-        if (httpResponse.getStatusLine().getStatusCode() >= 300) {
-            //TODO: error handling
-        }
-
-        BufferedReader reader = null;
-        List<JoinedRide> yourClassList = null;
+        BufferedReader reader;
+        List<JoinedRide> yourClassList;
         try {
             reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
             String responseBody = reader.readLine();
@@ -62,6 +61,7 @@ public class GroupGetSearchListRunnable implements Runnable {
 
             yourClassList = HttpHelper.getGson().fromJson(responseBody, listType);
         } catch (IOException e) {
+            Toast.makeText(fragment.getActivity(), "Check internet connection!", Toast.LENGTH_SHORT).show();
             throw new RuntimeException(e);
         }
 

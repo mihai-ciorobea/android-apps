@@ -38,7 +38,11 @@ public class GroupStartRideRunnable implements Runnable {
             // Execute HTTP Get Request
             httpclient.execute(httpGet);
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e1) {
+            }
+            run();
         }
     }
 }

@@ -2,7 +2,6 @@ package org.mihigh.cycling.app.group;
 
 import android.app.ProgressDialog;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -27,7 +26,6 @@ public class SaveGroupRideRunnable implements Runnable {
     public void run() {
         String url = activity.getString(R.string.server_url) + PATH_SAVE_GROUP_ACTIVITY;
 
-        HttpResponse httpResponse = null;
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
@@ -35,13 +33,13 @@ public class SaveGroupRideRunnable implements Runnable {
             httpGet.setHeader(HTTP.CONTENT_TYPE, "application/json");
 
             // Execute HTTP Post Request
-            httpResponse = httpclient.execute(httpGet);
+            httpclient.execute(httpGet);
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        if (httpResponse.getStatusLine().getStatusCode() >= 300) {
-            //TODO: error handling
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e1) {
+            }
+            run();
         }
 
         progress.dismiss();

@@ -2,7 +2,6 @@ package org.mihigh.cycling.app.filter;
 
 import android.app.Activity;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -12,12 +11,16 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.http.HttpHelper;
 
+import java.util.ArrayList;
+
 public class SendErrorRunnable implements Runnable {
 
     public static final String PATH = "/api/v1/error";
-  private final Activity activity;
+    private final Activity activity;
     private String errorData;
     private int pid;
+
+    private static final ArrayList<SendErrorRunnable> old = new ArrayList<SendErrorRunnable>();
 
     public SendErrorRunnable(Activity activity, String errorData, int pid) {
         this.activity = activity;
@@ -27,9 +30,28 @@ public class SendErrorRunnable implements Runnable {
 
     @Override
     public void run() {
+        execute();
+
+        ArrayList<SendErrorRunnable> retry = new ArrayList<SendErrorRunnable>(old);
+        old.clear();
+
+        boolean sendHttpCall = true;
+        for (SendErrorRunnable oldItem : retry) {
+            if (oldItem != null) {
+                if ( sendHttpCall == true) {
+                    sendHttpCall = oldItem.execute();
+                } else {
+                    old.add(oldItem);
+                }
+            }
+        }
+
+        android.os.Process.killProcess(pid);
+    }
+
+    private boolean execute() {
         String url = activity.getString(R.string.server_url) + PATH;
 
-        HttpResponse httpResponse = null;
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(url);
@@ -40,15 +62,11 @@ public class SendErrorRunnable implements Runnable {
             httppost.setEntity(new StringEntity(errorData));
 
             // Execute HTTP Post Request
-            httpResponse = httpclient.execute(httppost);
+            httpclient.execute(httppost);
+            return true;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            old.add(this);
+            return false;
         }
-
-        if (httpResponse.getStatusLine().getStatusCode() >= 300) {
-
-        }
-
-        android.os.Process.killProcess(pid);
     }
 }

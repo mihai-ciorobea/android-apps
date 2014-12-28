@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.group.dto.Coordinates;
 import org.mihigh.cycling.app.group.dto.UserMapDetails;
 
@@ -191,7 +192,7 @@ public class GroupMapFragment extends Fragment {
                                                 }
                                             });
                                         } catch (IOException e) {
-                                            throw new RuntimeException(e);
+                                            new ExceptionHandler(getActivity()).uncaughtException(null, e);
                                         }
                                     }
                                 }).start();

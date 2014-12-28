@@ -60,18 +60,6 @@ public class GroupTracking {
         }
 
         activity.add((int) distance);
-        activity.add(1);
-        activity.add(2);
-        activity.add(3);
-        activity.add(4);
-        activity.add(5);
-        activity.add(6);
-        activity.add(7);
-        activity.add(8);
-        activity.add(9);
-        activity.add(10);
-        activity.add(11);
-        activity.add(5);
         return activity;
     }
 

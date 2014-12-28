@@ -1,7 +1,8 @@
 package org.mihigh.cycling.app.login;
 
-import com.google.gson.Gson;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
@@ -23,11 +24,9 @@ public class MakeLoginRunnable implements Runnable {
     private final LoginActivity activity;
 
     public MakeLoginRunnable(UserInfo userInfo, LoginActivity activity) {
-
         this.userInfo = userInfo;
         this.activity = activity;
     }
-
 
     @Override
     public void run() {
@@ -36,7 +35,7 @@ public class MakeLoginRunnable implements Runnable {
         Gson gson = new Gson();
         String jsonUserInfo = gson.toJson(userInfo);
 
-        HttpResponse httpResponse = null;
+        HttpResponse httpResponse;
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(url);
@@ -50,6 +49,7 @@ public class MakeLoginRunnable implements Runnable {
             // Execute HTTP Post Request
             httpResponse = httpclient.execute(httppost);
         } catch (Exception e) {
+            Toast.makeText(activity, "Check internet connection!", Toast.LENGTH_SHORT).show();
             throw new RuntimeException(e);
         }
 
@@ -67,8 +67,5 @@ public class MakeLoginRunnable implements Runnable {
         activity.updateUserInfo(userInfo);
         activity.onUserLoggedIn();
     }
-
-
-
 }
 

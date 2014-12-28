@@ -1,6 +1,7 @@
 package org.mihigh.cycling.app.group;
 
-import org.apache.http.HttpResponse;
+import android.widget.Toast;
+
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -26,7 +27,6 @@ public class JoinedActivityRunnable implements Runnable {
     public void run() {
         String url = fragment.getString(R.string.server_url) + PATH_GET_JOINED_LIST;
 
-        HttpResponse httpResponse = null;
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(url);
@@ -36,13 +36,10 @@ public class JoinedActivityRunnable implements Runnable {
             httppost.setEntity(new StringEntity(id + ""));
 
             // Execute HTTP Post Request
-            httpResponse = httpclient.execute(httppost);
+            httpclient.execute(httppost);
         } catch (Exception e) {
+            Toast.makeText(fragment.getActivity(), "Check internet connection!", Toast.LENGTH_SHORT).show();
             throw new RuntimeException(e);
-        }
-
-        if (httpResponse.getStatusLine().getStatusCode() >= 300) {
-            //TODO: error handling
         }
 
         fragment.getActivity().runOnUiThread(new Runnable() {
@@ -51,7 +48,6 @@ public class JoinedActivityRunnable implements Runnable {
                 ((LoginActivity) (fragment.getActivity())).searchForRide();
             }
         });
-
     }
 }
 
