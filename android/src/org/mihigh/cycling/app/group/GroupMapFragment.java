@@ -192,7 +192,7 @@ public class GroupMapFragment extends Fragment {
                                                 }
                                             });
                                         } catch (IOException e) {
-                                            new ExceptionHandler(getActivity()).uncaughtException(null, e);
+                                            new ExceptionHandler(getActivity()).sendError(e, false);
                                         }
                                     }
                                 }).start();

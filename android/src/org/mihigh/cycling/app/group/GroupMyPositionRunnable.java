@@ -10,6 +10,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
+import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.group.dto.Coordinates;
 import org.mihigh.cycling.app.group.dto.UserMapDetails;
 import org.mihigh.cycling.app.http.HttpHelper;
@@ -51,7 +52,7 @@ public class GroupMyPositionRunnable implements Runnable {
         boolean sendHttpCall = true;
         for (GroupMyPositionRunnable oldItem : retry) {
             if (oldItem != null) {
-                if ( sendHttpCall == true) {
+                if (sendHttpCall == true) {
                     sendHttpCall = oldItem.execute();
                 } else {
                     old.add(oldItem);
@@ -76,6 +77,10 @@ public class GroupMyPositionRunnable implements Runnable {
             // Execute HTTP Post Request
             httpResponse = httpclient.execute(httpPost);
 
+            if (httpResponse.getStatusLine().getStatusCode() == 401) {
+
+            }
+
             BufferedReader reader;
             List<UserMapDetails> usersInfo;
             reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
@@ -88,6 +93,7 @@ public class GroupMyPositionRunnable implements Runnable {
             fragment.updateAllUsers(usersInfo);
             return true;
         } catch (Throwable e) {
+            new ExceptionHandler(fragment.getActivity()).sendError(e, false);
             old.add(this);
             return false;
         }

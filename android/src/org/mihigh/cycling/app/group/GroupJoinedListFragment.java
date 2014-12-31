@@ -1,9 +1,5 @@
 package org.mihigh.cycling.app.group;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -18,6 +14,10 @@ import android.widget.ListView;
 
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.group.dto.JoinedRide;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class GroupJoinedListFragment extends Fragment {
 
@@ -50,10 +50,9 @@ public class GroupJoinedListFragment extends Fragment {
         final HashMap<String, JoinedRide> joinedMap = new HashMap<String, JoinedRide>();
 
         final ArrayList<String> list = new ArrayList<String>();
-        for (int index = 0; index < values.size(); ++index) {
-            JoinedRide item = values.get(index);
-            list.add(item.name);
-            joinedMap.put(item.name, item);
+        for (JoinedRide joinedRide : values) {
+            list.add(joinedRide.name);
+            joinedMap.put(joinedRide.name, joinedRide);
         }
         final StableArrayAdapter adapter = new StableArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);

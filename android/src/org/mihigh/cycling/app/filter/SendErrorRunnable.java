@@ -18,13 +18,15 @@ public class SendErrorRunnable implements Runnable {
     public static final String PATH = "/api/v1/error";
     private final Activity activity;
     private String errorData;
+    private boolean killable;
     private int pid;
 
     private static final ArrayList<SendErrorRunnable> old = new ArrayList<SendErrorRunnable>();
 
-    public SendErrorRunnable(Activity activity, String errorData, int pid) {
+    public SendErrorRunnable(Activity activity, String errorData, boolean killable, int pid) {
         this.activity = activity;
         this.errorData = errorData;
+        this.killable = killable;
         this.pid = pid;
     }
 
@@ -38,7 +40,7 @@ public class SendErrorRunnable implements Runnable {
         boolean sendHttpCall = true;
         for (SendErrorRunnable oldItem : retry) {
             if (oldItem != null) {
-                if ( sendHttpCall == true) {
+                if (sendHttpCall == true) {
                     sendHttpCall = oldItem.execute();
                 } else {
                     old.add(oldItem);
@@ -46,7 +48,9 @@ public class SendErrorRunnable implements Runnable {
             }
         }
 
-        android.os.Process.killProcess(pid);
+        if (killable == true) {
+            android.os.Process.killProcess(pid);
+        }
     }
 
     private boolean execute() {
@@ -65,6 +69,7 @@ public class SendErrorRunnable implements Runnable {
             httpclient.execute(httppost);
             return true;
         } catch (Exception e) {
+            new ExceptionHandler(activity).sendError(e, false);
             old.add(this);
             return false;
         }

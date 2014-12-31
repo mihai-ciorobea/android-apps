@@ -248,7 +248,7 @@ public class SoloHomeFragment extends Fragment {
 
         long totalTimeInSec = previousTime + diffInSeconds;
         int hour = (int) (totalTimeInSec / 3600);
-        int minInSec = (int) (totalTimeInSec - hour);
+        int minInSec = (int) (totalTimeInSec % 3600);
         int min = minInSec / 60;
         int sec = minInSec % 60;
 
