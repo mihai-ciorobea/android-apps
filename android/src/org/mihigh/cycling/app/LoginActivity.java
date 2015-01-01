@@ -236,7 +236,6 @@ public class LoginActivity extends FragmentActivity {
             transaction.commit();
         }
 
-        //TODO:
     }
 
   @Override

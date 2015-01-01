@@ -8,10 +8,13 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.facebook.widget.LoginButton;
 
 public class HomeFragment extends Fragment {
 
@@ -76,6 +79,19 @@ public class HomeFragment extends Fragment {
                 }
             });
             viewGroup.addView(button);
+        }
+        {
+            LoginButton loginButton = new LoginButton(getActivity());
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentActivity activity = HomeFragment.this.getActivity();
+                    Intent intent = new Intent(activity, LoginActivity.class);
+                    activity.startActivity(intent);
+                }
+            });
+            viewGroup.addView(loginButton);
+
         }
 
         Bundle args = getArguments();

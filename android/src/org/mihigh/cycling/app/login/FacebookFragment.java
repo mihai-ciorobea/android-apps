@@ -1,8 +1,5 @@
 package org.mihigh.cycling.app.login;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,10 +22,12 @@ import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.login.dto.UserInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FacebookFragment extends Fragment {
 
     private LoginButton loginButton;
-    private GraphUser user;
 
     private UiLifecycleHelper uiHelper;
 
@@ -65,7 +64,6 @@ public class FacebookFragment extends Fragment {
         loginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
-                FacebookFragment.this.user = user;
                 updateUI();
             }
         });
