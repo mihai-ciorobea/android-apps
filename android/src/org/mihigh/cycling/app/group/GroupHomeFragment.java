@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +19,9 @@ import android.widget.TextView;
 
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
-import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.group.dto.ProgressStatus;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,11 +32,14 @@ public class GroupHomeFragment extends Fragment {
     private long previousTime = 0;
     private TextView speed;
     private TextView distance;
-    private GroupRideFragment groupRideFragment;
+    private long rideId;
+    private ViewPager mPager;
+    private ScreenSlidePagerAdapter mPagerAdapter;
 
-    public GroupHomeFragment(GroupRideFragment groupRideFragment) {
 
-        this.groupRideFragment = groupRideFragment;
+    public GroupHomeFragment(long rideId) {
+
+        this.rideId = rideId;
     }
 
     public enum RideStatus {
@@ -55,7 +58,6 @@ public class GroupHomeFragment extends Fragment {
     private Button resumeButton;
     private TextView time;
 
-    private LinearLayout barLayout;
 
 
     @Override
@@ -71,7 +73,6 @@ public class GroupHomeFragment extends Fragment {
         time = (TextView) getView().findViewById(R.id.time);
         speed = (TextView) getView().findViewById(R.id.speed);
         distance = (TextView) getView().findViewById(R.id.distance);
-        barLayout = (LinearLayout) getView().findViewById(R.id.performance_bars);
 
         startButton = (Button) getView().findViewById(R.id.start);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +81,7 @@ public class GroupHomeFragment extends Fragment {
                 rideStatusUpdate(RideStatus.STARTED);
                 previousStarted = new Date();
                 previousTime = 0;
-                new Thread(new GroupStartRideRunnable(groupRideFragment.id, GroupHomeFragment.this, ProgressStatus.ACTIVE)).start();
+                new Thread(new GroupStartRideRunnable(rideId, GroupHomeFragment.this, ProgressStatus.ACTIVE)).start();
             }
         });
 
@@ -99,8 +100,10 @@ public class GroupHomeFragment extends Fragment {
                             previousTime = 0;
 
                             dialog.dismiss();
-                            new Thread(new GroupStartRideRunnable(groupRideFragment.id, GroupHomeFragment.this, ProgressStatus.FINISHED)).start();
-                            ((LoginActivity) getActivity()).stopGroupRide(groupRideFragment);
+                            new Thread(new GroupStartRideRunnable(rideId, GroupHomeFragment.this, ProgressStatus.FINISHED)).start();
+//                            lalalal;
+                            ((LoginActivity) getActivity()).stopGroupRide();
+//                            groupRideFragment.mPagerAdapter.getMap().removeListner();
                         }
                     })
                     .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -140,6 +143,18 @@ public class GroupHomeFragment extends Fragment {
         previousStarted = new Date(sharedPref.getLong("previousStarted", 0L));
         setTimerForDisplayingTheTimePassed();
         rideStatusUpdate(rideStatusUpdate);
+
+
+
+        //
+        mPager = (ViewPager) getActivity().findViewById(R.id.group_pager);
+
+        if (mPagerAdapter == null) {
+            mPagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
+
+        }
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setCurrentItem(1);
     }
 
     @Override
@@ -238,7 +253,6 @@ public class GroupHomeFragment extends Fragment {
             return;
         }
 
-        updateBars();
         updateTime();
         updateSpeed();
         updateDistance();
@@ -269,25 +283,32 @@ public class GroupHomeFragment extends Fragment {
         return totalTimeInSec;
     }
 
-    private void updateBars() {
-        List<Integer> activity = GroupTracking.instance.get5MinActivity();
-        int size = activity.size();
-        if (size > 9) {
-            activity = activity.subList(size - 9, size);
+
+
+    public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+
+
+        private GroupProgressBars groupProgressBars;
+        private GroupMapFragment groupMapFragment;
+
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+            groupMapFragment = new GroupMapFragment(rideId, mPager);
+            groupProgressBars = new GroupProgressBars();
         }
 
-        int maxVal = Collections.max(activity);
-        if (maxVal != 0) {
-            for (int index = 0; index < activity.size(); ++index) {
-                int distance = activity.get(index);
-
-                int barSize = distance * 100 / maxVal;
-
-                barLayout.getChildAt(index).getLayoutParams().height =
-                    Math.max(Utils.getSizeFromDP(barSize, LoginActivity.scale), 10);
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                return groupProgressBars;
             }
 
-            barLayout.requestLayout();
+            return groupMapFragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
         }
     }
 }

@@ -15,7 +15,6 @@ import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.group.GroupJoinedListFragment;
 import org.mihigh.cycling.app.group.GroupMeniuFragment;
 import org.mihigh.cycling.app.group.GroupResult;
-import org.mihigh.cycling.app.group.GroupRideFragment;
 import org.mihigh.cycling.app.group.SearchListFragment;
 import org.mihigh.cycling.app.login.FacebookFragment;
 import org.mihigh.cycling.app.login.dto.UserInfo;
@@ -174,7 +173,7 @@ public class LoginActivity extends FragmentActivity {
 
     }
 
-    public void stopGroupRide(GroupRideFragment groupRideFragment) {
+    public void stopGroupRide() {
         GroupResult fragment = (GroupResult) getSupportFragmentManager().findFragmentById(R.id.group_result);
 
         if (fragment != null) {
@@ -187,7 +186,6 @@ public class LoginActivity extends FragmentActivity {
             transaction.commit();
         }
 
-        groupRideFragment.mPagerAdapter.getMap().removeListner();
 
     }
 
