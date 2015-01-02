@@ -20,6 +20,7 @@ import com.facebook.widget.LoginButton;
 
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.http.HttpHelper;
 import org.mihigh.cycling.app.login.dto.UserInfo;
 
 import java.util.ArrayList;
@@ -91,8 +92,8 @@ public class FacebookFragment extends Fragment {
 
                                 Log.e("email", email);
 
-
-                                new Thread(new MakeLoginRunnable(new UserInfo(firstName, lastName ,email, profilePic), (LoginActivity) getActivity())).start();
+                                HttpHelper.userInfo = new UserInfo(firstName, lastName, email, profilePic);
+                                new Thread(new MakeLoginRunnable(HttpHelper.userInfo, (LoginActivity) getActivity())).start();
 
                             }
                         }

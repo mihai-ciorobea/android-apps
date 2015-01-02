@@ -30,6 +30,13 @@ public class MakeLoginRunnable implements Runnable {
 
     @Override
     public void run() {
+        makeLogin();
+
+        activity.updateUserInfo(userInfo);
+        activity.onUserLoggedIn();
+    }
+
+    public void makeLogin() {
         String url = activity.getString(R.string.server_url) + LOGIN_PATH;
 
         Gson gson = new Gson();
@@ -63,9 +70,6 @@ public class MakeLoginRunnable implements Runnable {
                  }
             }
         }
-
-        activity.updateUserInfo(userInfo);
-        activity.onUserLoggedIn();
     }
 }
 

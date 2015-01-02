@@ -101,9 +101,8 @@ public class GroupHomeFragment extends Fragment {
 
                             dialog.dismiss();
                             new Thread(new GroupStartRideRunnable(rideId, GroupHomeFragment.this, ProgressStatus.FINISHED)).start();
-//                            lalalal;
                             ((LoginActivity) getActivity()).stopGroupRide();
-//                            groupRideFragment.mPagerAdapter.getMap().removeListner();
+                            mPagerAdapter.getMap().removeListner();
                         }
                     })
                     .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -309,6 +308,10 @@ public class GroupHomeFragment extends Fragment {
         @Override
         public int getCount() {
             return 2;
+        }
+
+        public GroupMapFragment getMap() {
+            return groupMapFragment;
         }
     }
 }
