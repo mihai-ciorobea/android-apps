@@ -55,6 +55,7 @@ public class HomeFragment extends Fragment {
         LayoutTransition l = new LayoutTransition();
         l.enableTransitionType(LayoutTransition.CHANGING);
         ViewGroup viewGroup = (ViewGroup) getView().findViewById(R.id.home_buttons_layout);
+        ViewGroup viewLogoutGroup = (ViewGroup) getView().findViewById(R.id.home_logout_buttons_layout);
         viewGroup.setLayoutTransition(l);
 
         {
@@ -80,6 +81,9 @@ public class HomeFragment extends Fragment {
             });
             viewGroup.addView(button);
         }
+
+
+
         {
             LoginButton loginButton = new LoginButton(getActivity());
             loginButton.setOnClickListener(new View.OnClickListener() {
@@ -90,8 +94,7 @@ public class HomeFragment extends Fragment {
                     activity.startActivity(intent);
                 }
             });
-            viewGroup.addView(loginButton);
-
+            viewLogoutGroup.addView(loginButton);
         }
 
         Bundle args = getArguments();
