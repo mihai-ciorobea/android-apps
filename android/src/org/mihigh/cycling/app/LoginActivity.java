@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +21,7 @@ import org.mihigh.cycling.app.login.FacebookFragment;
 import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.solo.SoloResult;
 import org.mihigh.cycling.app.solo.SoloRideFragment;
+import org.mihigh.cycling.app.solo.UpdateCheckerRunnable;
 
 public class LoginActivity extends FragmentActivity {
 
@@ -51,6 +53,13 @@ public class LoginActivity extends FragmentActivity {
                 buildAlertMessageNoInternet();
             }
 
+
+
+
+            checkForUpdates();
+
+
+
             facebookFragment = new FacebookFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.login_fragment_container, facebookFragment).commit();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -58,6 +67,31 @@ public class LoginActivity extends FragmentActivity {
             transaction.addToBackStack(null);
             transaction.commit();
         }
+    }
+
+
+    public void checkForUpdates() {
+        new Thread(new UpdateCheckerRunnable(this)).start();
+    }
+
+    public void showUpdates() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+            .setTitle("Update")
+            .setMessage("Update available")
+            .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://cycling.go.ro/static/app/pages/download/Cycling%20app.apk"));
+                    startActivity(browserIntent);
+                }
+            })
+            .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 
