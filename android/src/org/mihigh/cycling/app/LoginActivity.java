@@ -18,6 +18,7 @@ import org.mihigh.cycling.app.group.GroupMeniuFragment;
 import org.mihigh.cycling.app.group.GroupResult;
 import org.mihigh.cycling.app.group.SearchListFragment;
 import org.mihigh.cycling.app.login.LoginFragment;
+import org.mihigh.cycling.app.login.MakeLoginRunnable;
 import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.solo.SoloResult;
 import org.mihigh.cycling.app.solo.SoloRideFragment;
@@ -181,8 +182,7 @@ public class LoginActivity extends FragmentActivity {
         UserInfo userInfo = new UserInfo("Undefined", "Undefined", email, LoginFragment.NO_IMAGE_URL);
         userInfo.store(this);
 
-        updateUserInfo(userInfo);
-        onUserLoggedIn();
+        new Thread(new MakeLoginRunnable(userInfo, this)).start();
     }
 
     public void startSoloRide() {

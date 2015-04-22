@@ -15,6 +15,7 @@ import org.mihigh.cycling.app.group.dto.Coordinates;
 import org.mihigh.cycling.app.group.dto.UserMapDetails;
 import org.mihigh.cycling.app.http.HttpHelper;
 import org.mihigh.cycling.app.login.MakeLoginRunnable;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -80,7 +81,7 @@ public class GroupMyPositionRunnable implements Runnable {
 
             if (httpResponse.getStatusLine().getStatusCode() == 401) {
                 new ExceptionHandler(fragment.getActivity()).sendError(new RuntimeException("Received 401"), false);
-                new MakeLoginRunnable(HttpHelper.userInfo, null).makeLogin();
+                new MakeLoginRunnable(UserInfo.restore(fragment.getActivity()), null).makeLogin();
             }
 
             BufferedReader reader;

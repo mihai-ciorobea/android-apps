@@ -3,7 +3,6 @@ package org.mihigh.cycling.app.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
-import org.mihigh.cycling.app.http.HttpHelper;
 import org.mihigh.cycling.app.login.dto.UserInfo;
 
 import java.util.Arrays;
@@ -32,12 +30,15 @@ public class LoginFragment extends Fragment {
         public void call(Session session, SessionState state, Exception exception) {
         }
     };
+    private LoginActivity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        uiHelper = new UiLifecycleHelper(getActivity(), callback);
+        activity = (LoginActivity) getActivity();
+
+        uiHelper = new UiLifecycleHelper(activity, callback);
         uiHelper.onCreate(savedInstanceState);
 
         return inflater.inflate(R.layout.login_options, container, false);
@@ -59,18 +60,13 @@ public class LoginFragment extends Fragment {
                     String profilePic = "https://graph.facebook.com/" + id + "/picture?type=large";
                     String email = user.getProperty("email").toString();
 
-                    Log.e("email", email);
+                    UserInfo userInfo = new UserInfo(firstName, lastName, email, profilePic);
+                    userInfo.store(activity);
 
-                    HttpHelper.userInfo = new UserInfo(firstName, lastName, email, profilePic);
-                    new Thread(new MakeLoginRunnable(HttpHelper.userInfo, (LoginActivity) getActivity())).start();
-                    storeUserData(HttpHelper.userInfo);
+                    new Thread(new MakeLoginRunnable(userInfo, activity)).start();
                 }
             }
         });
-    }
-
-    private void storeUserData(UserInfo userInfo) {
-        userInfo.store(this.getActivity());
     }
 
     @Override
@@ -89,13 +85,13 @@ public class LoginFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        AppEventsLogger.activateApp(getActivity());
+        AppEventsLogger.activateApp(activity);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Session.getActiveSession().onActivityResult(getActivity(), requestCode, resultCode, data);
+        Session.getActiveSession().onActivityResult(activity, requestCode, resultCode, data);
     }
 
     @Override
