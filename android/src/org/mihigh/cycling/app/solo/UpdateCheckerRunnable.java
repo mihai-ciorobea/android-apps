@@ -3,6 +3,7 @@ package org.mihigh.cycling.app.solo;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -34,6 +35,10 @@ public class UpdateCheckerRunnable implements Runnable {
 
             // Execute HTTP Post Request
             HttpResponse execute = httpclient.execute(httpCall);
+
+            if (execute.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new RuntimeException("Expected 200 and received " + execute.getStatusLine().getStatusCode());
+            }
 
             Integer lastVersion = Mapping.<Integer>map(execute.getEntity().getContent(), Integer.TYPE);
             if (lastVersion > versionCode) {

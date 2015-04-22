@@ -13,8 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import com.facebook.widget.LoginButton;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 
 public class HomeFragment extends Fragment {
 
@@ -89,6 +89,8 @@ public class HomeFragment extends Fragment {
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    UserInfo.restore(getActivity()).clearStore(getActivity());
+
                     FragmentActivity activity = HomeFragment.this.getActivity();
                     Intent intent = new Intent(activity, LoginActivity.class);
                     activity.startActivity(intent);

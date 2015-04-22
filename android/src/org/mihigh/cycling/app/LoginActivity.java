@@ -11,13 +11,13 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-
+import android.view.View;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.group.GroupJoinedListFragment;
 import org.mihigh.cycling.app.group.GroupMeniuFragment;
 import org.mihigh.cycling.app.group.GroupResult;
 import org.mihigh.cycling.app.group.SearchListFragment;
-import org.mihigh.cycling.app.login.FacebookFragment;
+import org.mihigh.cycling.app.login.LoginFragment;
 import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.solo.SoloResult;
 import org.mihigh.cycling.app.solo.SoloRideFragment;
@@ -27,7 +27,7 @@ public class LoginActivity extends FragmentActivity {
 
     private String userName;
     public static float scale;
-    private FacebookFragment facebookFragment;
+    private LoginFragment loginFragment;
     private GroupMeniuFragment groupMeniuFragment;
     public static UserInfo userInfo;
 
@@ -53,17 +53,21 @@ public class LoginActivity extends FragmentActivity {
                 buildAlertMessageNoInternet();
             }
 
-
-
-
             checkForUpdates();
 
+            // We have user details
+            UserInfo userInfo = UserInfo.restore(this);
+            if (userInfo != null) {
+                updateUserInfo(userInfo);
+                onUserLoggedIn();
+                return;
+            }
 
-
-            facebookFragment = new FacebookFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.login_fragment_container, facebookFragment).commit();
+            // Request user details
+            loginFragment = new LoginFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.login_fragment_container, loginFragment).commit();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.login_fragment_container, facebookFragment);
+            transaction.replace(R.id.login_fragment_container, loginFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         }
@@ -136,7 +140,7 @@ public class LoginActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        facebookFragment.onActivityResult(requestCode, resultCode, data);
+        loginFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -150,7 +154,7 @@ public class LoginActivity extends FragmentActivity {
     }
 
     public void updateUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
+        LoginActivity.userInfo = userInfo;
     }
 
     public void onUserLoggedIn() {
@@ -170,6 +174,15 @@ public class LoginActivity extends FragmentActivity {
             transaction.addToBackStack(null);
             transaction.commit();
         }
+    }
+
+    public void skipLogin(View view) {
+        String email = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID) + "@mihigh.com";
+        UserInfo userInfo = new UserInfo("Undefined", "Undefined", email, LoginFragment.NO_IMAGE_URL);
+        userInfo.store(this);
+
+        updateUserInfo(userInfo);
+        onUserLoggedIn();
     }
 
     public void startSoloRide() {
