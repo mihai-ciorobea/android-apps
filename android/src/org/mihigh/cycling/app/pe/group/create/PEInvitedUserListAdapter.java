@@ -1,4 +1,4 @@
-package org.mihigh.cycling.app.pe.groups.create;
+package org.mihigh.cycling.app.pe.group.create;
 
 import android.app.Activity;
 import android.view.View;

@@ -9,9 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import org.mihigh.cycling.app.R;
-import org.mihigh.cycling.app.pe.groups.create.PECreateGroup;
+import org.mihigh.cycling.app.login.dto.UserInfo;
+import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
+import org.mihigh.cycling.app.pe.group.create.PECreateGroup;
+import org.mihigh.cycling.app.pe.group.dto.PECheckGroupForUser;
 
 public class PEHome extends Fragment {
+
+    private boolean hasGroup = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -23,56 +28,70 @@ public class PEHome extends Fragment {
     public void onStart() {
         super.onStart();
 
+        checkHasGroup();
+
         LayoutTransition l = new LayoutTransition();
         l.enableTransitionType(LayoutTransition.CHANGING);
         ViewGroup viewGroup = (ViewGroup) getView().findViewById(R.id.pe_home_buttons_container);
         viewGroup.setLayoutTransition(l);
 
         {
-            Button button = new Button(getActivity());
-            button.setText("Create Group");
-            button.setOnClickListener(new View.OnClickListener() {
+            Button createButton = new Button(getActivity());
+            createButton.setText("Create Group");
+            createButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     gotoCreateGroup();
                 }
             });
-            viewGroup.addView(button);
+            createButton.setVisibility(!hasGroup ? View.VISIBLE : View.INVISIBLE);
+            viewGroup.addView(createButton);
         }
 
         {
-            Button button = new Button(getActivity());
-            button.setText("Join Group");
-            button.setOnClickListener(new View.OnClickListener() {
+            Button joinButton = new Button(getActivity());
+            joinButton.setText("Join Group");
+            joinButton.setVisibility(!hasGroup ? View.VISIBLE : View.INVISIBLE);
+            joinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                 }
             });
-            viewGroup.addView(button);
+            viewGroup.addView(joinButton);
         }
 
         {
-            Button button = new Button(getActivity());
-            button.setText("To Your Group");
-            button.setOnClickListener(new View.OnClickListener() {
+            Button groupButton = new Button(getActivity());
+            groupButton.setText("To Your Group");
+            groupButton.setVisibility(hasGroup ? View.VISIBLE : View.INVISIBLE);
+            groupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                 }
             });
-            viewGroup.addView(button);
+            viewGroup.addView(groupButton);
         }
 
         {
-            Button button = new Button(getActivity());
-            button.setText("Route");
-            button.setOnClickListener(new View.OnClickListener() {
+            Button routeButton = new Button(getActivity());
+            routeButton.setText("Route");
+            routeButton.setVisibility(View.VISIBLE);
+            routeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                 }
             });
-            viewGroup.addView(button);
+            viewGroup.addView(routeButton);
         }
 
+    }
+
+    private void checkHasGroup() {
+        hasGroup = PEGroupDetails.getHasGroup(getActivity());
+        if (!hasGroup) {
+            //go on server and check if user has a group
+            new Thread(new PECheckGroupForUser(UserInfo.restore(getActivity()), PEHome.this)).start();
+        }
     }
 
     private void gotoCreateGroup() {
@@ -84,5 +103,9 @@ public class PEHome extends Fragment {
         transaction.replace(R.id.login_fragment_container, peCreateGroup);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void updateHasGroup() {
+
     }
 }

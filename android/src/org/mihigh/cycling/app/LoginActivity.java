@@ -58,8 +58,7 @@ public class LoginActivity extends FragmentActivity {
             // We have user details
             UserInfo userInfo = UserInfo.restore(this);
             if (userInfo != null) {
-                updateUserInfo(userInfo);
-                onUserLoggedIn();
+                new Thread(new MakeLoginRunnable(userInfo, this)).start();
                 return;
             }
 
