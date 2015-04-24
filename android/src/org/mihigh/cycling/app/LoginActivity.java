@@ -20,16 +20,15 @@ import org.mihigh.cycling.app.group.SearchListFragment;
 import org.mihigh.cycling.app.login.LoginFragment;
 import org.mihigh.cycling.app.login.MakeLoginRunnable;
 import org.mihigh.cycling.app.login.dto.UserInfo;
+import org.mihigh.cycling.app.pe.PEHome;
 import org.mihigh.cycling.app.solo.SoloResult;
 import org.mihigh.cycling.app.solo.SoloRideFragment;
 import org.mihigh.cycling.app.solo.UpdateCheckerRunnable;
 
 public class LoginActivity extends FragmentActivity {
 
-    private String userName;
     public static float scale;
     private LoginFragment loginFragment;
-    private GroupMeniuFragment groupMeniuFragment;
     public static UserInfo userInfo;
 
 
@@ -81,20 +80,20 @@ public class LoginActivity extends FragmentActivity {
 
     public void showUpdates() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-            .setTitle("Update")
-            .setMessage("Update available")
-            .setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://cycling.go.ro/static/app/pages/download/Cycling%20app.apk"));
-                    startActivity(browserIntent);
-                }
-            })
-            .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+                .setTitle("Update")
+                .setMessage("Update available")
+                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://cycling.go.ro/static/app/pages/download/Cycling%20app.apk"));
+                        startActivity(browserIntent);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -103,29 +102,25 @@ public class LoginActivity extends FragmentActivity {
     private void buildAlertMessageNoInternet() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your MobileData seems to be disabled, do you want to enable it? The app will not work without it.")
-            .setCancelable(false)
-            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                    startActivity(new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS));
-                }
-            })
-            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                    dialog.cancel();
-                }
-            });
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
         final AlertDialog alert = builder.create();
         alert.show();
     }
+
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
-        if (ni == null) {
-            // There are no active networks.
-            return false;
-        } else {
-            return true;
-        }
+        return ni != null;
     }
 
     @Override
@@ -166,9 +161,6 @@ public class LoginActivity extends FragmentActivity {
             fragment.updateHomeView();
         } else {
             HomeFragment newFragment = new HomeFragment();
-            Bundle args = new Bundle();
-            args.putString(HomeFragment.USER, userName);
-            newFragment.setArguments(args);
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.login_fragment_container, newFragment);
@@ -178,7 +170,7 @@ public class LoginActivity extends FragmentActivity {
     }
 
     public void skipLogin(View view) {
-        String email = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID) + "@mihigh.com";
+        String email = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID) + "@bikeroute.com";
         UserInfo userInfo = new UserInfo("Undefined", "Undefined", email, LoginFragment.NO_IMAGE_URL);
         userInfo.store(this);
 
@@ -193,9 +185,6 @@ public class LoginActivity extends FragmentActivity {
             fragment.updateHomeView();
         } else {
             SoloRideFragment newFragment = new SoloRideFragment();
-            Bundle args = new Bundle();
-            args.putString(HomeFragment.USER, userName);
-            newFragment.setArguments(args);
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.login_fragment_container, newFragment);
@@ -237,8 +226,7 @@ public class LoginActivity extends FragmentActivity {
     }
 
     public void startGroupRide() {
-        //Check if home already exists
-        groupMeniuFragment = (GroupMeniuFragment) getSupportFragmentManager().findFragmentById(R.id.group_fragment_container);
+        GroupMeniuFragment groupMeniuFragment = (GroupMeniuFragment) getSupportFragmentManager().findFragmentById(R.id.group_fragment_container);
 
         if (groupMeniuFragment != null) {
             groupMeniuFragment.updateHomeView();
@@ -249,6 +237,16 @@ public class LoginActivity extends FragmentActivity {
             transaction.addToBackStack(null);
             transaction.commit();
         }
+    }
+
+    public void startPrimaEvadare() {
+        PEHome peHome = (PEHome) getSupportFragmentManager().findFragmentById(R.id.pe_home_container);
+
+        peHome = peHome == null ? new PEHome() : peHome;
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.login_fragment_container, peHome);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void searchForRide() {
@@ -282,12 +280,5 @@ public class LoginActivity extends FragmentActivity {
         }
 
     }
-
-  @Override
-  public String toString() {
-    return "LoginActivity{" +
-           "userName='" + userName + '\'' +
-           '}';
-  }
 }
 

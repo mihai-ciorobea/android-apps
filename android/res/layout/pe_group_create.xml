@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/pe_create_group_container"
+              android:layout_width="match_parent"
+              android:layout_height="fill_parent"
+              android:gravity="center|top"
+              android:orientation="vertical"
+              android:layout_gravity="bottom|center"
+              android:background="#aa3b3b3b"
+              android:weightSum="10"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px">
+
+    <TextView android:textSize="30sp"
+              android:layout_width="wrap_content"
+              android:layout_height="0dp"
+              android:layout_weight="1"
+              android:gravity="center"
+              android:text="New Group"/>
+
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="2"
+                  android:orientation="horizontal"
+                  android:layout_marginLeft="20dp"
+                  android:layout_marginBottom="20dp">
+        <TextView android:textSize="20sp"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="50dp"
+                  android:gravity="center"
+                  android:text="Name:"/>
+        <EditText android:id="@+id/pe_create_group_name"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="50dp"
+                  android:hint=""
+                  android:inputType="text">
+        </EditText>
+    </LinearLayout>
+
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:orientation="vertical"
+                  android:layout_marginLeft="10dp"
+                  android:gravity="center|top">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal">
+
+            <TextView android:textSize="20sp"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="2dp"
+                      android:gravity="center"
+                      android:text="Add user:"/>
+            <Button android:id="@+id/pe_create_group_add_email"
+                    android:padding="10dp"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/gray_button"
+                    android:text="Email"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"/>
+
+            <Button android:id="@+id/pe_create_group_add_id"
+                    android:padding="10dp"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/gray_button"
+                    android:text="Id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"/>
+
+            <!--<Button android:id="@+id/pe_create_group_add_nfc"-->
+                    <!--android:padding="10dp"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:background="@drawable/gray_button"-->
+                    <!--android:text="NFC"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:layout_marginRight="5dp"-->
+                    <!--android:layout_marginLeft="10dp"/>-->
+        </LinearLayout>
+    </LinearLayout>
+
+    <ListView
+            android:id="@+id/pe_create_group_invited_users"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/EnterPays_addAtomPayment" >
+
+    </ListView>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:orientation="horizontal"
+                  android:gravity="center|bottom"
+                  android:layout_marginBottom="10dp">
+        <Button android:id="@+id/pe_create_group_cancel"
+                android:padding="10dp"
+                android:textColor="#ffffff"
+                android:background="@drawable/red_button"
+                android:text="Cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"/>
+        <Button android:id="@+id/pe_create_group_create"
+                android:padding="10dp"
+                android:textColor="#ffffff"
+                android:background="@drawable/green_button"
+                android:text="Create"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"/>
+    </LinearLayout>
+</LinearLayout>

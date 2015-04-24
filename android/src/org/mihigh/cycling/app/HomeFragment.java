@@ -19,22 +19,23 @@ import org.mihigh.cycling.app.login.dto.UserInfo;
 public class HomeFragment extends Fragment {
 
     public static final String USER = "USER_DETAILS";
+    private LoginActivity activity;
 
 
     private void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it? The app will not work without it.")
-            .setCancelable(false)
-            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                }
-            })
-            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                    dialog.cancel();
-                }
-            });
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
         final AlertDialog alert = builder.create();
         alert.show();
     }
@@ -43,6 +44,9 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        activity = (LoginActivity) getActivity();
+
         return inflater.inflate(R.layout.home, container, false);
 
     }
@@ -59,39 +63,49 @@ public class HomeFragment extends Fragment {
         viewGroup.setLayoutTransition(l);
 
         {
-            Button button = new Button(getActivity());
+            Button button = new Button(activity);
             button.setText("Solo Ride");
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((LoginActivity) getActivity()).startSoloRide();
+                    activity.startSoloRide();
                 }
             });
             viewGroup.addView(button);
         }
 
         {
-            Button button = new Button(getActivity());
+            Button button = new Button(activity);
             button.setText("Group Ride");
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((LoginActivity) getActivity()).startGroupRide();
+                    activity.startGroupRide();
                 }
             });
             viewGroup.addView(button);
         }
 
-
+        {
+            Button button = new Button(activity);
+            button.setText("Prima Evadare");
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.startPrimaEvadare();
+                }
+            });
+            viewGroup.addView(button);
+        }
 
         {
-            LoginButton loginButton = new LoginButton(getActivity());
+            LoginButton loginButton = new LoginButton(activity);
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UserInfo.restore(getActivity()).clearStore(getActivity());
+                    UserInfo.restore(activity).clearStore(activity);
 
-                    FragmentActivity activity = HomeFragment.this.getActivity();
+                    FragmentActivity activity = HomeFragment.this.activity;
                     Intent intent = new Intent(activity, LoginActivity.class);
                     activity.startActivity(intent);
                 }
@@ -104,7 +118,7 @@ public class HomeFragment extends Fragment {
             updateHomeView();
         }
 
-        LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager manager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
         }

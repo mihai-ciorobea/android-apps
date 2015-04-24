@@ -1,7 +1,6 @@
 package org.mihigh.cycling.app.filter;
 
 import android.app.Activity;
-
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -18,15 +17,15 @@ public class SendErrorRunnable implements Runnable {
     public static final String PATH = "/api/v1/error";
     private final Activity activity;
     private String errorData;
-    private boolean killable;
+    private boolean kill;
     private int pid;
 
-    private static final ArrayList<SendErrorRunnable> old = new ArrayList<SendErrorRunnable>();
+    private static final ArrayList<SendErrorRunnable> oldErrors = new ArrayList<SendErrorRunnable>();
 
-    public SendErrorRunnable(Activity activity, String errorData, boolean killable, int pid) {
+    public SendErrorRunnable(Activity activity, String errorData, boolean kill, int pid) {
         this.activity = activity;
         this.errorData = errorData;
-        this.killable = killable;
+        this.kill = kill;
         this.pid = pid;
     }
 
@@ -34,24 +33,27 @@ public class SendErrorRunnable implements Runnable {
     public void run() {
         execute();
 
-        ArrayList<SendErrorRunnable> retry = new ArrayList<SendErrorRunnable>(old);
-        old.clear();
+        ArrayList<SendErrorRunnable> retryErrors = new ArrayList<SendErrorRunnable>(oldErrors);
+        oldErrors.clear();
 
-        boolean sendHttpCall = true;
-        for (SendErrorRunnable oldItem : retry) {
-            if (oldItem != null) {
-                if (sendHttpCall == true) {
-                    sendHttpCall = oldItem.execute();
-                } else {
-                    old.add(oldItem);
+        for (SendErrorRunnable error : retryErrors) {
+            if (error != null) {
+                if (!error.execute()) {
+                    oldErrors.add(error);
                 }
             }
         }
 
-        if (killable == true) {
+        if (kill) {
             android.os.Process.killProcess(pid);
         }
+
+        try {
+            Thread.sleep(1000 * 60);
+        } catch (InterruptedException ignored) {
+        }
     }
+
 
     private boolean execute() {
         String url = activity.getString(R.string.server_url) + PATH;
@@ -69,8 +71,6 @@ public class SendErrorRunnable implements Runnable {
             httpclient.execute(httppost);
             return true;
         } catch (Exception e) {
-            new ExceptionHandler(activity).sendError(e, false);
-            old.add(this);
             return false;
         }
     }
