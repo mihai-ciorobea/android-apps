@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/pe_join_group_container"
+              android:layout_width="match_parent"
+              android:layout_height="fill_parent"
+              android:gravity="center|top"
+              android:orientation="vertical"
+              android:layout_gravity="bottom|center"
+              android:background="#aa3b3b3b"
+              android:weightSum="10"
+              android:layout_marginLeft="10px"
+              android:layout_marginRight="10px">
+
+    <TextView android:textSize="30sp"
+              android:layout_width="wrap_content"
+              android:layout_height="0dp"
+              android:layout_weight="1"
+              android:gravity="center"
+              android:text="Join Group"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:orientation="horizontal"
+                  android:gravity="center|bottom"
+                  android:layout_marginBottom="10dp">
+        <Button android:id="@+id/pe_join_group_invites_button"
+                android:padding="10dp"
+                android:textColor="#ffffff"
+                android:background="@drawable/gray_button"
+                android:text="Invites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"/>
+        <Button android:id="@+id/pe_join_group_search_group_button"
+                android:padding="10dp"
+                android:textColor="#ffffff"
+                android:background="@drawable/gray_button"
+                android:text="Search group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"/>
+    </LinearLayout>
+
+
+    <!-- Invites -->
+    <TextView android:id="@+id/pe_join_group_invites_none"
+              android:textSize="20sp"
+              android:layout_width="wrap_content"
+              android:layout_height="0dp"
+              android:layout_weight="5"
+              android:gravity="center"
+              android:visibility="gone"
+              android:text="No invites !\n Search to join a group"/>
+
+    <ListView
+            android:id="@+id/pe_join_group_invites_list"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8"
+            android:layout_marginLeft="10dp"
+            >
+    </ListView>
+
+
+    <!-- Search -->
+    <LinearLayout android:id="@+id/pe_join_group_search_box"
+                  android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:visibility="gone"
+                  android:background="#aa3b3b3b"
+                  android:orientation="horizontal">
+        <SearchView android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pe_join_group_search"
+                    android:text="Search"/>
+
+    </LinearLayout>
+    <ListView
+            android:id="@+id/pe_join_group_search_list"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            >
+    </ListView>
+
+</LinearLayout>

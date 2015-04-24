@@ -1,7 +1,6 @@
-package org.mihigh.cycling.app.pe.group.create;
+package org.mihigh.cycling.app.pe.group.join.search;
 
-import android.app.ProgressDialog;
-import android.support.v4.app.Fragment;
+import android.app.Dialog;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 import org.apache.http.HttpResponse;
@@ -18,29 +17,24 @@ import org.mihigh.cycling.app.http.HttpHelper;
 import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-public class CreateGroupRunnable implements Runnable {
-    private static final String PATH_CREATE_GROUP = "/api/v1/group";
-    private final String groupName;
-    private final ArrayList<String> users;
-    private Fragment fragment;
-    private ProgressDialog progress;
-    private FragmentActivity activity;
+public class RequestInvitationRunnable implements Runnable {
+    private static final String PATH_CREATE_GROUP = "/api/v1/invitation/%s";
 
-    public CreateGroupRunnable(String groupName, ArrayList<String> users, Fragment fragment, ProgressDialog progress) {
-        this.groupName = groupName;
-        this.users = users;
-        this.fragment = fragment;
+    private final PEGroupDetails groupDetails;
+    private final FragmentActivity activity;
+    private final Dialog progress;
+
+
+    public RequestInvitationRunnable(PEGroupDetails groupDetails, FragmentActivity activity, Dialog progress) {
+        this.groupDetails = groupDetails;
+        this.activity = activity;
         this.progress = progress;
-
-        activity = fragment.getActivity();
     }
 
     @Override
     public void run() {
-        String url = fragment.getString(R.string.server_url) + PATH_CREATE_GROUP;
+        String url = activity.getString(R.string.server_url) + String.format(PATH_CREATE_GROUP, groupDetails.id);
 
         try {
             HttpClient httpclient = new DefaultHttpClient();
@@ -51,10 +45,7 @@ public class CreateGroupRunnable implements Runnable {
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
 
             // Add your data
-            HashMap<String, String> data = new HashMap<String, String>();
-            data.put("name", groupName);
-            data.put("users", users.toString());
-            httpCall.setEntity(new StringEntity(HttpHelper.getGson().toJson(data)));
+            httpCall.setEntity(new StringEntity("create"));
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httpCall);
@@ -65,21 +56,19 @@ public class CreateGroupRunnable implements Runnable {
             }
 
             // all good
-            new PEGroupDetails().setHasGroup(activity, true);
+            progress.dismiss();
         } catch (Exception e) {
             new ExceptionHandler(activity).sendError(e, false);
 
+            progress.dismiss();
             activity.runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(activity, "Try again..", Toast.LENGTH_LONG).show();
-                    progress.dismiss();
                 }
             });
-            return;
         }
 
-        progress.dismiss();
-        fragment.getFragmentManager().popBackStack();
+
 
     }
 }

@@ -27,11 +27,11 @@ public class PEInvitedUserListAdapter extends ArrayAdapter<PEInvitedUser> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = activity.getLayoutInflater().inflate(invitedUserLayoutResourceId, parent, false);
 
-        final PaymentHolder holder = new PaymentHolder();
+        final RowDataHolder holder = new RowDataHolder();
         holder.PEInvitedUser = items.get(position);
-        holder.removePaymentButton = (ImageButton) row.findViewById(R.id.pe_group_create_invite_user_remove);
-        holder.removePaymentButton.setTag(holder.PEInvitedUser);
-        holder.removePaymentButton.setOnClickListener(new View.OnClickListener() {
+        holder.removeButton = (ImageButton) row.findViewById(R.id.pe_group_create_invite_user_remove);
+        holder.removeButton.setTag(holder.PEInvitedUser);
+        holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 items.remove(holder.PEInvitedUser);
@@ -45,10 +45,10 @@ public class PEInvitedUserListAdapter extends ArrayAdapter<PEInvitedUser> {
         return row;
     }
 
-    public static class PaymentHolder {
+    public static class RowDataHolder {
         PEInvitedUser PEInvitedUser;
         TextView email;
-        ImageButton removePaymentButton;
+        ImageButton removeButton;
     }
 
 }

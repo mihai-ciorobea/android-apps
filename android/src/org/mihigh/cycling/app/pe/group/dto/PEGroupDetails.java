@@ -9,8 +9,11 @@ public class PEGroupDetails {
 
     public static final String SHARED_PREFERENCES_NAME = "GROUP_INFO";
 
+    public String name;
+    public String id;
+
     // Only store the fact that the user has a group
-    public void setHasGroup(Activity activity, boolean hasGroup) {
+    public static void setHasGroup(Activity activity, boolean hasGroup) {
         Log.e(PEGroupDetails.class.getName(), "Store hasGroup=" + hasGroup);
 
         SharedPreferences settings = activity.getSharedPreferences(PEGroupDetails.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);

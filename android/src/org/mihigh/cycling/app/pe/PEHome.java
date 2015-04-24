@@ -3,16 +3,17 @@ package org.mihigh.cycling.app.pe;
 import android.animation.LayoutTransition;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import org.mihigh.cycling.app.R;
-import org.mihigh.cycling.app.login.dto.UserInfo;
-import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 import org.mihigh.cycling.app.pe.group.create.PECreateGroup;
-import org.mihigh.cycling.app.pe.group.dto.PECheckGroupForUser;
+import org.mihigh.cycling.app.pe.group.details.PEGroupHome;
+import org.mihigh.cycling.app.pe.group.dto.PECheckGroupForUserRunnable;
+import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
+import org.mihigh.cycling.app.pe.group.join.PEJoinGroup;
+import org.mihigh.cycling.app.utils.Navigation;
 
 public class PEHome extends Fragment {
 
@@ -55,6 +56,7 @@ public class PEHome extends Fragment {
             joinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    gotoJoinGroup();
                 }
             });
             viewGroup.addView(joinButton);
@@ -67,6 +69,8 @@ public class PEHome extends Fragment {
             groupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    PEGroupDetails.setHasGroup(getActivity(), false);
+                    gotoGroupDetails();
                 }
             });
             viewGroup.addView(groupButton);
@@ -90,22 +94,24 @@ public class PEHome extends Fragment {
         hasGroup = PEGroupDetails.getHasGroup(getActivity());
         if (!hasGroup) {
             //go on server and check if user has a group
-            new Thread(new PECheckGroupForUser(UserInfo.restore(getActivity()), PEHome.this)).start();
+            new Thread(new PECheckGroupForUserRunnable(PEHome.this)).start();
         }
     }
 
-    private void gotoCreateGroup() {
-        //Check if home already exists
-        PECreateGroup peCreateGroup = (PECreateGroup) this.getActivity().getSupportFragmentManager().findFragmentById(R.id.pe_create_group_container);
-        peCreateGroup = peCreateGroup == null ? new PECreateGroup() : peCreateGroup;
 
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.login_fragment_container, peCreateGroup);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    private void gotoCreateGroup() {
+        Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PECreateGroup());
+    }
+
+    private void gotoJoinGroup() {
+        Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PEJoinGroup());
+    }
+
+    public void gotoGroupDetails() {
+        Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PEGroupHome());
     }
 
     public void updateHasGroup() {
-
+        Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PEHome());
     }
 }

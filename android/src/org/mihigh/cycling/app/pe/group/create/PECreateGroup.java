@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.utils.LoadingUtils;
 
 import java.util.ArrayList;
 
@@ -122,19 +123,10 @@ public class PECreateGroup extends Fragment {
                     users.add(user.email);
                 }
 
-
-                final ProgressDialog progress = new ProgressDialog(getActivity());
-                progress.setTitle("Loading");
-                progress.setMessage("Wait while saving...");
-                progress.show();
-
+                ProgressDialog progress = LoadingUtils.createLoadingDialog(getActivity());
                 new Thread(new CreateGroupRunnable(groupName, users, PECreateGroup.this, progress)).start();
-
-
             }
         });
-
-
     }
 
     private void setupCancelButton() {
