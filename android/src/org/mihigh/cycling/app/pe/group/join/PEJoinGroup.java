@@ -1,5 +1,7 @@
 package org.mihigh.cycling.app.pe.group.join;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 import org.mihigh.cycling.app.pe.group.join.invitation.GetInvitationsRunnable;
 import org.mihigh.cycling.app.pe.group.join.invitation.PEJoinInvitationListAdapter;
@@ -36,8 +39,38 @@ public class PEJoinGroup extends Fragment {
     public void onStart() {
         super.onStart();
 
+        setupSettings();
         setupInvites();
         setupSearch();
+
+    }
+
+    private void setupSettings() {
+        getView().findViewById(R.id.pe_join_group_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(PEJoinGroup.this.getActivity());
+
+                UserInfo userInfo = UserInfo.restore(getActivity());
+
+                String label = "email";
+                String value =  userInfo.getEmail();
+                if (userInfo.isGenerated()) {
+                    label = "id";
+                    value = userInfo.getEmail().split("@")[0];
+                }
+
+                alert.setTitle("Your " + label);
+                alert.setMessage(value);
+
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+
+                alert.show();
+            }
+        });
 
     }
 
@@ -58,6 +91,14 @@ public class PEJoinGroup extends Fragment {
         seartchList.setAdapter(adapter);
 
         searchBox = getActivity().findViewById(R.id.pe_join_group_search_box);
+        searchBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search.setFocusable(true);
+                search.requestFocusFromTouch();
+            }
+        });
+
         search = (SearchView) getActivity().findViewById(R.id.pe_join_group_search);
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 

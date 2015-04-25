@@ -10,13 +10,27 @@
               android:weightSum="10"
               android:layout_marginLeft="10px"
               android:layout_marginRight="10px">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:weightSum="10"
+                  android:orientation="horizontal"
+                  android:gravity="center|bottom"
+                  android:layout_marginBottom="10dp">
+        <TextView android:textSize="30sp"
+                  android:layout_height="match_parent"
+                  android:layout_width="0dp"
+                  android:layout_weight="8"
+                  android:gravity="center"
+                  android:text="Join Group"/>
 
-    <TextView android:textSize="30sp"
-              android:layout_width="wrap_content"
-              android:layout_height="0dp"
-              android:layout_weight="1"
-              android:gravity="center"
-              android:text="Join Group"/>
+        <ImageButton android:id="@+id/pe_join_group_settings"
+                     android:layout_height="match_parent"
+                     android:layout_width="0dp"
+                     android:layout_weight="2"
+                     android:src="@android:drawable/ic_menu_manage"
+                />
+    </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="0dp"

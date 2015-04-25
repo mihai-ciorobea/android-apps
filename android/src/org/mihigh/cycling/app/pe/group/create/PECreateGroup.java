@@ -47,7 +47,7 @@ public class PECreateGroup extends Fragment {
                 AlertDialog.Builder alert = new AlertDialog.Builder(PECreateGroup.this.getActivity());
 
                 alert.setTitle("Add User");
-                alert.setMessage("Type id. The user id can be found in \"Join group\" menu");
+                alert.setMessage("Type id. The user id can be found in \"Prima Evadare\" menu");
 
                 // Set an EditText view to get user input
                 final EditText input = new EditText(PECreateGroup.this.getActivity());

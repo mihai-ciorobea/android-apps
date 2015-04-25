@@ -55,6 +55,10 @@ public class UserInfo {
         this.lastName = lastName;
     }
 
+    public boolean isGenerated() {
+        return email.contains("bikeroute");
+    }
+
     public void store(Activity activity) {
         Log.e(UserInfo.class.getName(), "Store " + this.toString());
 

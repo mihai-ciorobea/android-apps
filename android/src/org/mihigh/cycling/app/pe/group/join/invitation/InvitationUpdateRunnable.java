@@ -70,7 +70,7 @@ public class InvitationUpdateRunnable implements Runnable {
                         peJoinInvitationListAdapter.deleteInvitation(groupDetails);
                     } else {
                         Navigation.changeFragment(activity, R.id.pe_group_home_container, new PEGroupHome());
-
+                        PEGroupDetails.setHasGroup(activity, true);
                     }
                 }
             });
