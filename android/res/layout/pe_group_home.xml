@@ -11,12 +11,70 @@
               android:layout_marginLeft="10px"
               android:layout_marginRight="10px">
 
-    <TextView android:textSize="30sp"
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:weightSum="10"
+                  android:orientation="horizontal"
+                  android:gravity="center|bottom"
+                  android:layout_marginBottom="10dp">
+        <TextView android:textSize="30sp"
+                  android:layout_height="match_parent"
+                  android:layout_width="0dp"
+                  android:layout_weight="8"
+                  android:gravity="center"
+                  android:text="Group Details"/>
+
+        <ImageButton android:id="@+id/pe_group_home_settings"
+                     android:layout_height="match_parent"
+                     android:layout_width="0dp"
+                     android:layout_weight="2"
+                     android:src="@android:drawable/ic_menu_manage"/>
+    </LinearLayout>
+
+    <!-- History -->
+    <TextView android:id="@+id/pe_group_home_no_history"
+              android:textSize="20sp"
               android:layout_width="wrap_content"
               android:layout_height="0dp"
-              android:layout_weight="1"
+              android:layout_weight="8"
+              android:visibility="gone"
               android:gravity="center"
-              android:text="Group Details"/>
+              android:text="No history !\n Be the first one to say something"/>
+
+    <ListView
+            android:id="@+id/pe_group_home_history"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8"
+            android:layout_marginLeft="10dp">
+    </ListView>
+
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:weightSum="10"
+                  android:orientation="horizontal"
+                  android:gravity="center|bottom"
+                  android:layout_marginBottom="10dp">
+
+        <EditText android:id="@+id/pe_group_home_new_text"
+                  android:textSize="15sp"
+                  android:layout_height="match_parent"
+                  android:layout_width="0dp"
+                  android:layout_weight="8"
+                  android:gravity="center"
+                  android:inputType="textEmailAddress|textEmailSubject"
+                  android:textColor="@android:color/white"
+                  android:hint="New message"/>
+
+        <ImageButton android:id="@+id/pe_group_home_send"
+                     android:layout_height="match_parent"
+                     android:layout_width="0dp"
+                     android:layout_weight="2"
+                     android:src="@android:drawable/ic_menu_send"/>
+    </LinearLayout>
 
 
 </LinearLayout>

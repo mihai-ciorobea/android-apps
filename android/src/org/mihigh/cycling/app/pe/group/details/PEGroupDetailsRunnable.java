@@ -1,4 +1,4 @@
-package org.mihigh.cycling.app.pe.group.dto;
+package org.mihigh.cycling.app.pe.group.details;
 
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
@@ -10,18 +10,16 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
-import org.mihigh.cycling.app.pe.PEHome;
 import org.mihigh.cycling.app.pe.group.get.PEUserGroups;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-public class PECheckGroupForUserRunnable implements Runnable {
+public class PEGroupDetailsRunnable implements Runnable {
     private static final String PATH_CREATE_GROUP = "/api/v1/group?state=joined";
-    private final PEHome fragment;
+    private final PEGroupHome fragment;
 
-    public
-    PECheckGroupForUserRunnable(PEHome fragment) {
+    public PEGroupDetailsRunnable(PEGroupHome fragment) {
         this.fragment = fragment;
     }
 
@@ -50,15 +48,14 @@ public class PECheckGroupForUserRunnable implements Runnable {
             // deserialize
             Type type = new TypeToken<PEUserGroups>() {
             }.getType();
-            PEUserGroups groups = HttpHelper.fromInputStream(response.getEntity().getContent(), type);
+            final PEUserGroups groups = HttpHelper.fromInputStream(response.getEntity().getContent(), type);
             if (groups != null
                     && groups.groups != null
                     && !groups.groups.isEmpty()) {
-                groups.groups.get(0).setHasGroup(fragment.getActivity(), true);
 
                 fragment.getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-                        fragment.updateHasGroup();
+                        fragment.updateDetails(groups.groups.get(0));
                     }
                 });
             }
