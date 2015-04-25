@@ -37,7 +37,7 @@ public class PEGroupHomeSettings extends Fragment {
         getView().findViewById(R.id.pe_group_details_settings_leave).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(new LeaveGroupRunnable(getActivity(), groupDetails));
+                new Thread(new LeaveGroupRunnable(getActivity(), groupDetails)).start();
             }
         });
     }

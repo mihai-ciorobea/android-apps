@@ -59,8 +59,6 @@ public class LeaveGroupRunnable implements Runnable {
         } catch (Exception e) {
             new ExceptionHandler(activity).sendError(e, false);
             LoadingUtils.makeToast(activity, "Try again..");
-
         }
-
     }
 }
