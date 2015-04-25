@@ -7,8 +7,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.pe.group.details.dto.Message;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class PEHistoryListAdapter extends ArrayAdapter<Message> {
@@ -23,6 +25,9 @@ public class PEHistoryListAdapter extends ArrayAdapter<Message> {
         this.userLineResourceId = userLineResourceId;
         this.activity = activity;
         this.items = items;
+
+        enableHttpResponseCache(activity);
+
     }
 
     @Override
@@ -52,6 +57,19 @@ public class PEHistoryListAdapter extends ArrayAdapter<Message> {
         TextView userName;
         TextView text;
         ImageView image;
+    }
+
+    private void enableHttpResponseCache(FragmentActivity activity) {
+        try {
+            long httpCacheSize = 10 * 1024 * 1024; // 10 MiB
+            File httpCacheDir;
+            httpCacheDir = new File(activity.getExternalCacheDir(), "http");
+            Class.forName("android.net.http.HttpResponseCache")
+                    .getMethod("install", File.class, long.class)
+                    .invoke(null, httpCacheDir, httpCacheSize);
+        } catch (Exception e) {
+            new ExceptionHandler(activity).sendError(e, false);
+        }
     }
 }
 

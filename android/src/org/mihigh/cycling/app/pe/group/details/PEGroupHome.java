@@ -1,6 +1,5 @@
 package org.mihigh.cycling.app.pe.group.details;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,17 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import org.mihigh.cycling.app.R;
-import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.pe.group.details.dto.Message;
+import org.mihigh.cycling.app.pe.group.details.settings.PEGroupHomeSettings;
 import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 import org.mihigh.cycling.app.utils.LoadingUtils;
+import org.mihigh.cycling.app.utils.Navigation;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class PEGroupHome extends Fragment {
@@ -39,10 +35,19 @@ public class PEGroupHome extends Fragment {
     public void onStart() {
         super.onStart();
 
-        enableHttpResponseCache(getActivity());
+        setupSettings();
 
         loadingDialog = LoadingUtils.createLoadingDialog(getActivity());
         new Thread(new PEGroupDetailsRunnable(this)).start();
+    }
+
+    private void setupSettings() {
+        getView().findViewById(R.id.pe_group_home_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PEGroupHomeSettings(groupDetails));
+            }
+        });
     }
 
     private void setupSendNewText() {
@@ -88,16 +93,5 @@ public class PEGroupHome extends Fragment {
     }
 
 
-    private void enableHttpResponseCache(Activity activity) {
-        try {
-            long httpCacheSize = 10 * 1024 * 1024; // 10 MiB
-            File httpCacheDir;
-            httpCacheDir = new File(activity.getCacheDir(), "http");
-            Class.forName("android.net.http.HttpResponseCache")
-                    .getMethod("install", File.class, long.class)
-                    .invoke(null, httpCacheDir, httpCacheSize);
-        } catch (Exception e) {
-            new ExceptionHandler(activity).sendError(e, false);
-        }
-    }
+
 }
