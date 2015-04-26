@@ -1,9 +1,5 @@
 package org.mihigh.cycling.app.group;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -16,9 +12,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.group.dto.JoinedRide;
+import org.mihigh.cycling.app.utils.LoadingUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class SearchListFragment extends Fragment {
 
@@ -35,11 +35,7 @@ public class SearchListFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        progress = new ProgressDialog(getActivity());
-        progress.setTitle("Loading");
-        progress.setMessage("Wait while loading...");
-        progress.show();
-
+        progress = LoadingUtils.createLoadingDialog(getActivity());
 
         //TODO: save it
         new Thread(new GroupGetSearchListRunnable(this, "")).start();

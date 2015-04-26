@@ -1,7 +1,5 @@
 package org.mihigh.cycling.app.solo;
 
-import java.util.ArrayList;
-
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.location.Location;
@@ -14,23 +12,16 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
 import com.google.gson.Gson;
-
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.utils.LoadingUtils;
+
+import java.util.ArrayList;
 
 public class SoloResult extends Fragment {
 
@@ -106,11 +97,10 @@ public class SoloResult extends Fragment {
         map.addPolyline(options.color(Color.RED));
 
 
-
         map.addMarker(new MarkerOptions()
-                          .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                          .position(new LatLng(Tracking.instance.getPositions().get(0).getLatitude(),
-                                               Tracking.instance.getPositions().get(0).getLongitude())));
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                .position(new LatLng(Tracking.instance.getPositions().get(0).getLatitude(),
+                        Tracking.instance.getPositions().get(0).getLongitude())));
 
 
         LatLngBounds bounds = builder.build();
@@ -118,14 +108,14 @@ public class SoloResult extends Fragment {
         final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
         mapView.getViewTreeObserver().addOnGlobalLayoutListener(
-            new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    // If you need this to be called again, then run again addOnGlobalLayoutListener.
-                    mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    map.animateCamera(cu);
-                }
-            });
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        // If you need this to be called again, then run again addOnGlobalLayoutListener.
+                        mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        map.animateCamera(cu);
+                    }
+                });
     }
 
     @Override
@@ -153,12 +143,7 @@ public class SoloResult extends Fragment {
 
     public void postData(final String jsonData) {
         //TODO: check if internet available
-
-        final ProgressDialog progress = new ProgressDialog(getActivity());
-        progress.setTitle("Loading");
-        progress.setMessage("Wait while loading...");
-        progress.show();
-
+        final ProgressDialog progress = LoadingUtils.createLoadingDialog(getActivity());
         new Thread(new SaveSoloRideRunnable(jsonData, Tracking.instance.getDistance(), progress, (LoginActivity) getActivity())).start();
     }
 }

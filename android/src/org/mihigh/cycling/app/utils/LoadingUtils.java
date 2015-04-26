@@ -10,7 +10,7 @@ public class LoadingUtils {
     public static ProgressDialog createLoadingDialog(FragmentActivity activity) {
         final ProgressDialog progress = new ProgressDialog(activity);
         progress.setTitle("Loading");
-        progress.setMessage("Wait while saving...");
+        progress.setMessage("Please wait...");
         progress.show();
 
         return progress;

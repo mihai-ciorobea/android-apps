@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.group.dto.JoinedRide;
+import org.mihigh.cycling.app.utils.LoadingUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,10 +35,7 @@ public class GroupJoinedListFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        progress = new ProgressDialog(getActivity());
-        progress.setTitle("Loading");
-        progress.setMessage("Wait while loading...");
-        progress.show();
+        progress = LoadingUtils.createLoadingDialog(getActivity());
 
 
         //TODO: save it

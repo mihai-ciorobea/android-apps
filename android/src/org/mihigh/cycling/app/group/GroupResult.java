@@ -12,22 +12,13 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.utils.LoadingUtils;
 
 public class GroupResult extends Fragment {
 
@@ -91,23 +82,23 @@ public class GroupResult extends Fragment {
         map.addPolyline(options.color(Color.RED));
 
         map.addMarker(new MarkerOptions()
-                          .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                          .position(new LatLng(GroupTracking.instance.getPositions().get(0).getLatitude(),
-                                               GroupTracking.instance.getPositions().get(0).getLongitude())));
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                .position(new LatLng(GroupTracking.instance.getPositions().get(0).getLatitude(),
+                        GroupTracking.instance.getPositions().get(0).getLongitude())));
 
         LatLngBounds bounds = builder.build();
         int padding = 20; // offset from edges of the map in pixels
         final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
         mapView.getViewTreeObserver().addOnGlobalLayoutListener(
-            new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    // If you need this to be called again, then run again addOnGlobalLayoutListener.
-                    mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    map.animateCamera(cu);
-                }
-            });
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        // If you need this to be called again, then run again addOnGlobalLayoutListener.
+                        mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        map.animateCamera(cu);
+                    }
+                });
     }
 
     @Override
@@ -135,12 +126,7 @@ public class GroupResult extends Fragment {
 
     public void sendFinish() {
         //TODO: check if internet available
-
-        final ProgressDialog progress = new ProgressDialog(getActivity());
-        progress.setTitle("Loading");
-        progress.setMessage("Wait while loading...");
-        progress.show();
-
+        final ProgressDialog progress = LoadingUtils.createLoadingDialog(getActivity());
         new Thread(new SaveGroupRideRunnable(progress, (LoginActivity) getActivity())).start();
     }
 }

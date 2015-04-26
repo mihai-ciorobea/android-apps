@@ -53,6 +53,7 @@ public class LeaveGroupRunnable implements Runnable {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    PEGroupDetails.setHasGroup(activity, false);
                     Navigation.changeFragment(activity, R.id.login_fragment_container, new PEHome());
                 }
             });
