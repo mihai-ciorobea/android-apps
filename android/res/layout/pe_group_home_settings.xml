@@ -75,7 +75,77 @@
     </LinearLayout>
 
 
+    <!-- Members -->
+    <ListView android:id="@+id/pe_group_details_settings_members_list"
+              android:layout_width="match_parent"
+              android:layout_height="0dp"
+              android:visibility="gone"
+              android:layout_weight="8"/>
 
+    <!-- Invite User -->
+    <LinearLayout android:id="@+id/pe_group_details_settings_add_buttons"
+                  android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:orientation="vertical"
+                  android:visibility="gone"
+                  android:layout_marginLeft="10dp"
+                  android:gravity="center|top">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal">
+
+            <TextView android:textSize="20sp"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="2dp"
+                      android:gravity="center"
+                      android:text="Add user:"/>
+            <Button android:id="@+id/pe_group_details_settings_add_email"
+                    android:padding="10dp"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/gray_button"
+                    android:text="Email"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"/>
+
+            <Button android:id="@+id/pe_group_details_settings_add_id"
+                    android:padding="10dp"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/gray_button"
+                    android:text="Id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+    </LinearLayout>
+    <ListView
+            android:id="@+id/pe_group_details_settings_invited_users_list"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/EnterPays_addAtomPayment">
+    </ListView>
+
+
+    <!-- Requests -->
+    <ListView
+            android:id="@+id/pe_group_details_settings_requests_list"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8"
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/EnterPays_addAtomPayment">
+    </ListView>
 
 
 </LinearLayout>

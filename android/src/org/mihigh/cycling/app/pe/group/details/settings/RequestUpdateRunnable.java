@@ -1,6 +1,6 @@
-package org.mihigh.cycling.app.pe.group.join.invitation;
+package org.mihigh.cycling.app.pe.group.details.settings;
 
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 import org.apache.http.HttpResponse;
@@ -14,34 +14,31 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
-import org.mihigh.cycling.app.pe.group.details.PEGroupHome;
-import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
-import org.mihigh.cycling.app.utils.Navigation;
+import org.mihigh.cycling.app.pe.group.join.invitation.InvitationUpdateRunnable;
 
 import java.io.IOException;
 
-public class InvitationUpdateRunnable implements Runnable {
-    private static final String PATH_CREATE_GROUP = "/api/v1/invitation/%s";
+public class RequestUpdateRunnable implements Runnable {
+    private static final String PATH_CREATE_GROUP = "/api/v1/group/%s/request";
 
-    private final PEGroupDetails groupDetails;
-    private final Action action;
+    private final RequestData requestData;
+    private final InvitationUpdateRunnable.Action action;
     private final FragmentActivity activity;
-    private final PEJoinInvitationListAdapter peJoinInvitationListAdapter;
-    private final Dialog progress;
+    private final PEJoinRequestListAdapter peJoinRequestListAdapter;
+    private final ProgressDialog progress;
 
-
-    public InvitationUpdateRunnable(PEGroupDetails groupDetails, Action action, FragmentActivity activity,
-                                    PEJoinInvitationListAdapter peJoinInvitationListAdapter, Dialog progress) {
-        this.groupDetails = groupDetails;
+    public RequestUpdateRunnable(RequestData requestData, InvitationUpdateRunnable.Action action, FragmentActivity activity,
+                                 PEJoinRequestListAdapter peJoinRequestListAdapter, ProgressDialog progress) {
+        this.requestData = requestData;
         this.action = action;
         this.activity = activity;
-        this.peJoinInvitationListAdapter = peJoinInvitationListAdapter;
+        this.peJoinRequestListAdapter = peJoinRequestListAdapter;
         this.progress = progress;
     }
 
     @Override
     public void run() {
-        String url = activity.getString(R.string.server_url) + String.format(PATH_CREATE_GROUP, groupDetails.id);
+        String url = activity.getString(R.string.server_url) + String.format(PATH_CREATE_GROUP, requestData.groupDetails.id);
 
         try {
             HttpClient httpclient = new DefaultHttpClient();
@@ -52,7 +49,7 @@ public class InvitationUpdateRunnable implements Runnable {
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
 
             // Add your data
-            httpCall.setEntity(new StringEntity(action == Action.DELETE ? "delete" : "accept"));
+            httpCall.setEntity(new StringEntity(action == InvitationUpdateRunnable.Action.DELETE ? "delete" : "accept"));
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httpCall);
@@ -66,12 +63,7 @@ public class InvitationUpdateRunnable implements Runnable {
             progress.dismiss();
             activity.runOnUiThread(new Runnable() {
                 public void run() {
-                    if (action == Action.DELETE) {
-                        peJoinInvitationListAdapter.deleteInvitation(groupDetails);
-                    } else {
-                        Navigation.changeFragment(activity, R.id.pe_group_home_container, new PEGroupHome());
-                        PEGroupDetails.setHasGroup(activity, true);
-                    }
+                    peJoinRequestListAdapter.deleteInvitation(requestData);
                 }
             });
         } catch (Exception e) {
@@ -86,10 +78,6 @@ public class InvitationUpdateRunnable implements Runnable {
         }
 
 
-
     }
 
-    public enum Action {
-        DELETE, ACCEPT
-    }
 }

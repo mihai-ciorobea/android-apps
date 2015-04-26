@@ -59,6 +59,12 @@ public class UserInfo {
         return email.contains("bikeroute");
     }
 
+    public String getUIName() {
+        return isGenerated() ?
+                email.split("@")[0] :
+                firstName + " " + lastName;
+    }
+
     public void store(Activity activity) {
         Log.e(UserInfo.class.getName(), "Store " + this.toString());
 
