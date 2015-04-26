@@ -45,14 +45,14 @@ public class PEHome extends Fragment {
                     gotoCreateGroup();
                 }
             });
-            createButton.setVisibility(!hasGroup ? View.VISIBLE : View.INVISIBLE);
+            createButton.setVisibility(!hasGroup ? View.VISIBLE : View.GONE);
             viewGroup.addView(createButton);
         }
 
         {
             Button joinButton = new Button(getActivity());
             joinButton.setText("Join Group");
-            joinButton.setVisibility(!hasGroup ? View.VISIBLE : View.INVISIBLE);
+            joinButton.setVisibility(!hasGroup ? View.VISIBLE : View.GONE);
             joinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -65,7 +65,7 @@ public class PEHome extends Fragment {
         {
             Button groupButton = new Button(getActivity());
             groupButton.setText("To Your Group");
-            groupButton.setVisibility(hasGroup ? View.VISIBLE : View.INVISIBLE);
+            groupButton.setVisibility(hasGroup ? View.VISIBLE : View.GONE);
             groupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -74,6 +74,12 @@ public class PEHome extends Fragment {
                 }
             });
             viewGroup.addView(groupButton);
+        }
+
+        {
+            Button space = new Button(getActivity());
+            space.setVisibility(View.INVISIBLE);
+            viewGroup.addView(space);
         }
 
         {
