@@ -13,6 +13,7 @@ import org.mihigh.cycling.app.pe.group.details.PEGroupHome;
 import org.mihigh.cycling.app.pe.group.dto.PECheckGroupForUserRunnable;
 import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 import org.mihigh.cycling.app.pe.group.join.PEJoinGroup;
+import org.mihigh.cycling.app.pe.route.PERouteHome;
 import org.mihigh.cycling.app.utils.Navigation;
 
 public class PEHome extends Fragment {
@@ -42,7 +43,7 @@ public class PEHome extends Fragment {
             createButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    gotoCreateGroup();
+                    Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PECreateGroup());
                 }
             });
             createButton.setVisibility(!hasGroup ? View.VISIBLE : View.GONE);
@@ -56,7 +57,7 @@ public class PEHome extends Fragment {
             joinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    gotoJoinGroup();
+                    Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PEJoinGroup());
                 }
             });
             viewGroup.addView(joinButton);
@@ -70,7 +71,7 @@ public class PEHome extends Fragment {
                 @Override
                 public void onClick(View v) {
                     PEGroupDetails.setHasGroup(getActivity(), false);
-                    gotoGroupDetails();
+                    Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PEGroupHome());
                 }
             });
             viewGroup.addView(groupButton);
@@ -89,6 +90,7 @@ public class PEHome extends Fragment {
             routeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PERouteHome());
                 }
             });
             viewGroup.addView(routeButton);
@@ -102,19 +104,6 @@ public class PEHome extends Fragment {
             //go on server and check if user has a group
             new Thread(new PECheckGroupForUserRunnable(PEHome.this)).start();
         }
-    }
-
-
-    private void gotoCreateGroup() {
-        Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PECreateGroup());
-    }
-
-    private void gotoJoinGroup() {
-        Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PEJoinGroup());
-    }
-
-    public void gotoGroupDetails() {
-        Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PEGroupHome());
     }
 
     public void updateHasGroup() {
