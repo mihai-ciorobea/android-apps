@@ -1,8 +1,8 @@
 package org.mihigh.cycling.app.pe.route;
 
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.content.*;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -29,7 +29,6 @@ public class PERouteHome extends Fragment {
     boolean useCollaborativeTracking = true;
     boolean isGPSEnabled = true;
     boolean is3GEnabled = false;
-    boolean isBlueToothEnabled = false;
 
 
     MapView mapView;
@@ -91,54 +90,14 @@ public class PERouteHome extends Fragment {
                 Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PEActivityStared());
             }
 
-            private void checkBluetooth() {
-                final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                if (mBluetoothAdapter == null) {
-                    isBlueToothEnabled = false;
-                    checkYourPosition();
-                    return;
-                }
 
-                if (!mBluetoothAdapter.isEnabled()) {
-
-                    AlertDialog.Builder alert = new AlertDialog.Builder(PERouteHome.this.getActivity());
-                    alert.setTitle("Collaborative Reporting");
-                    alert.setMessage("Reuse your neighbour location via bluetooth. This option is optional.");
-                    alert.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
-                            startActivity(discoverableIntent);
-
-                            isBlueToothEnabled = true;
-                            checkYourPosition();
-                        }
-                    });
-                    alert.setNegativeButton("Continue anyway", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            isBlueToothEnabled = false;
-                            checkYourPosition();
-                        }
-                    });
-                    alert.show();
-                } else {
-
-                    Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                    discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
-                    startActivity(discoverableIntent);
-
-                    mBluetoothAdapter.setName("NewDeviceName");
-                    isBlueToothEnabled = true;
-                    checkYourPosition();
-                }
-            }
 
             private void check3G() {
                 ConnectivityManager service = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
                 if (service == null) {
                     is3GEnabled = false;
-                    checkBluetooth();
+                    checkYourPosition();
                     return;
                 }
 
@@ -156,13 +115,13 @@ public class PERouteHome extends Fragment {
                     alert.setNegativeButton("Continue anyway", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             is3GEnabled = false;
-                            checkBluetooth();
+                            checkYourPosition();
                         }
                     });
                     alert.show();
                 } else {
                     is3GEnabled = true;
-                    checkBluetooth();
+                    checkYourPosition();
                 }
             }
 
