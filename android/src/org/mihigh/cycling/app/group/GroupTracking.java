@@ -66,7 +66,7 @@ public class GroupTracking {
 
     public String getDistance() {
         if (positions.isEmpty()) {
-            return "0.0";
+            return "0.00";
         }
 
         Location last = positions.get(0);

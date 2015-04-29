@@ -12,7 +12,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="vertical"
                   android:weightSum="10"
-                  android:layout_weight="2"
+                  android:layout_weight="1"
                   android:layout_width="match_parent"
                   android:layout_height="0dp"
                   android:gravity="center|top"
@@ -27,10 +27,11 @@
                       android:gravity="center|top"
                       android:layout_gravity="top">
 
-            <ImageButton android:layout_weight="2"
+            <ImageButton android:id="@+id/pe_route_activity_stated_zoom"
+                         android:layout_weight="2"
                          android:layout_width="0dp"
                          android:layout_height="wrap_content"
-                         android:src="@android:drawable/ic_menu_zoom"/>
+                         android:src="@drawable/ic_menu_zoom"/>
 
             <TextView android:id="@+id/pe_route_activity_stated_time"
                       android:textSize="40sp"
@@ -41,76 +42,91 @@
                       android:text="00:00"/>
 
             <ImageButton android:layout_weight="2"
+                         android:id="@+id/pe_route_activity_stated_send_msg"
                          android:layout_width="0dp"
                          android:layout_height="wrap_content"
-                         android:src="@android:drawable/ic_menu_edit"/>
+                         android:src="@drawable/ic_menu_notifications"/>
 
         </LinearLayout>
 
 
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/pe_route_activity_stated_tracking_layout"
+                  android:orientation="vertical"
+                  android:weightSum="10"
+                  android:layout_weight="1"
+                  android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:gravity="center|top"
+                  android:layout_gravity="top"
+                  android:layout_alignParentTop="true">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="horizontal"
+                  android:weightSum="10"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="center|top"
+                  android:layout_gravity="top">
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:orientation="horizontal"
+                      android:orientation="vertical"
                       android:weightSum="10"
-                      android:layout_width="match_parent"
+                      android:layout_weight="5"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:gravity="center|top"
+                      android:layout_gravity="top"
+                      android:layout_alignParentTop="true">
+
+            <TextView android:textSize="10sp"
+                      android:layout_weight="5"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="Distance (KM)"/>
+            <TextView android:id="@+id/pe_route_activity_stated_distance"
+                      android:textSize="35sp"
+                      android:layout_weight="5"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="0.00"/>
+
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:orientation="vertical"
+                      android:weightSum="10"
+                      android:layout_weight="5"
+                      android:layout_width="0dp"
                       android:layout_height="wrap_content"
                       android:gravity="center|top"
                       android:layout_gravity="top">
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:orientation="vertical"
-                          android:weightSum="10"
-                          android:layout_weight="5"
-                          android:layout_width="0dp"
-                          android:layout_height="wrap_content"
-                          android:gravity="center|top"
-                          android:layout_gravity="top"
-                          android:layout_alignParentTop="true">
-
-                <TextView android:textSize="10sp"
-                          android:layout_weight="5"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:gravity="center"
-                          android:text="Distance (KM)"/>
-                <TextView android:id="@+id/pe_route_activity_stated_distance"
-                          android:textSize="35sp"
-                          android:layout_weight="5"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:gravity="center"
-                          android:text="0.00"/>
-
-            </LinearLayout>
-
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:orientation="vertical"
-                          android:weightSum="10"
-                          android:layout_weight="5"
-                          android:layout_width="0dp"
-                          android:layout_height="wrap_content"
-                          android:gravity="center|top"
-                          android:layout_gravity="top">
-
-                <TextView
-                        android:textSize="10sp"
-                        android:layout_weight="5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Speed (KM/h)"/>
-                <TextView android:id="@+id/pe_route_activity_stated_speed"
-                          android:textSize="35sp"
-                          android:layout_weight="5"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:gravity="center"
-                          android:text="0.00"/>
-            </LinearLayout>
+            <TextView
+                    android:textSize="10sp"
+                    android:layout_weight="5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Speed (KM/h)"/>
+            <TextView android:id="@+id/pe_route_activity_stated_speed"
+                      android:textSize="35sp"
+                      android:layout_weight="5"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="0.00"/>
         </LinearLayout>
     </LinearLayout>
-
+    </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/pe_route_activity_stated_viewPager_layout"
                   android:orientation="vertical"
                   android:weightSum="20"
                   android:layout_weight="8"
@@ -130,14 +146,14 @@
                 android:layout_marginBottom="20dp"/>
 
 
-        <LinearLayout android:id="@+id/stop_pause"
+        <LinearLayout android:id="@+id/pe_route_activity_stated_stop_layout"
                       android:orientation="horizontal"
                       android:weightSum="2"
                       android:layout_weight="3"
                       android:layout_width="match_parent"
                       android:layout_height="0dp">
 
-            <Button android:id="@+id/stop"
+            <Button android:id="@+id/pe_route_activity_stated_stop"
                     android:padding="10dp"
                     android:textColor="#ffffff"
                     android:background="@drawable/red_button"

@@ -6,7 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.Utils;
+import org.mihigh.cycling.app.group.GroupTracking;
+
+import java.util.Collections;
+import java.util.List;
 
 public class PE_UI_ProgressBars extends Fragment {
 
@@ -37,6 +43,28 @@ public class PE_UI_ProgressBars extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    public void updateBars() {
+        List<Integer> activity = GroupTracking.instance.get5MinActivity();
+        int size = activity.size();
+        if (size > 9) {
+            activity = activity.subList(size - 9, size);
+        }
+
+        int maxVal = Collections.max(activity);
+        if (maxVal != 0) {
+            for (int index = 0; index < activity.size(); ++index) {
+                int distance = activity.get(index);
+
+                int barSize = distance * 100 / maxVal;
+
+                barLayout.getChildAt(index).getLayoutParams().height =
+                        Math.max(Utils.getSizeFromDP(barSize, LoginActivity.scale), 10);
+            }
+
+            barLayout.requestLayout();
+        }
     }
 
 }

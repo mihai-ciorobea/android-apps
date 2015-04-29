@@ -15,15 +15,22 @@ public class LocationTracking implements LocationListener {
 
     private final PECollaborativeLocation collaborativeLocation;
     private final PE_GPS_Service gpsService;
+    private LocationListener notifyUI;
+    private boolean stillRunning = true;
 
-    public LocationTracking(PECollaborativeLocation collaborativeLocation, PE_GPS_Service gpsService) {
+    public LocationTracking(PECollaborativeLocation collaborativeLocation, PE_GPS_Service gpsService, LocationListener notifyUI) {
         this.collaborativeLocation = collaborativeLocation;
         this.gpsService = gpsService;
+        this.notifyUI = notifyUI;
 
         gpsService.setUILocationChangedListener(this);
     }
 
     public void startTracking() {
+        if (!stillRunning) {
+            return;
+        }
+
         collaborativeLocation.discoverServices();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -48,7 +55,19 @@ public class LocationTracking implements LocationListener {
                     lat /= neighbours.size();
                     lng /= neighbours.size();
 
-                    gpsService.receivedCollaborativeLocation(new LatLng(lat, lng));
+                    final LatLng latLng = new LatLng(lat, lng);
+                    gpsService.receivedCollaborativeLocation(latLng);
+                    notifyUI.onLocationChanged(new Location("") {
+                        @Override
+                        public double getLatitude() {
+                            return latLng.latitude;
+                        }
+
+                        @Override
+                        public double getLongitude() {
+                            return latLng.longitude;
+                        }
+                    });
 
                     // start scanning again
                     startTracking();
@@ -57,11 +76,22 @@ public class LocationTracking implements LocationListener {
         }, GPS_UPDATE_TIME);
     }
 
+    public void stopTracking() {
+
+        stillRunning = false;
+
+        collaborativeLocation.onPause();
+        collaborativeLocation.onStop();
+
+        gpsService.stop();
+    }
+
     @Override
     public void onLocationChanged(Location location) {
         //receiveLocationViaGPSService
         collaborativeLocation.updateLocation(location);
         startTracking();
+        notifyUI.onLocationChanged(location);
     }
 
     public void gpsGettingSlow() {

@@ -30,11 +30,15 @@ public class PE_UI_TracingViewPageAdapter extends FragmentStatePagerAdapter {
         return 3;
     }
 
-//    public PE_UI_MapFragment getMap() {
-//        return (PE_UI_MapFragment) pages.get(getMapIndex());
-//    }
-
     public int getMapIndex() {
         return 1;
+    }
+
+    public int getSettingIndex() {
+        return 2;
+    }
+
+    public void updateProgressBars() {
+        ((PE_UI_ProgressBars)pages.get(0)).updateBars();
     }
 }
