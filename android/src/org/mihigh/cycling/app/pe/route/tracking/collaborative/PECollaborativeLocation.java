@@ -1,4 +1,4 @@
-package org.mihigh.cycling.app.pe.route.collaborative;
+package org.mihigh.cycling.app.pe.route.tracking.collaborative;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,7 +9,13 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import com.google.android.gms.maps.model.LatLng;
+import org.mihigh.cycling.app.pe.route.PERouteActivityStared;
+import org.mihigh.cycling.app.utils.LoadingUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class PECollaborativeLocation {
 
@@ -29,14 +35,18 @@ public class PECollaborativeLocation {
     public WifiP2pManager.Channel channel;
     public BroadcastReceiver receiver;
     private WifiP2pDnsSdServiceInfo service;
+    private FragmentActivity activity;
+
+
+    List<LatLng> neighbours = Collections.synchronizedList(new ArrayList<LatLng>());
 
 
     public void setup(FragmentActivity activity) {
+        this.activity = activity;
         manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(activity, activity.getMainLooper(), null);
 
         setupDiscoverService();
-        discoverServices();
     }
 
     public void updateLocation(final Location location) {
@@ -62,7 +72,7 @@ public class PECollaborativeLocation {
     }
 
     private void newService(Location location) {
-        String serviceName = SERVICE_BASE_NAME + location.getLatitude() + "_" + location.getLongitude();
+        String serviceName = SERVICE_BASE_NAME + location.getLatitude() + SEPARATOR + location.getLongitude();
 
         setupService(serviceName);
     }
@@ -85,7 +95,16 @@ public class PECollaborativeLocation {
                     public void onDnsSdServiceAvailable(String instanceName, String registrationType, WifiP2pDevice srcDevice) {
                         // A service has been discovered. Is this our app?
                         if (instanceName.contains(SERVICE_BASE_NAME)) {
-                            Log.d("GIGI", instanceName);
+                            String[] split = instanceName.split(SEPARATOR);
+
+                            if (split.length != 3) {
+                                return;
+                            }
+
+                            double lat = Double.parseDouble(split[1]);
+                            double lng = Double.parseDouble(split[2]);
+
+                            neighbours.add(new LatLng(lat, lng));
                         }
                     }
                 }, null);
@@ -93,5 +112,30 @@ public class PECollaborativeLocation {
         // After attaching listeners, create a service request and initiate discovery.
         WifiP2pDnsSdServiceRequest serviceRequest = WifiP2pDnsSdServiceRequest.newInstance();
         manager.addServiceRequest(channel, serviceRequest, new LoggingActionListener("setupDiscoverService addServiceRequest"));
+    }
+
+    public List<LatLng> getNeighbours() {
+        List<LatLng> result =  new ArrayList<LatLng>(neighbours);
+        neighbours.clear();
+
+        return result;
+    }
+
+    public void onStop() {
+        if (manager != null && channel != null) {
+            manager.removeGroup(channel, new LoggingActionListener("removeGroup"));
+        }
+    }
+
+    public void onResume() {
+        if (receiver != null) {
+            activity.registerReceiver(receiver, intentFilter);
+        }
+    }
+
+    public void onPause() {
+        if (receiver != null) {
+            activity.unregisterReceiver(receiver);
+        }
     }
 }

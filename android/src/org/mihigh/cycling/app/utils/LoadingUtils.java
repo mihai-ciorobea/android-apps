@@ -20,7 +20,7 @@ public class LoadingUtils {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(activity, text, Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, text, Toast.LENGTH_SHORT).show();
             }
         });
     }

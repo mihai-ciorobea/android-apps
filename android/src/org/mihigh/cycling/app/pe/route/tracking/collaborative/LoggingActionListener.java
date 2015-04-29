@@ -1,4 +1,4 @@
-package org.mihigh.cycling.app.pe.route.collaborative;
+package org.mihigh.cycling.app.pe.route.tracking.collaborative;
 
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="bottom"
+                  android:layout_alignParentBottom="true">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:id="@+id/pe_route_activity_started_progress_bars_layout"
+                      android:orientation="horizontal"
+                      android:weightSum="10"
+                      android:layout_width="match_parent"
+                      android:layout_height="100dp"
+                      android:gravity="bottom">
+
+            <View android:layout_width="0dp"
+                  android:layout_height="10dp"
+                  android:layout_weight="1"
+                  android:layout_marginLeft="20dp"
+                  android:background="@drawable/rectangle"/>
+
+            <View android:layout_width="0dp"
+                  android:layout_height="10dp"
+                  android:layout_weight="1"
+                  android:layout_marginLeft="5dp"
+                  android:background="@drawable/rectangle"/>
+
+            <View android:layout_width="0dp"
+                  android:layout_height="10dp"
+                  android:layout_weight="1"
+                  android:layout_marginLeft="5dp"
+                  android:background="@drawable/rectangle"/>
+
+            <View android:layout_width="0dp"
+                  android:layout_height="10dp"
+                  android:layout_weight="1"
+                  android:layout_marginLeft="5dp"
+                  android:background="@drawable/rectangle"/>
+
+            <View android:layout_width="0dp"
+                  android:layout_height="10dp"
+                  android:layout_weight="1"
+                  android:layout_marginLeft="5dp"
+                  android:background="@drawable/rectangle"/>
+
+            <View android:layout_width="0dp"
+                  android:layout_height="10dp"
+                  android:layout_weight="1"
+                  android:layout_marginLeft="5dp"
+                  android:background="@drawable/rectangle"/>
+
+            <View android:layout_width="0dp"
+                  android:layout_height="10dp"
+                  android:layout_weight="1"
+                  android:layout_marginLeft="5dp"
+                  android:background="@drawable/rectangle"/>
+
+            <View android:layout_width="0dp"
+                  android:layout_height="10dp"
+                  android:layout_weight="1"
+                  android:layout_marginLeft="5dp"
+                  android:background="@drawable/rectangle"/>
+
+            <View android:layout_width="0dp"
+                  android:layout_height="10dp"
+                  android:layout_weight="1"
+                  android:layout_marginLeft="5dp"
+                  android:background="@drawable/rectangle"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

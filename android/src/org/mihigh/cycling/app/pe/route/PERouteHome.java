@@ -12,15 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.*;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import org.mihigh.cycling.app.R;
-import org.mihigh.cycling.app.group.dto.Coordinates;
+import org.mihigh.cycling.app.pe.route.ui.utils.MapTrack;
 import org.mihigh.cycling.app.utils.LoadingUtils;
 import org.mihigh.cycling.app.utils.Navigation;
 
@@ -71,7 +71,10 @@ public class PERouteHome extends Fragment {
     public void onStart() {
         super.onStart();
 
-        setupTrack();
+        MapTrack.setupTrack(mapView, map);
+        MapTrack.addStartMarker(map);
+        MapTrack.setupCamera(mapView, map);
+
         setupStartButton();
         setupCollaborativeSwitch();
 
@@ -86,8 +89,12 @@ public class PERouteHome extends Fragment {
             }
 
             private void checkYourPosition() {
-                LoadingUtils.makeToast(getActivity(), "BLA");
-                Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PEActivityStared());
+
+                LoadingUtils.makeToast(getActivity(), "send started activity BLA BLA BLA BLA BLA BLA");
+                //TODO: send started activity
+
+
+                Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PERouteActivityStared());
             }
 
 
@@ -186,38 +193,7 @@ public class PERouteHome extends Fragment {
         });
     }
 
-    private void setupTrack() {
-        // Add track on map
-        PolylineOptions polylineOptions = new PolylineOptions();
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (Coordinates mark : PETrackCoordinates.track) {
-            LatLng point = new LatLng(mark.getLatitude(), mark.getLongitude());
-            polylineOptions.add(point);
-            builder.include(point);
-        }
-        map.addPolyline(polylineOptions);
 
-
-        // Add start marker
-        map.addMarker(new MarkerOptions()
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                .position(new LatLng(PETrackCoordinates.track.get(0).getLatitude(), PETrackCoordinates.track.get(0).getLongitude())));
-
-        // Setup zoom & bounds
-        LatLngBounds bounds = builder.build();
-        int padding = 20; // offset from edges of the map in pixels
-        final CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-
-        mapView.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        map.animateCamera(cameraUpdate);
-                    }
-                });
-    }
 
     @Override
     public void onResume() {
@@ -236,7 +212,6 @@ public class PERouteHome extends Fragment {
         super.onLowMemory();
         mapView.onLowMemory();
     }
-
 
     public static abstract class LocationResult {
         public abstract void gotLocation(Location location);
