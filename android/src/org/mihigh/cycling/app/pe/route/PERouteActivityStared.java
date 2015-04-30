@@ -1,6 +1,5 @@
 package org.mihigh.cycling.app.pe.route;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.location.Location;
@@ -32,7 +31,9 @@ import java.util.TimerTask;
 
 public class PERouteActivityStared extends Fragment {
 
-    public static Activity activity;
+    public static FragmentActivity activity;
+
+
 
     private PECollaborativeLocation collaborativeLocation = new PECollaborativeLocation();
     private PE_GPS_Service gpsService = new PE_GPS_Service();
@@ -41,6 +42,9 @@ public class PERouteActivityStared extends Fragment {
         @Override
         public void onLocationChanged(Location location) {
             UserTracking.instance.addLocation(location);
+            new Thread(new SendUserPositionRunnable(getActivity(), location)).start();
+            new Thread(new GetUsersToShowOnMapRunnable(getActivity(), location, UserTracking.instance.setGroupVisibility,
+                    UserTracking.instance.setNearbyVisibility, viewPageAdapter.getMap())).start();
         }
     });
 
@@ -55,14 +59,14 @@ public class PERouteActivityStared extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        activity = getActivity();
+
         return inflater.inflate(R.layout.pe_route_activity_started, container, false);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        activity = getActivity();
 
         // Create wifi p2p setup
         collaborativeLocation.setup(getActivity());
@@ -197,7 +201,7 @@ public class PERouteActivityStared extends Fragment {
 
     @Override
     public void onStop() {
-        collaborativeLocation.onStop();
+//        collaborativeLocation.onStop();
         super.onStop();
     }
 
@@ -211,7 +215,7 @@ public class PERouteActivityStared extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        collaborativeLocation.onPause();
+//        collaborativeLocation.onPause();
     }
 
 }

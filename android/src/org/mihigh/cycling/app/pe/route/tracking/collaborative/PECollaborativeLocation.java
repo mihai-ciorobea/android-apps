@@ -1,6 +1,5 @@
 package org.mihigh.cycling.app.pe.route.tracking.collaborative;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.location.Location;
@@ -33,18 +32,24 @@ public class PECollaborativeLocation {
 
     public WifiP2pManager manager;
     public WifiP2pManager.Channel channel;
-    public BroadcastReceiver receiver;
+    //    public BroadcastReceiver receiver;
     private WifiP2pDnsSdServiceInfo service;
     private FragmentActivity activity;
 
 
     List<LatLng> neighbours = Collections.synchronizedList(new ArrayList<LatLng>());
+    private WifiP2pDnsSdServiceRequest serviceRequest;
 
 
     public void setup(FragmentActivity activity) {
         this.activity = activity;
         manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(activity, activity.getMainLooper(), null);
+//        receiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//            }
+//        };
 
         setupDiscoverService();
     }
@@ -55,17 +60,17 @@ public class PECollaborativeLocation {
             manager.removeLocalService(channel, service, new WifiP2pManager.ActionListener() {
                 @Override
                 public void onSuccess() {
-
                     // Create new service with the new location
                     newService(location);
                 }
 
                 @Override
                 public void onFailure(int reason) {
-
+                    // Create new service with the new location
+                    newService(location);
                 }
             });
-        } else {
+        }  else {
             // Create new service with the new location
             newService(location);
         }
@@ -78,6 +83,7 @@ public class PECollaborativeLocation {
     }
 
     public void discoverServices() {
+        LoadingUtils.makeToast(PERouteActivityStared.activity, "COLLABORATIVE_START");
         manager.discoverServices(channel, new LoggingActionListener("discoverServices, discoverServices"));
     }
 
@@ -110,12 +116,12 @@ public class PECollaborativeLocation {
                 }, null);
 
         // After attaching listeners, create a service request and initiate discovery.
-        WifiP2pDnsSdServiceRequest serviceRequest = WifiP2pDnsSdServiceRequest.newInstance();
+        serviceRequest = WifiP2pDnsSdServiceRequest.newInstance();
         manager.addServiceRequest(channel, serviceRequest, new LoggingActionListener("setupDiscoverService addServiceRequest"));
     }
 
     public List<LatLng> getNeighbours() {
-        List<LatLng> result =  new ArrayList<LatLng>(neighbours);
+        List<LatLng> result = new ArrayList<LatLng>(neighbours);
         neighbours.clear();
 
         return result;
@@ -128,14 +134,22 @@ public class PECollaborativeLocation {
     }
 
     public void onResume() {
-        if (receiver != null) {
-            activity.registerReceiver(receiver, intentFilter);
-        }
+
     }
 
     public void onPause() {
-        if (receiver != null) {
-            activity.unregisterReceiver(receiver);
+        if (manager != null && channel != null) {
+            manager.clearLocalServices(channel, new WifiP2pManager.ActionListener() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onFailure(int reason) {
+
+                }
+            });
         }
     }
 }

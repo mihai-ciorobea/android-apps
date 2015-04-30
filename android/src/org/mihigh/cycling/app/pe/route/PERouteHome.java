@@ -93,7 +93,6 @@ public class PERouteHome extends Fragment {
                 LoadingUtils.makeToast(getActivity(), "send started activity BLA BLA BLA BLA BLA BLA");
                 //TODO: send started activity
 
-
                 Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PERouteActivityStared());
             }
 

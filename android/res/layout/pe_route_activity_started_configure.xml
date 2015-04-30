@@ -7,15 +7,18 @@
 
     <TextView android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:textSize="30dp"
               android:text="Configure Map:"/>
 
     <CheckBox android:id="@+id/pe_route_activity_stated_configuration_group"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:textSize="20dp"
               android:text="Show group users"/>
 
     <CheckBox android:id="@+id/pe_route_activity_stated_configuration_nearby"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:textSize="20dp"
               android:text="Show nearby users"/>
 </LinearLayout>

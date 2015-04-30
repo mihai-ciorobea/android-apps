@@ -41,4 +41,8 @@ public class PE_UI_TracingViewPageAdapter extends FragmentStatePagerAdapter {
     public void updateProgressBars() {
         ((PE_UI_ProgressBars)pages.get(0)).updateBars();
     }
+
+    public PE_UI_MapFragment getMap() {
+        return (PE_UI_MapFragment) getItem(getMapIndex());
+    }
 }

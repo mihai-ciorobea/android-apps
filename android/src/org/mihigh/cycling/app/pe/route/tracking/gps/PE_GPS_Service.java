@@ -12,6 +12,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.model.LatLng;
+import org.mihigh.cycling.app.pe.route.PERouteActivityStared;
 import org.mihigh.cycling.app.pe.route.tracking.LocationTracking;
 import org.mihigh.cycling.app.utils.LoadingUtils;
 
@@ -36,7 +37,6 @@ public class PE_GPS_Service {
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-
             gpsScanId.incrementAndGet();
 
             // notify GoogleMap
@@ -95,8 +95,13 @@ public class PE_GPS_Service {
 
 
     public void stop() {
-//        locationClient.removeLocationUpdates(locationListener);
-        this.onPause();
+        LoadingUtils.makeToast(PERouteActivityStared.activity, "GPS_STOP");
+
+        locationClient.disconnect();
+    }
+
+    public void onDestroy() {
+        locationClient.removeLocationUpdates(locationListener);
     }
 
     public void receivedCollaborativeLocation(final LatLng latLng) {
@@ -114,8 +119,13 @@ public class PE_GPS_Service {
     }
 
 
-
     public void onResume() {
+        LoadingUtils.makeToast(PERouteActivityStared.activity, "GPS_START");
+
+        if (locationClient.isConnected()) {
+            return;
+        }
+
         final int startNumber = gpsScanId.get();
 
         new Handler().postDelayed(new Runnable() {
@@ -126,16 +136,31 @@ public class PE_GPS_Service {
                 if (startNumber == timeoutNumber) {
                     locationTracking.gpsGettingSlow();
                 }
+
+                //TODO remove
+                if (startNumber == 0)
+                    locationListener.onLocationChanged(new Location("") {
+                        @Override
+                        public double getLatitude() {
+                            return 44.51742;
+                        }
+
+                        @Override
+                        public double getLongitude() {
+                            return 26.08507;
+                        }
+                    });
             }
         }, LocationTracking.GPS_UPDATE_TIME);
         locationClient.connect();
     }
 
     public void onPause() {
-        locationClient.disconnect();
+
     }
 
     public void setUILocationChangedListener(LocationTracking locationTracking) {
         this.locationTracking = locationTracking;
     }
 }
+

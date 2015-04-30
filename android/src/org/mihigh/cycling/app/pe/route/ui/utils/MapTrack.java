@@ -1,5 +1,6 @@
 package org.mihigh.cycling.app.pe.route.ui.utils;
 
+import android.location.Location;
 import android.view.ViewTreeObserver;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,5 +52,16 @@ public class MapTrack {
         map.addMarker(new MarkerOptions()
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                 .position(new LatLng(PETrackCoordinates.track.get(0).getLatitude(), PETrackCoordinates.track.get(0).getLongitude())));
+    }
+
+    public static float distanceTo(Location start, Location stop ){
+        float[] results = new float[1];
+        Location.distanceBetween(
+                start.getLatitude(),
+                start.getLongitude(),
+                stop.getLatitude(),
+                stop.getLongitude(),
+                results);
+        return results[0];
     }
 }

@@ -4,8 +4,10 @@ import android.location.Location;
 import android.os.Handler;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.model.LatLng;
+import org.mihigh.cycling.app.pe.route.PERouteActivityStared;
 import org.mihigh.cycling.app.pe.route.tracking.collaborative.PECollaborativeLocation;
 import org.mihigh.cycling.app.pe.route.tracking.gps.PE_GPS_Service;
+import org.mihigh.cycling.app.utils.LoadingUtils;
 
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class LocationTracking implements LocationListener {
                     // No neighbours, start GPS
                     gpsService.onResume();
                 } else {
+                    LoadingUtils.makeToast(PERouteActivityStared.activity, "COLLABORATIVE");
 
                     // Send data to gpsService
                     double lat = 0;
@@ -57,7 +60,7 @@ public class LocationTracking implements LocationListener {
 
                     final LatLng latLng = new LatLng(lat, lng);
                     gpsService.receivedCollaborativeLocation(latLng);
-                    notifyUI.onLocationChanged(new Location("") {
+                    notifyUI.onLocationChanged(new Location("COLLABORATIVE") {
                         @Override
                         public double getLatitude() {
                             return latLng.latitude;
@@ -88,9 +91,12 @@ public class LocationTracking implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        //receiveLocationViaGPSService
+        //via GPS
+
+        LoadingUtils.makeToast(PERouteActivityStared.activity, "GPS");
         collaborativeLocation.updateLocation(location);
         startTracking();
+        location.setProvider("GPS");
         notifyUI.onLocationChanged(location);
     }
 

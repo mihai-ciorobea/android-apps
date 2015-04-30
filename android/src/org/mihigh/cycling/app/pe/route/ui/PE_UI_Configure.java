@@ -22,13 +22,16 @@ public class PE_UI_Configure extends Fragment {
         super.onStart();
 
         final CheckBox groupCheckBox = (CheckBox) getView().findViewById(R.id.pe_route_activity_stated_configuration_group);
+        groupCheckBox.setChecked(UserTracking.instance.setGroupVisibility);
         groupCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserTracking.instance.setGroupVisibility = groupCheckBox.isChecked();
             }
         });
+
         final CheckBox nearbyCheckBox = (CheckBox) getView().findViewById(R.id.pe_route_activity_stated_configuration_nearby);
+        nearbyCheckBox.setChecked(UserTracking.instance.setNearbyVisibility);
         nearbyCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
