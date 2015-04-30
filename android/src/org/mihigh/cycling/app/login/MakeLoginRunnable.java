@@ -14,6 +14,7 @@ import org.apache.http.protocol.HTTP;
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
+import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
 import org.mihigh.cycling.app.login.dto.UserInfo;
 
@@ -42,7 +43,7 @@ public class MakeLoginRunnable implements Runnable {
         Gson gson = new Gson();
         String jsonUserInfo = gson.toJson(userInfo);
 
-        HttpResponse httpResponse;
+        HttpResponse httpResponse = null;
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(url);
@@ -56,11 +57,16 @@ public class MakeLoginRunnable implements Runnable {
             // Execute HTTP Post Request
             httpResponse = httpclient.execute(httppost);
         } catch (Exception e) {
-            Toast.makeText(activity, "Check internet connection!", Toast.LENGTH_SHORT).show();
-            throw new RuntimeException(e);
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity, "Check internet connection!", Toast.LENGTH_SHORT).show();
+                }
+            });
+            new ExceptionHandler(activity).sendError(e, false);
         }
 
-        Header[] headers = httpResponse.getHeaders("Set-Cookie");
+        Header[] headers = httpResponse != null ? httpResponse.getHeaders("Set-Cookie") : new Header[0];
         for (Header h : headers) {
             if (h.getName().equalsIgnoreCase("Set-Cookie")) {
                  for(HeaderElement cookie: h.getElements()) {

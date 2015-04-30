@@ -76,7 +76,7 @@ public class GetUserHelpRunnable implements Runnable {
 
                 alert.setPositiveButton("Show on map", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                         map.openMarker(helpRequest.userInfo, helpRequest.lastLocation);
+                        map.openMarker(helpRequest.userInfo, helpRequest.lastLocation);
                     }
                 });
 
@@ -87,7 +87,7 @@ public class GetUserHelpRunnable implements Runnable {
 
                 alert.setNeutralButton("Next", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        AlertDialog.Builder alert = allAlerts.get(index + 1);
+                        AlertDialog.Builder alert = allAlerts.size() == index + 1 ? null : allAlerts.get(index + 1);
                         if (alert != null) {
                             alert.show();
                         }

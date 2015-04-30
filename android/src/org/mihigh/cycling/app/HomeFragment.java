@@ -62,29 +62,30 @@ public class HomeFragment extends Fragment {
         ViewGroup viewLogoutGroup = (ViewGroup) getView().findViewById(R.id.home_logout_buttons_layout);
         viewGroup.setLayoutTransition(l);
 
-        {
-            Button button = new Button(activity);
-            button.setText("Solo Ride");
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activity.startSoloRide();
-                }
-            });
-            viewGroup.addView(button);
-        }
+//        {
+//            Button button = new Button(activity);
+//            button.setText("Solo Ride");
+//            button.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    activity.startSoloRide();
+//                }
+//            });
+//            viewGroup.addView(button);
+//        }
+//
+//        {
+//            Button button = new Button(activity);
+//            button.setText("Group Ride");
+//            button.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    activity.startGroupRide();
+//                }
+//            });
+//            viewGroup.addView(button);
+//        }
 
-        {
-            Button button = new Button(activity);
-            button.setText("Group Ride");
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activity.startGroupRide();
-                }
-            });
-            viewGroup.addView(button);
-        }
 
         {
             Button button = new Button(activity);
