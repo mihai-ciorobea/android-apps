@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
-import org.mihigh.cycling.app.group.GroupTracking;
+import org.mihigh.cycling.app.pe.route.tracking.UserTracking;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +46,7 @@ public class PE_UI_ProgressBars extends Fragment {
     }
 
     public void updateBars() {
-        List<Integer> activity = GroupTracking.instance.get5MinActivity();
+        List<Integer> activity = UserTracking.instance.get5MinActivity();
         int size = activity.size();
         if (size > 9) {
             activity = activity.subList(size - 9, size);

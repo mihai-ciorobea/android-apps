@@ -11,7 +11,8 @@ public class UserTracking {
     public static final UserTracking instance = new UserTracking();
 
     private List<Location> positions = new ArrayList<Location>();
-
+    public boolean setGroupVisibility = true;
+    public boolean setNearbyVisibility = false;
 
     private UserTracking() {
     }

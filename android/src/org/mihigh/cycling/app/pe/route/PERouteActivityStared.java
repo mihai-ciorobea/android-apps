@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.google.android.gms.location.LocationListener;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
+import org.mihigh.cycling.app.pe.route.help.RequestHelp;
 import org.mihigh.cycling.app.pe.route.result.PETrackResult;
 import org.mihigh.cycling.app.pe.route.tracking.LocationTracking;
 import org.mihigh.cycling.app.pe.route.tracking.UserTracking;
@@ -80,11 +81,7 @@ public class PERouteActivityStared extends Fragment {
         getView().findViewById(R.id.pe_route_activity_stated_send_msg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: request help
-
-
-
-
+                Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new RequestHelp());
             }
         });
 

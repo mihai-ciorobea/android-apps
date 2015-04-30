@@ -70,7 +70,6 @@ public class PEHome extends Fragment {
             groupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PEGroupDetails.setHasGroup(getActivity(), false);
                     Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PEGroupHome());
                 }
             });
