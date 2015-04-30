@@ -43,6 +43,7 @@ public class PERouteActivityStared extends Fragment {
         public void onLocationChanged(Location location) {
             UserTracking.instance.addLocation(location);
             new Thread(new SendUserPositionRunnable(getActivity(), location)).start();
+            new Thread(new GetUserHelpRunnable(getActivity(), viewPageAdapter.getMap())).start();
             new Thread(new GetUsersToShowOnMapRunnable(getActivity(), location, UserTracking.instance.setGroupVisibility,
                     UserTracking.instance.setNearbyVisibility, viewPageAdapter.getMap())).start();
         }

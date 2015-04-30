@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.group.dto.Coordinates;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.pe.route.PETrackCoordinates;
 import org.mihigh.cycling.app.pe.route.tracking.UserTracking;
 import org.mihigh.cycling.app.pe.route.tracking.gps.PE_GPS_Service;
@@ -132,6 +133,10 @@ public class PE_UI_MapFragment extends Fragment {
 
     ConcurrentHashMap<String, Marker> markers = new ConcurrentHashMap<String, Marker>();
 
+    public void openMarker(UserInfo userInfo, Coordinates lastLocation) {
+        map.addMarker(new MarkerOptions().position(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude())));
+    }
+
     public void updateUserPositions(final List<PEUserMapDetails> users) {
         if (users == null) {
             return;
@@ -156,13 +161,13 @@ public class PE_UI_MapFragment extends Fragment {
         for (String email : markers.keySet()) {
             boolean found = false;
             for (PEUserMapDetails user : users) {
-                if (user.userInfo.getEmail().equalsIgnoreCase(email)){
+                if (user.userInfo.getEmail().equalsIgnoreCase(email)) {
                     found = true;
                     break;
                 }
             }
 
-            if(!found) {
+            if (!found) {
                 markers.get(email).remove();
                 markers.remove(email);
             }
@@ -178,6 +183,9 @@ public class PE_UI_MapFragment extends Fragment {
 
             @Override
             public View getInfoContents(final Marker marker) {
+                if (marker.getSnippet() == null ){
+                    return null;
+                }
                 View v = getActivity().getLayoutInflater().inflate(R.layout.group_map_window_adapter, null);
                 final ImageView image = (ImageView) v.findViewById(R.id.image);
                 TextView email = (TextView) v.findViewById(R.id.userEmail);
