@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import com.facebook.widget.LoginButton;
 import org.mihigh.cycling.app.login.dto.UserInfo;
+import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 
 public class HomeFragment extends Fragment {
 
@@ -105,6 +106,7 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     UserInfo.restore(activity).clearStore(activity);
+                    PEGroupDetails.setHasGroup(getActivity(), false);
 
                     FragmentActivity activity = HomeFragment.this.activity;
                     Intent intent = new Intent(activity, LoginActivity.class);

@@ -4,8 +4,8 @@ import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
+import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -18,6 +18,7 @@ import org.mihigh.cycling.app.http.HttpHelper;
 import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -53,14 +54,13 @@ public class CreateGroupRunnable implements Runnable {
             // Add your data
             HashMap<String, String> data = new HashMap<String, String>();
             data.put("name", groupName);
-            data.put("users", users.toString());
             httpCall.setEntity(new StringEntity(HttpHelper.getGson().toJson(data)));
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httpCall);
 
             // Check if 202
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_ACCEPTED) {
+            if (response.getStatusLine().getStatusCode() > 300) {
                 throw new IOException("Received " + response.getStatusLine().getStatusCode());
             }
 

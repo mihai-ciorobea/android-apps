@@ -2,7 +2,6 @@ package org.mihigh.cycling.app.pe.group.dto;
 
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
@@ -41,7 +40,7 @@ public class PECheckGroupForUserRunnable implements Runnable {
             HttpResponse response = new DefaultHttpClient().execute(httpCall);
 
             // Check if 200
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            if (response.getStatusLine().getStatusCode() > 300) {
                 throw new IOException("Received " + response.getStatusLine().getStatusCode());
             }
 

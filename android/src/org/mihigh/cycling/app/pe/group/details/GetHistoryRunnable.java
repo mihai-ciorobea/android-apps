@@ -60,7 +60,7 @@ public class GetHistoryRunnable implements Runnable {
             HttpResponse response = httpclient.execute(httpCall);
 
             // Check if 200
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            if (response.getStatusLine().getStatusCode() > 300) {
                 throw new IOException("Received " + response.getStatusLine().getStatusCode());
             }
 

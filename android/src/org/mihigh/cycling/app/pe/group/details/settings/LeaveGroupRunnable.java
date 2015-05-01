@@ -2,7 +2,6 @@ package org.mihigh.cycling.app.pe.group.details.settings;
 
 import android.support.v4.app.FragmentActivity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -46,7 +45,7 @@ public class LeaveGroupRunnable implements Runnable {
             HttpResponse response = httpclient.execute(httpCall);
 
             // Check if 202
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_ACCEPTED) {
+            if (response.getStatusLine().getStatusCode() > 300) {
                 throw new IOException("Received " + response.getStatusLine().getStatusCode());
             }
 

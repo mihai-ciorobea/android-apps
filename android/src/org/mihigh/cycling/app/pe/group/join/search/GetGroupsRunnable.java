@@ -3,7 +3,6 @@ package org.mihigh.cycling.app.pe.group.join.search;
 import android.support.v4.app.FragmentActivity;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -50,7 +49,7 @@ public class GetGroupsRunnable implements Runnable {
             HttpResponse response = httpclient.execute(httpCall);
 
             // Check if 200
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            if (response.getStatusLine().getStatusCode() > 300) {
                 throw new IOException("Received " + response.getStatusLine().getStatusCode());
             }
 
