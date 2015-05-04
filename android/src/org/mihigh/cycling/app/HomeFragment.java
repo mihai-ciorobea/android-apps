@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import com.facebook.widget.LoginButton;
 import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
@@ -62,6 +63,10 @@ public class HomeFragment extends Fragment {
         ViewGroup viewGroup = (ViewGroup) getView().findViewById(R.id.home_buttons_layout);
         ViewGroup viewLogoutGroup = (ViewGroup) getView().findViewById(R.id.home_logout_buttons_layout);
         viewGroup.setLayoutTransition(l);
+
+        //Set welcome msg
+        TextView welcomeMsg = (TextView) getView().findViewById(R.id.home_hello_msg);
+        welcomeMsg.setText(UserInfo.restore(activity).getUIName());
 
 //        {
 //            Button button = new Button(activity);

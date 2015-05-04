@@ -12,6 +12,7 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.pe.route.ui.PE_UI_MapFragment;
 import org.mihigh.cycling.app.pe.route.ui.dto.PEUserMapDetails;
 
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class GetUsersToShowOnMapRunnable implements Runnable {
 
-    private static final String PATH_CREATE_GROUP = "/api/v1/activity/PE/getUsers?group=%s&nearby=%s";
+    private static final String PATH_CREATE_GROUP = "/api/v1/activity/1/users?group=%s&nearby=%s";
     private final FragmentActivity activity;
     private final Location location;
     private final boolean setGroupVisibility;
@@ -51,6 +52,7 @@ public class GetUsersToShowOnMapRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httpCall);
@@ -69,7 +71,6 @@ public class GetUsersToShowOnMapRunnable implements Runnable {
 
             final List<PEUserMapDetails> users = HttpHelper.getGson().fromJson(responseBody, listType);
 
-            //TODO with the user list
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

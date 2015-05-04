@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
-import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -15,15 +14,15 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CreateGroupRunnable implements Runnable {
-    private static final String PATH_CREATE_GROUP = "/api/v1/group";
+    private static final String PATH_CREATE_GROUP = "/api/v1/wrapper/group";
     private final String groupName;
     private final ArrayList<String> users;
     private Fragment fragment;
@@ -50,10 +49,13 @@ public class CreateGroupRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(fragment.getActivity()) == null ? null : UserInfo.restore(fragment.getActivity()).getEmail());
+
 
             // Add your data
-            HashMap<String, String> data = new HashMap<String, String>();
+            HashMap<String, Object> data = new HashMap<String, Object>();
             data.put("name", groupName);
+            data.put("users", users);
             httpCall.setEntity(new StringEntity(HttpHelper.getGson().toJson(data)));
 
             // Execute HTTP Post Request

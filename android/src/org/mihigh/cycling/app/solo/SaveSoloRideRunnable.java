@@ -12,6 +12,7 @@ import org.mihigh.cycling.app.LoginActivity;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.http.HttpHelper;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 
 public class SaveSoloRideRunnable implements Runnable {
 
@@ -37,6 +38,7 @@ public class SaveSoloRideRunnable implements Runnable {
             HttpPost httppost = new HttpPost(url);
             httppost.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httppost.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
 
             // Add your data
             httppost.setEntity(new StringEntity(jsonData));

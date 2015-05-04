@@ -12,3 +12,7 @@ libs
 .idea/
 *.iml
 
+# artifacts
+*.apk
+release-key.keystore
+

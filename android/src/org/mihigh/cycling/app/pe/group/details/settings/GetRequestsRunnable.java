@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.support.v4.app.FragmentActivity;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -22,7 +21,7 @@ import java.util.List;
 
 public class GetRequestsRunnable implements Runnable {
 
-    private static final String PATH_CREATE_GROUP = "/api/v1/group/%s/request";
+    private static final String PATH_CREATE_GROUP = "/api/v1/request/group/%s";
     private final FragmentActivity activity;
     private final PEGroupDetails groupDetails;
     private final PEJoinRequestListAdapter adapter;
@@ -47,6 +46,7 @@ public class GetRequestsRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httpCall);
@@ -64,10 +64,10 @@ public class GetRequestsRunnable implements Runnable {
                 @Override
                 public void run() {
                     if (users == null || users.isEmpty()) {
-//                        noneTextView.setVisibility(View.VISIBLE);
                         return;
                     }
 
+                    adapter.clear();
                     for (UserInfo user : users) {
                         adapter.add(new RequestData(groupDetails, user));
                     }

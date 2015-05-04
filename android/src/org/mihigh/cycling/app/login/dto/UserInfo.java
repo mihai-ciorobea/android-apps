@@ -8,6 +8,7 @@ import android.util.Log;
 public class UserInfo {
     public static String SHARED_PREFERENCES_NAME = "USER_INFO";
 
+    private String id;
     private String firstName;
     private String lastName;
     private String email;
@@ -119,5 +120,13 @@ public class UserInfo {
                 ", email='" + email + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

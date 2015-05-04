@@ -8,6 +8,7 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.group.dto.ProgressStatus;
 import org.mihigh.cycling.app.http.HttpHelper;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 
 public class GroupStartRideRunnable implements Runnable {
 
@@ -34,6 +35,8 @@ public class GroupStartRideRunnable implements Runnable {
             HttpGet httpGet = new HttpGet(url);
             httpGet.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpGet.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpGet.setHeader(Utils.EMAIL, UserInfo.restore(fragment.getActivity()) == null ? null : UserInfo.restore(fragment.getActivity()).getEmail());
+
 
             // Execute HTTP Get Request
             httpclient.execute(httpGet);

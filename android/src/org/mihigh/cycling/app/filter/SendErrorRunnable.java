@@ -9,18 +9,24 @@ import org.apache.http.protocol.HTTP;
 import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.http.HttpHelper;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class SendErrorRunnable implements Runnable {
 
     public static final String PATH = "/api/v1/error";
-    private final Activity activity;
+    private Activity activity;
     private String errorData;
     private boolean kill;
     private int pid;
 
-    private static final ArrayList<SendErrorRunnable> oldErrors = new ArrayList<SendErrorRunnable>();
+
+    final static List<SendErrorRunnable> failedUpdates = Collections.synchronizedList(new ArrayList<SendErrorRunnable>());
+
 
     public SendErrorRunnable(Activity activity, String errorData, boolean kill, int pid) {
         this.activity = activity;
@@ -31,31 +37,40 @@ public class SendErrorRunnable implements Runnable {
 
     @Override
     public void run() {
-        execute();
+        boolean succeeded = sendError();
 
-        ArrayList<SendErrorRunnable> retryErrors = new ArrayList<SendErrorRunnable>(oldErrors);
-        oldErrors.clear();
-
-        for (SendErrorRunnable error : retryErrors) {
-            if (error != null) {
-                if (!error.execute()) {
-                    oldErrors.add(error);
+        synchronized (failedUpdates) {
+            if (succeeded) {
+                //try others
+                for (Iterator<SendErrorRunnable> iterator = failedUpdates.iterator(); iterator.hasNext(); ) {
+                    SendErrorRunnable failedUpdate = iterator.next();
+                    failedUpdate.activity = activity;
+                    boolean retryStatus = failedUpdate.sendError();
+                    if (!retryStatus) {
+                        break;
+                    } else {
+                        iterator.remove();
+                    }
                 }
+            } else {
+                //add to failed
+                failedUpdates.add(this);
             }
         }
+
 
         if (kill) {
             android.os.Process.killProcess(pid);
         }
 
         try {
-            Thread.sleep(1000 * 60);
+            Thread.sleep(1000 * 10);
         } catch (InterruptedException ignored) {
         }
     }
 
 
-    private boolean execute() {
+    private boolean sendError() {
         String url = activity.getString(R.string.server_url) + PATH;
 
         try {
@@ -63,6 +78,7 @@ public class SendErrorRunnable implements Runnable {
             HttpPost httppost = new HttpPost(url);
             httppost.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httppost.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
 
             // Add your data
             httppost.setEntity(new StringEntity(errorData));

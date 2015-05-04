@@ -1,8 +1,9 @@
 package org.mihigh.cycling.app.pe.route;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.*;
 import android.location.Location;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -31,10 +32,6 @@ import java.util.TimerTask;
 
 public class PERouteActivityStared extends Fragment {
 
-    public static FragmentActivity activity;
-
-
-
     private PECollaborativeLocation collaborativeLocation = new PECollaborativeLocation();
     private PE_GPS_Service gpsService = new PE_GPS_Service();
     private LocationTracking locationTracking = new LocationTracking(collaborativeLocation, gpsService, new LocationListener() {
@@ -55,12 +52,20 @@ public class PERouteActivityStared extends Fragment {
     private Timer timer;
     private PE_UI_TracingViewPageAdapter viewPageAdapter;
 
+    public static int battery = -1;
+
+    private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver(){
+        @Override
+        public void onReceive(Context ctxt, Intent intent) {
+            battery = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activity = getActivity();
+        getActivity().registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         return inflater.inflate(R.layout.pe_route_activity_started, container, false);
     }

@@ -12,6 +12,7 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.utils.LoadingUtils;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 
 public class NeedHelpRunnable implements Runnable {
 
-    private static final String PATH_CREATE_GROUP = "/api/v1/activity/PE/help";
+    private static final String PATH_CREATE_GROUP = "/api/v1/message/help/activity/1";
 
     private final FragmentActivity activity;
     private final String text;
@@ -47,6 +48,7 @@ public class NeedHelpRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
 
             // Add text line
             // Add your data

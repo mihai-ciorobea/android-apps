@@ -3,8 +3,8 @@
     <string name="app_name">Bike route</string>
     <string name="app_home_name">Home</string>
     <string name="facebook_app_id">1452923118300905</string>
-    <!--<string name="server_url">http://cycling.go.ro</string>-->
-    <string name="server_url">http://192.168.0.102:8080</string>
+    <string name="server_url">http://cycling.go.ro</string>
+    <!--<string name="server_url">http://192.168.0.102:8080</string>-->
     <!--<string name="server_url">http://192.168.2.1:8080</string>-->
 </resources>
 

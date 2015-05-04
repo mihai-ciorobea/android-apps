@@ -1,6 +1,7 @@
 package org.mihigh.cycling.app.pe.group.details;
 
 import android.support.v4.app.FragmentActivity;
+import android.widget.ListView;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -19,18 +20,21 @@ import java.io.IOException;
 
 public class SendMsgRunnable implements Runnable {
 
-    private static final String PATH_CREATE_GROUP = "/api/v1/group/%s/chat";
+    private static final String PATH_CREATE_GROUP = "/api/v1/message/group/%s";
 
     private final FragmentActivity activity;
     private final PEHistoryListAdapter adapter;
     private final String text;
     private PEGroupDetails groupDetails;
+    private ListView historyList;
 
-    public SendMsgRunnable(FragmentActivity activity, PEHistoryListAdapter adapter, String text, PEGroupDetails groupDetails) {
+    public SendMsgRunnable(FragmentActivity activity, PEHistoryListAdapter adapter, String text,
+                           PEGroupDetails groupDetails, ListView historyList) {
         this.activity = activity;
         this.adapter = adapter;
         this.text = text;
         this.groupDetails = groupDetails;
+        this.historyList = historyList;
     }
 
     @Override
@@ -44,6 +48,8 @@ public class SendMsgRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
+
 
             // Add text line
             httpCall.setEntity(new StringEntity(text));
@@ -63,7 +69,9 @@ public class SendMsgRunnable implements Runnable {
                         this.text = SendMsgRunnable.this.text;
                         this.userInfo = UserInfo.restore(activity);
                     }});
+
                     adapter.notifyDataSetChanged();
+                    historyList.setSelection(adapter.getCount() - 1);
                 }
             });
         } catch (Exception e) {

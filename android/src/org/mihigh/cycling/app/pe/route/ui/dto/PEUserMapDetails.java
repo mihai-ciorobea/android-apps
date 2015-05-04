@@ -6,5 +6,5 @@ import org.mihigh.cycling.app.login.dto.UserInfo;
 public class PEUserMapDetails {
     public UserInfo userInfo;
     public Coordinates userLocation;
-    public boolean isGroup;
+    public boolean group;
 }

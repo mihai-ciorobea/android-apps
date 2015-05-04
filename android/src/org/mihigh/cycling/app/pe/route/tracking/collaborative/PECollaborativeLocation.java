@@ -83,7 +83,6 @@ public class PECollaborativeLocation {
     }
 
     public void discoverServices() {
-        LoadingUtils.makeToast(PERouteActivityStared.activity, "COLLABORATIVE_START");
         manager.discoverServices(channel, new LoggingActionListener("discoverServices, discoverServices"));
     }
 

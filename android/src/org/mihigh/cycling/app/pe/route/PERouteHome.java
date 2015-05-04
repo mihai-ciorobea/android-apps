@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,14 +21,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import org.mihigh.cycling.app.R;
+import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.pe.route.ui.utils.MapTrack;
 import org.mihigh.cycling.app.utils.LoadingUtils;
 import org.mihigh.cycling.app.utils.Navigation;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class PERouteHome extends Fragment {
 
     boolean useCollaborativeTracking = true;
     boolean isGPSEnabled = true;
+    boolean isWifiEnabled = false;
     boolean is3GEnabled = false;
 
 
@@ -89,33 +95,45 @@ public class PERouteHome extends Fragment {
             }
 
             private void checkYourPosition() {
-
-                LoadingUtils.makeToast(getActivity(), "send started activity BLA BLA BLA BLA BLA BLA");
-                //TODO: send started activity
-
+                //TODO show working if not nearby start possition
                 Navigation.changeFragment(getActivity(), R.id.login_fragment_container, new PERouteActivityStared());
             }
 
 
-
             private void check3G() {
                 ConnectivityManager service = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-
                 if (service == null) {
                     is3GEnabled = false;
                     checkYourPosition();
                     return;
                 }
-
-                boolean enabled = service.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting()
-                        || service.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+                boolean enabled = service.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
 
                 if (!enabled) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(PERouteHome.this.getActivity());
                     alert.setTitle("Reporting");
-                    alert.setMessage("Let us know were you are. Enable you 3G/WIFI service. This option is optional.");
+                    alert.setMessage("Let us know were you are. \nEnable you 3G service.");
                     alert.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
+                            try {
+                                final ConnectivityManager conman = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                                final Class conmanClass = Class.forName(conman.getClass().getName());
+                                final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
+                                iConnectivityManagerField.setAccessible(true);
+                                final Object iConnectivityManager = iConnectivityManagerField.get(conman);
+                                final Class iConnectivityManagerClass = Class.forName(iConnectivityManager.getClass().getName());
+                                final Method setMobileDataEnabledMethod = iConnectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", Boolean.TYPE);
+                                setMobileDataEnabledMethod.setAccessible(true);
+
+                                setMobileDataEnabledMethod.invoke(iConnectivityManager, true);
+                                is3GEnabled = true;
+                                checkYourPosition();
+                            } catch (Exception e) {
+                                new ExceptionHandler(getActivity()).sendError(e, false);
+
+                                is3GEnabled = false;
+                                checkYourPosition();
+                            }
                         }
                     });
                     alert.setNegativeButton("Continue anyway", new DialogInterface.OnClickListener() {
@@ -128,6 +146,43 @@ public class PERouteHome extends Fragment {
                 } else {
                     is3GEnabled = true;
                     checkYourPosition();
+                }
+
+            }
+
+            private void checkWifi() {
+                ConnectivityManager service = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                if (service == null) {
+                    isWifiEnabled = false;
+                    check3G();
+                    return;
+                }
+
+                boolean enabled = service.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+
+                if (!enabled) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(PERouteHome.this.getActivity());
+                    alert.setTitle("Collaborative tracking");
+                    alert.setMessage("We use WIFI P2P to save battery instead of GPS. \n Enable WIFI service?");
+                    alert.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+                            wifiManager.setWifiEnabled(true);
+                            isWifiEnabled = false;
+                            check3G();
+                        }
+                    });
+                    alert.setNegativeButton("Continue anyway", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            isWifiEnabled = false;
+                            check3G();
+                        }
+                    });
+                    alert.show();
+                } else {
+                    isWifiEnabled = true;
+                    check3G();
                 }
             }
 
@@ -153,7 +208,7 @@ public class PERouteHome extends Fragment {
                 } else {
                     isGPSEnabled = true;
                     if (useCollaborativeTracking) {
-                        check3G();
+                        checkWifi();
                     } else {
                         checkYourPosition();
                     }
@@ -191,7 +246,6 @@ public class PERouteHome extends Fragment {
             }
         });
     }
-
 
 
     @Override

@@ -23,6 +23,7 @@ public class PEGroupHome extends Fragment {
     private PEHistoryListAdapter adapter;
     private PEGroupDetails groupDetails;
     private ProgressDialog loadingDialog;
+    private ListView historyList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class PEGroupHome extends Fragment {
         text.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    new Thread(new SendMsgRunnable(getActivity(), adapter, text.getText().toString(), groupDetails)).start();
+                    new Thread(new SendMsgRunnable(getActivity(), adapter, text.getText().toString(), groupDetails, historyList)).start();
                     text.setText("");
                 }
                 return false;
@@ -67,7 +68,7 @@ public class PEGroupHome extends Fragment {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(new SendMsgRunnable(getActivity(), adapter, text.getText().toString(), groupDetails)).start();
+                new Thread(new SendMsgRunnable(getActivity(), adapter, text.getText().toString(), groupDetails, historyList)).start();
                 text.setText("");
             }
         });
@@ -77,7 +78,7 @@ public class PEGroupHome extends Fragment {
     private void setupHistory() {
         // Adapter
         adapter = new PEHistoryListAdapter(getActivity(), R.layout.pe_group_home_msg, new ArrayList<Message>());
-        ListView historyList = (ListView) getView().findViewById(R.id.pe_group_home_history);
+        historyList = (ListView) getView().findViewById(R.id.pe_group_home_history);
         historyList.setAdapter(adapter);
 
         TextView noHistory = (TextView) getView().findViewById(R.id.pe_group_home_no_history);

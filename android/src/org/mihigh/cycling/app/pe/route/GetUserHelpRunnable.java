@@ -26,7 +26,7 @@ import java.util.List;
 
 public class GetUserHelpRunnable implements Runnable {
 
-    private static final String PATH_CREATE_GROUP = "/api/v1/activity/PE/help";
+    private static final String PATH_CREATE_GROUP = "/api/v1/message/help/activity/1";
     private final FragmentActivity activity;
     private PE_UI_MapFragment map;
 
@@ -47,6 +47,7 @@ public class GetUserHelpRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
 
 
             // Execute HTTP Post Request
@@ -71,12 +72,13 @@ public class GetUserHelpRunnable implements Runnable {
                 allAlerts.add(alert);
 
                 final int index = helpRequests.indexOf(helpRequest);
-                alert.setTitle(helpRequest.userInfo.getFirstName() + " " + helpRequest.userInfo.getLastName());
+                alert.setTitle(helpRequest.userInfo.getEmail());
                 alert.setMessage("Need help: " + helpRequest.text);
 
                 alert.setPositiveButton("Show on map", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         map.openMarker(helpRequest.userInfo, helpRequest.lastLocation);
+
                     }
                 });
 
@@ -95,7 +97,7 @@ public class GetUserHelpRunnable implements Runnable {
                 });
             }
 
-            if (allAlerts.get(0) != null) {
+            if (!allAlerts.isEmpty()) {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -116,3 +118,4 @@ class HelpRequest {
     public Coordinates lastLocation;
     public String text;
 }
+

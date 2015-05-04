@@ -21,13 +21,14 @@ public class PE_UI_ProgressBars extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        return inflater.inflate(R.layout.pe_route_activity_started_progress_bars, container, false);
+        View view = inflater.inflate(R.layout.pe_route_activity_started_progress_bars, container, false);
+        barLayout = (LinearLayout) view.findViewById(R.id.pe_route_activity_started_progress_bars_layout);
+        return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        barLayout = (LinearLayout) getView().findViewById(R.id.pe_route_activity_started_progress_bars_layout);
     }
 
     @Override

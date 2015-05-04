@@ -71,6 +71,7 @@ public class GroupMyPositionRunnable implements Runnable {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url);
             httpPost.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
+            httpPost.setHeader(Utils.EMAIL, UserInfo.restore(fragment.getActivity()) == null ? null : UserInfo.restore(fragment.getActivity()).getEmail());
             httpPost.setHeader(HTTP.CONTENT_TYPE, "application/json");
 
             StringEntity entity = new StringEntity(HttpHelper.getGson().toJson(new Coordinates(lat, lng, date)));

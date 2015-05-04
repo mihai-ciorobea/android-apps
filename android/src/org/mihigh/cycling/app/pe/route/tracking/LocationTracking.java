@@ -44,7 +44,6 @@ public class LocationTracking implements LocationListener {
                     // No neighbours, start GPS
                     gpsService.onResume();
                 } else {
-                    LoadingUtils.makeToast(PERouteActivityStared.activity, "COLLABORATIVE");
 
                     // Send data to gpsService
                     double lat = 0;
@@ -93,7 +92,6 @@ public class LocationTracking implements LocationListener {
     public void onLocationChanged(Location location) {
         //via GPS
 
-        LoadingUtils.makeToast(PERouteActivityStared.activity, "GPS");
         collaborativeLocation.updateLocation(location);
         startTracking();
         location.setProvider("GPS");

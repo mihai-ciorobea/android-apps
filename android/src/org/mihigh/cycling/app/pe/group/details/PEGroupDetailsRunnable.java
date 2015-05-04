@@ -9,13 +9,15 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
-import org.mihigh.cycling.app.pe.group.get.PEUserGroups;
+import org.mihigh.cycling.app.login.dto.UserInfo;
+import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.List;
 
 public class PEGroupDetailsRunnable implements Runnable {
-    private static final String PATH_CREATE_GROUP = "/api/v1/group?state=joined";
+    private static final String PATH_CREATE_GROUP = "/api/v1/group/joined";
     private final PEGroupHome fragment;
 
     public PEGroupDetailsRunnable(PEGroupHome fragment) {
@@ -34,6 +36,8 @@ public class PEGroupDetailsRunnable implements Runnable {
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
 
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(fragment.getActivity()) == null ? null : UserInfo.restore(fragment.getActivity()).getEmail());
+
             // Execute HTTP Post Request
             HttpResponse response = new DefaultHttpClient().execute(httpCall);
 
@@ -45,16 +49,15 @@ public class PEGroupDetailsRunnable implements Runnable {
             // all good
 
             // deserialize
-            Type type = new TypeToken<PEUserGroups>() {
+            Type type = new TypeToken<List<PEGroupDetails>>() {
             }.getType();
-            final PEUserGroups groups = HttpHelper.fromInputStream(response.getEntity().getContent(), type);
+            final List<PEGroupDetails> groups = HttpHelper.fromInputStream(response.getEntity().getContent(), type);
             if (groups != null
-                    && groups.groups != null
-                    && !groups.groups.isEmpty()) {
+                    && !groups.isEmpty()) {
 
                 fragment.getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-                        fragment.updateDetails(groups.groups.get(0));
+                        fragment.updateDetails(groups.get(0));
                     }
                 });
             }

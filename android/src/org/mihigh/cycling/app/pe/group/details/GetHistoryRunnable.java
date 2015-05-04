@@ -7,7 +7,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -16,16 +15,17 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
-import org.mihigh.cycling.app.pe.group.details.dto.AllMessages;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.pe.group.details.dto.Message;
 import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.List;
 
 public class GetHistoryRunnable implements Runnable {
 
-    private static final String PATH_CREATE_GROUP = "/api/v1/group/%s/chat";
+    private static final String PATH_CREATE_GROUP = "/api/v1/message/group/%s";
 
     private final FragmentActivity activity;
     private final PEHistoryListAdapter adapter;
@@ -55,6 +55,7 @@ public class GetHistoryRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httpCall);
@@ -64,21 +65,20 @@ public class GetHistoryRunnable implements Runnable {
                 throw new IOException("Received " + response.getStatusLine().getStatusCode());
             }
 
-            Type type = new TypeToken<AllMessages>() {
+            Type type = new TypeToken<List<Message>>() {
             }.getType();
-            final AllMessages allMessages = HttpHelper.fromInputStream(response.getEntity().getContent(), type);
+            final List<Message> allMessages = HttpHelper.fromInputStream(response.getEntity().getContent(), type);
 
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (allMessages == null
-                            || allMessages.msgs == null
-                            || allMessages.msgs.isEmpty()) {
+                    if (allMessages == null || allMessages.isEmpty()) {
                         noneTextView.setVisibility(View.VISIBLE);
+                        historyList.setVisibility(View.GONE);
                         return;
                     }
 
-                    for (Message msg : allMessages.msgs) {
+                    for (Message msg : allMessages) {
                         adapter.add(msg);
                     }
                     adapter.notifyDataSetChanged();

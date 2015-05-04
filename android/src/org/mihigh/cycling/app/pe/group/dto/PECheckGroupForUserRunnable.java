@@ -9,18 +9,18 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.pe.PEHome;
-import org.mihigh.cycling.app.pe.group.get.PEUserGroups;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.List;
 
 public class PECheckGroupForUserRunnable implements Runnable {
-    private static final String PATH_CREATE_GROUP = "/api/v1/group?state=joined";
+    private static final String PATH_CREATE_GROUP = "/api/v1/group/joined";
     private final PEHome fragment;
 
-    public
-    PECheckGroupForUserRunnable(PEHome fragment) {
+    public PECheckGroupForUserRunnable(PEHome fragment) {
         this.fragment = fragment;
     }
 
@@ -35,6 +35,8 @@ public class PECheckGroupForUserRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(fragment.getActivity()) == null ? null : UserInfo.restore(fragment.getActivity()).getEmail());
+
 
             // Execute HTTP Post Request
             HttpResponse response = new DefaultHttpClient().execute(httpCall);
@@ -47,13 +49,11 @@ public class PECheckGroupForUserRunnable implements Runnable {
             // all good
 
             // deserialize
-            Type type = new TypeToken<PEUserGroups>() {
+            Type type = new TypeToken<List<PEGroupDetails>>() {
             }.getType();
-            PEUserGroups groups = HttpHelper.fromInputStream(response.getEntity().getContent(), type);
-            if (groups != null
-                    && groups.groups != null
-                    && !groups.groups.isEmpty()) {
-                groups.groups.get(0).setHasGroup(fragment.getActivity(), true);
+            List<PEGroupDetails> groups = HttpHelper.fromInputStream(response.getEntity().getContent(), type);
+            if (groups != null && !groups.isEmpty()) {
+                groups.get(0).setHasGroup(fragment.getActivity(), true);
 
                 fragment.getActivity().runOnUiThread(new Runnable() {
                     public void run() {

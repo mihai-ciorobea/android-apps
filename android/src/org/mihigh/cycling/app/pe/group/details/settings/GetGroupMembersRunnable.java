@@ -49,6 +49,7 @@ public class GetGroupMembersRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httpCall);
@@ -61,15 +62,14 @@ public class GetGroupMembersRunnable implements Runnable {
             Type type = new TypeToken<List<UserInfo>>() {
             }.getType();
             final List<UserInfo> users = HttpHelper.fromInputStream(response.getEntity().getContent(), type);
-            if (users != null
-                    && !users.isEmpty()) {
+            if (users != null && !users.isEmpty()) {
 
                 activity.runOnUiThread(new Runnable() {
                     public void run() {
+                        membersAdapter.clear();
+
                         for (UserInfo user : users) {
-                            membersAdapter.add(user.isGenerated() ?
-                                    user.getEmail().split("@")[0] :
-                                    user.getFirstName() + " " + user.getLastName());
+                            membersAdapter.add(user.getUIName());
                         }
 
                         membersAdapter.notifyDataSetChanged();

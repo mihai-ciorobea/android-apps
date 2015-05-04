@@ -12,14 +12,18 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.*;
 
 public class SendUserPositionRunnable implements Runnable {
 
-    private static final String PATH_CREATE_GROUP = "/api/v1/activity/PE/location";
-    private final FragmentActivity activity;
+    final static List<SendUserPositionRunnable> failedUpdates = Collections.synchronizedList(new ArrayList<SendUserPositionRunnable>());
+
+
+    private static final String PATH_CREATE_GROUP = "/api/v1/activity/1/location";
+    private FragmentActivity activity;
     private final Location location;
 
     public SendUserPositionRunnable(FragmentActivity activity, Location location) {
@@ -30,6 +34,31 @@ public class SendUserPositionRunnable implements Runnable {
 
     @Override
     public void run() {
+
+        boolean succeeded = sendLocation();
+
+        synchronized (failedUpdates) {
+            if (succeeded) {
+                //try others
+                for (Iterator<SendUserPositionRunnable> iterator = failedUpdates.iterator(); iterator.hasNext(); ) {
+                    SendUserPositionRunnable failedUpdate = iterator.next();
+                    failedUpdate.activity = activity;
+                    boolean retryStatus = failedUpdate.sendLocation();
+                    if (!retryStatus) {
+                        break;
+                    } else {
+                        iterator.remove();
+                    }
+                }
+            } else {
+                //add to failed
+                failedUpdates.add(this);
+            }
+        }
+
+    }
+
+    private boolean sendLocation() {
         String url = activity.getString(R.string.server_url) + PATH_CREATE_GROUP;
 
         try {
@@ -39,6 +68,7 @@ public class SendUserPositionRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
 
 
             // Add text line
@@ -48,6 +78,7 @@ public class SendUserPositionRunnable implements Runnable {
             data.put("time", location.getTime());
             data.put("accuracy", location.getAccuracy());
             data.put("provider", location.getProvider());
+            data.put("battery", PERouteActivityStared.battery);
             httpCall.setEntity(new StringEntity(HttpHelper.getGson().toJson(data)));
 
             // Execute HTTP Post Request
@@ -60,6 +91,8 @@ public class SendUserPositionRunnable implements Runnable {
 
         } catch (Exception e) {
             new ExceptionHandler(activity).sendError(e, false);
+            return false;
         }
+        return true;
     }
 }

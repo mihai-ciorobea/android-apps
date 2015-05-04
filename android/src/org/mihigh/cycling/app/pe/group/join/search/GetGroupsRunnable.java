@@ -11,11 +11,12 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
-import org.mihigh.cycling.app.pe.group.get.PEUserGroups;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.List;
 
 public class GetGroupsRunnable implements Runnable {
 
@@ -44,6 +45,7 @@ public class GetGroupsRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httpCall);
@@ -53,21 +55,20 @@ public class GetGroupsRunnable implements Runnable {
                 throw new IOException("Received " + response.getStatusLine().getStatusCode());
             }
 
-            Type type = new TypeToken<PEUserGroups>() {
+            Type type = new TypeToken<List<PEGroupDetails>>() {
             }.getType();
-            final PEUserGroups groups = HttpHelper.fromInputStream(response.getEntity().getContent(), type);
+            final List<PEGroupDetails> groups = HttpHelper.fromInputStream(response.getEntity().getContent(), type);
 
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     adapter.clear();
                     if (groups == null
-                            || groups.groups == null
-                            || groups.groups.isEmpty()) {
+                            || groups.isEmpty()) {
                         return;
                     }
 
-                    for (PEGroupDetails group : groups.groups) {
+                    for (PEGroupDetails group : groups) {
                         adapter.add(group);
                     }
                     adapter.notifyDataSetChanged();

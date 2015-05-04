@@ -10,6 +10,7 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.pe.PEHome;
 import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 import org.mihigh.cycling.app.utils.LoadingUtils;
@@ -18,7 +19,7 @@ import org.mihigh.cycling.app.utils.Navigation;
 import java.io.IOException;
 
 public class LeaveGroupRunnable implements Runnable {
-    private static final String PATH_CREATE_GROUP = "/api/v1/group/%s";
+    private static final String PATH_CREATE_GROUP = "/api/v1/request/group/%s";
 
     private FragmentActivity activity;
     private PEGroupDetails groupDetails;
@@ -40,6 +41,7 @@ public class LeaveGroupRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httpCall);

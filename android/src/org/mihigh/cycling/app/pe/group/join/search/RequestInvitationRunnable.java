@@ -13,12 +13,13 @@ import org.mihigh.cycling.app.R;
 import org.mihigh.cycling.app.Utils;
 import org.mihigh.cycling.app.filter.ExceptionHandler;
 import org.mihigh.cycling.app.http.HttpHelper;
+import org.mihigh.cycling.app.login.dto.UserInfo;
 import org.mihigh.cycling.app.pe.group.dto.PEGroupDetails;
 
 import java.io.IOException;
 
 public class RequestInvitationRunnable implements Runnable {
-    private static final String PATH_CREATE_GROUP = "/api/v1/invitation/%s";
+    private static final String PATH_CREATE_GROUP = "/api/v1/request/group/%s";
 
     private final PEGroupDetails groupDetails;
     private final FragmentActivity activity;
@@ -42,6 +43,8 @@ public class RequestInvitationRunnable implements Runnable {
             // Auth headers
             httpCall.addHeader("Cookie", Utils.SESSION_ID + " = " + HttpHelper.session);
             httpCall.setHeader(HTTP.CONTENT_TYPE, "application/json");
+            httpCall.setHeader(Utils.EMAIL, UserInfo.restore(activity) == null ? null : UserInfo.restore(activity).getEmail());
+
 
             // Add your data
             httpCall.setEntity(new StringEntity("create"));

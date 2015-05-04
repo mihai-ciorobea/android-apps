@@ -143,11 +143,16 @@ public class PE_UI_MapFragment extends Fragment {
         }
 
         for (PEUserMapDetails user : users) {
+            //Skip if it is me
+            if (user.userInfo.getEmail().equalsIgnoreCase(UserInfo.restore(getActivity()).getEmail())){
+                continue;
+            }
+
             Marker currentMarker = markers.get(user.userInfo.getEmail());
             if (currentMarker == null) {
                 Marker marker = map.addMarker(new MarkerOptions()
                         .position(new LatLng(user.userLocation.getLatitude(), user.userLocation.getLongitude()))
-                        .icon(BitmapDescriptorFactory.fromResource(user.isGroup ? R.drawable.marker : R.drawable.red_dot2))
+                        .icon(BitmapDescriptorFactory.fromResource(user.group ? R.drawable.marker : R.drawable.red_dot2))
                         .title(user.userInfo.getUIName())
                         .snippet(String.valueOf(users.indexOf(user))));
                 markers.put(user.userInfo.getEmail(), marker);

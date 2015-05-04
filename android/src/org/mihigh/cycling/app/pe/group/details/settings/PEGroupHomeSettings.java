@@ -106,9 +106,8 @@ public class PEGroupHomeSettings extends Fragment {
                         String id = input.getText().toString();
                         String email = id + "@bikeroute.com";
 
-                        invitesAdapter.insert(id, 0);
                         ProgressDialog loadingDialog = LoadingUtils.createLoadingDialog(getActivity());
-                        new Thread(new InviteUserRunnable(getActivity(), groupDetails, email, loadingDialog)).start();
+                        new Thread(new InviteUserRunnable(getActivity(), groupDetails, email, loadingDialog, invitesAdapter, id)).start();
                     }
                 });
 
@@ -140,9 +139,8 @@ public class PEGroupHomeSettings extends Fragment {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String email = input.getText().toString();
 
-                        invitesAdapter.insert(email, 0);
                         ProgressDialog loadingDialog = LoadingUtils.createLoadingDialog(getActivity());
-                        new Thread(new InviteUserRunnable(getActivity(), groupDetails, email, loadingDialog)).start();
+                        new Thread(new InviteUserRunnable(getActivity(), groupDetails, email, loadingDialog, invitesAdapter, email)).start();
                     }
                 });
 

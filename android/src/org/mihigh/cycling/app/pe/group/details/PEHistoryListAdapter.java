@@ -38,9 +38,7 @@ public class PEHistoryListAdapter extends ArrayAdapter<Message> {
         holder.message = items.get(position);
 
         holder.userName = (TextView) row.findViewById(R.id.pe_group_home_msg_user);
-        holder.userName.setText(holder.message.userInfo.isGenerated() ?
-                holder.message.userInfo.getEmail().split("@")[0] :
-                holder.message.userInfo.getFirstName() + " " + holder.message.userInfo.getLastName());
+        holder.userName.setText(holder.message.userInfo.getUIName());
 
         holder.image = (ImageView) row.findViewById(R.id.pe_group_home_msg_user_img);
         new Thread(new DownloadImageRunnable(activity, (ImageView) row.findViewById(R.id.pe_group_home_msg_user_img),
